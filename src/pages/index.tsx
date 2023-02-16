@@ -2,11 +2,12 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 
 const Home: NextPage = () => {
   const { data, status } = useSession();
 
-  console.log("data: ", data);
+  console.log("data: ", data?.user.image);
   console.log("status: ", status);
 
   const handleSignIn = () => {
@@ -59,6 +60,22 @@ const Home: NextPage = () => {
                 </button>
               )}
             </div>
+
+            {status === "authenticated" && data.user.image ? (
+              <div className="mt-16 flex flex-col items-center gap-2">
+                <p>Welcome back,</p>
+                <div>
+                  <Image
+                    src={data.user?.image}
+                    alt="Discord profile image of signed in user"
+                    width={128}
+                    height={128}
+                    className="mb-1 h-16 w-16 rounded-full ring"
+                  />
+                  <p>{data.user.name}</p>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </main>
