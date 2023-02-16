@@ -1,14 +1,16 @@
-import { type GetServerSidePropsContext, type NextPage } from "next";
+import { type GetServerSidePropsContext } from "next";
 import { getServerAuthSession } from "../../server/auth";
 import dynamic from "next/dynamic";
 
-const Map = dynamic(() => import("../../components/Map"), { ssr: false });
+const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
+  ssr: false,
+});
 
 export default function PlayPage() {
   return (
-    <div className="min-h-screen w-full">
-      <Map />
-    </div>
+    <main className="min-h-screen w-screen">
+      <DynamicMap />
+    </main>
   );
 }
 
