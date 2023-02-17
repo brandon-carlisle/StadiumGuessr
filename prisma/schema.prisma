@@ -68,3 +68,14 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+// New Models
+
+model Team {
+    id        String @id @default(cuid())
+    name      String
+    stadium   String
+    capacity  Int
+    latitude  String
+    longitude String
+}
