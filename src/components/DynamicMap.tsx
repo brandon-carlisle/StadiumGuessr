@@ -1,14 +1,14 @@
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { type Prisma } from "@prisma/client";
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import { Icon } from "leaflet";
+import type { Team } from "../pages/play/index";
 
 interface Props {
-  teams: Prisma.TeamSelect[];
+  teams: Team[];
 }
 
 export default function DynamicMap({ teams }: Props) {
-  console.log("Map teams: ", teams);
-
   return (
     <MapContainer
       center={[51.505, -0.09]}
@@ -21,7 +21,21 @@ export default function DynamicMap({ teams }: Props) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <Marker position={}></Marker>
+      {teams.map((team) => (
+        <Marker
+          position={[team.latitude, team.longitude]}
+          key={team.id}
+          icon={
+            new Icon({
+              iconUrl: markerIconPng.src,
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+            })
+          }
+        >
+          <Popup>{team.name}</Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 }
