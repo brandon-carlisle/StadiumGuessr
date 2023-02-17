@@ -9,8 +9,8 @@ const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
 
 export default function PlayPage() {
   return (
-    <main className="flex min-h-screen w-screen flex-col">
-      <div className="navbar h-1/5">
+    <main className="flex h-full flex-col">
+      <div className="navbar">
         <input
           type="text"
           className="input-primary input"
