@@ -1,7 +1,18 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { type Prisma } from "@prisma/client";
 
-export default function DynamicMap() {
+interface Props {
+  teams: Prisma.TeamSelect[];
+}
+
+export default function DynamicMap({ teams }: Props) {
+  console.log("Map teams: ", teams);
+
+  const [teamOne] = teams;
+
+  console.log(teamOne?.stadium);
+
   return (
     <MapContainer
       center={[51.505, -0.09]}

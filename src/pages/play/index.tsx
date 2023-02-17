@@ -2,7 +2,7 @@ import { type GetServerSidePropsContext } from "next";
 import { getServerAuthSession } from "../../server/auth";
 import dynamic from "next/dynamic";
 import { prisma } from "../../server/db";
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 
 const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
   ssr: false,
@@ -10,7 +10,7 @@ const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
 });
 
 interface Props {
-  teams: Prisma.TeamSelect;
+  teams: Prisma.TeamSelect[];
 }
 
 export default function PlayPage({ teams }: Props) {
@@ -26,7 +26,7 @@ export default function PlayPage({ teams }: Props) {
           Log the teams!
         </button>
       </div>
-      <DynamicMap />
+      <DynamicMap teams={teams} />
     </main>
   );
 }
