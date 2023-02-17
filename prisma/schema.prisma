@@ -76,6 +76,6 @@ model Team {
     name      String
     stadium   String
     capacity  Int
-    latitude  String
-    longitude String
+    latitude  Float
+    longitude Float
 }
