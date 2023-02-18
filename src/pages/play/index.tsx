@@ -21,25 +21,6 @@ interface Props {
   teams: Team[];
 }
 
-export default function PlayPage({ teams }: Props) {
-  return (
-    <main className="flex h-full flex-col">
-      <div className="navbar">
-        <input
-          type="text"
-          className="input-primary input"
-          placeholder="45000"
-        />
-        <button className="btn-info btn" onClick={() => console.log(teams)}>
-          Log the teams!
-        </button>
-      </div>
-
-      <DynamicMap teams={teams} />
-    </main>
-  );
-}
-
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getServerAuthSession(ctx);
 
@@ -51,11 +32,25 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       },
     };
   }
-
   const teams = await prisma.team.findMany();
-  console.log("✅ TEAMS: ", teams);
 
   return {
     props: { teams },
   };
+}
+
+export default function PlayPage({ teams }: Props) {
+  return (
+    <main className="flex h-full flex-col">
+      <div className="navbar">
+        <input
+          type="text"
+          className="input-primary input"
+          placeholder="45000"
+        />
+      </div>
+
+      <DynamicMap />
+    </main>
+  );
 }

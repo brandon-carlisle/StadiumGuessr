@@ -1,41 +1,24 @@
-import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import { Icon } from "leaflet";
-import type { Team } from "../pages/play/index";
+import { type LatLngExpression } from "leaflet";
 
-interface Props {
-  teams: Team[];
-}
+const TEMP_CENTER = [51.481667, -0.191111] as LatLngExpression;
+const TEMP_ZOOM = 17;
 
-export default function DynamicMap({ teams }: Props) {
+export default function DynamicMap() {
   return (
-    <MapContainer
-      center={[51.505, -0.09]}
-      zoom={13}
-      scrollWheelZoom={true}
-      className="h-full"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      {teams.map((team) => (
-        <Marker
-          position={[team.latitude, team.longitude]}
-          key={team.id}
-          icon={
-            new Icon({
-              iconUrl: markerIconPng.src,
-              iconSize: [25, 41],
-              iconAnchor: [12, 41],
-            })
-          }
-        >
-          <Popup>{team.name}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <>
+      <MapContainer
+        center={TEMP_CENTER}
+        zoom={TEMP_ZOOM}
+        scrollWheelZoom={true}
+        className="h-full"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+      </MapContainer>
+    </>
   );
 }
