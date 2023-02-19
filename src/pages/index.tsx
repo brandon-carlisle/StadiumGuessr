@@ -3,17 +3,9 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { increment, decrement } from "../store/features/counter/counterSlice";
 
 const Home: NextPage = () => {
   const { data, status } = useSession();
-  const count = useAppSelector((state) => state.counter.value);
-  const dipatch = useAppDispatch();
-
-  const handleIncrementClick = () => {
-    dipatch(increment());
-  };
 
   const handleSignIn = () => {
     signIn("discord").catch((err) => console.error(err));
@@ -43,12 +35,6 @@ const Home: NextPage = () => {
               knowledge. You will get placed at a random stadium around Europe
               and you will have to guess various facts about it.
             </p>
-
-            <p>Counter State: {count}</p>
-            <button className="btn-primary btn" onClick={handleIncrementClick}>
-              Increment
-            </button>
-            <button className="btn-primary btn">Decrement</button>
 
             <div className="flex items-center justify-center gap-4">
               {status === "loading" || status === "unauthenticated" ? (
