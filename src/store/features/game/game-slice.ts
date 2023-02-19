@@ -1,13 +1,14 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { type Team } from "@prisma/client";
 
 interface gameState {
   score: number;
-  currentTeamId: string | null;
+  currentTeam: Team | null;
 }
 
 const initialState: gameState = {
   score: 0,
-  currentTeamId: null,
+  currentTeam: null,
 };
 
 const gameSlice = createSlice({
@@ -20,11 +21,11 @@ const gameSlice = createSlice({
     decrementScore(state, action: PayloadAction<number>) {
       state.score -= action.payload;
     },
-    setCurrentTeamId(state, action: PayloadAction<string>) {
-      state.currentTeamId = action.payload;
+    updateTeam(state, action: PayloadAction<Team>) {
+      state.currentTeam = action.payload;
     },
   },
 });
 
-export const { incrementScore, decrementScore } = gameSlice.actions;
+export const { incrementScore, decrementScore, updateTeam } = gameSlice.actions;
 export default gameSlice.reducer;
