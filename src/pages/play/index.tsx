@@ -2,10 +2,10 @@ import { type GetServerSidePropsContext } from "next";
 import { getServerAuthSession } from "../../server/auth";
 import dynamic from "next/dynamic";
 import { prisma } from "../../server/db";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppDispatch } from "../../store/hooks";
 import { type Team } from "@prisma/client";
 import { updateTeam } from "../../store/features/game/game-slice";
-import { useRef } from "react";
+import Score from "../../components/Score";
 
 // Leaflet needs the window object, so this needs to have dynamic import
 const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
@@ -38,7 +38,6 @@ interface PlayPageProps {
 
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
-  const score = useAppSelector((state) => state.game.score);
 
   function handleUpdateTeam() {
     // temp to simulate team change
@@ -50,19 +49,12 @@ export default function PlayPage({ teams }: PlayPageProps) {
   return (
     <main className="relative flex h-full flex-col">
       <div className="navbar">
-        <button className="btn-primary btn" onClick={handleUpdateTeam}>
-          Update team
+        <button onClick={handleUpdateTeam} className="btn-info btn">
+          Change
         </button>
       </div>
-
       <DynamicMap />
-
-      <div className="stats absolute bottom-5 left-1/2 z-[9999] -translate-x-1/2 shadow-lg">
-        <div className="stat">
-          <div className="stat-title">Current Score</div>
-          <div className="stat-value text-center">{score}</div>
-        </div>
-      </div>
+      <Score />
     </main>
   );
 }
