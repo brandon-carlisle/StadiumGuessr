@@ -39,7 +39,6 @@ interface PlayPageProps {
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
   const score = useAppSelector((state) => state.game.score);
-  const mapRef = useRef(null);
 
   function handleUpdateTeam() {
     // temp to simulate team change
@@ -56,7 +55,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
         </button>
       </div>
 
-      <DynamicMap ref={mapRef} />
+      <DynamicMap />
 
       <div className="stats absolute bottom-5 left-1/2 z-[9999] -translate-x-1/2 shadow-lg">
         <div className="stat">
