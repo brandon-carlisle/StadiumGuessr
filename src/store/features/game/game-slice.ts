@@ -6,13 +6,15 @@ interface gameState {
   currentTeam: Team | null;
   teamsLeft: number;
   timeRemaining: number;
+  gameOngoing: boolean;
 }
 
 const initialState: gameState = {
   score: 0,
   currentTeam: null,
   teamsLeft: 20,
-  timeRemaining: 120,
+  timeRemaining: 180,
+  gameOngoing: false,
 };
 
 const gameSlice = createSlice({
@@ -32,7 +34,14 @@ const gameSlice = createSlice({
       if (state.teamsLeft) state.teamsLeft--;
     },
     updateTimeRemaining(state) {
-      state.timeRemaining--;
+      if (!state.gameOngoing) {
+        state.timeRemaining = 0;
+      } else {
+        state.timeRemaining--;
+      }
+    },
+    setGameOngoing(state, action: PayloadAction<boolean>) {
+      state.gameOngoing = action.payload;
     },
   },
 });
@@ -43,5 +52,6 @@ export const {
   updateTeam,
   removeTeamLeft,
   updateTimeRemaining,
+  setGameOngoing,
 } = gameSlice.actions;
 export default gameSlice.reducer;

@@ -4,8 +4,12 @@ import dynamic from "next/dynamic";
 import { prisma } from "../../server/db";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { type Team } from "@prisma/client";
-import { updateTeam } from "../../store/features/game/game-slice";
-import Score from "../../components/Score";
+import {
+  setGameOngoing,
+  updateTeam,
+  updateTimeRemaining,
+} from "../../store/features/game/game-slice";
+
 import { useEffect, useState } from "react";
 import Stats from "../../components/Stats";
 
@@ -39,33 +43,49 @@ interface PlayPageProps {
 }
 
 export default function PlayPage({ teams }: PlayPageProps) {
-  const [rounds, setRounds] = useState<Team[]>();
-  const teamsLeft = useAppSelector((state) => state.game.teamsLeft);
-
   const dispatch = useAppDispatch();
+  const currentTeamID = useAppSelector((state) => state.game.currentTeam?.id);
+  const gameOngoing = useAppSelector((state) => state.game.gameOngoing);
+  const timeRemaining = useAppSelector((state) => state.game.timeRemaining);
 
   useEffect(() => {
-    setRounds(teams);
-  }, [teams]);
+    dispatch(setGameOngoing(true));
+    dispatch(updateTeam(teams[0]));
+  }, [dispatch, teams]);
 
-  function handleUpdateTeam() {
-    // temp to simulate team change
-    if (teams[5]) {
-      dispatch(updateTeam(teams[5]));
+  useEffect(() => {
+    const timer = setInterval(() => {
+      dispatch(updateTimeRemaining());
+    }, 1000);
+
+    if (timeRemaining < 1) {
+      dispatch(setGameOngoing(false));
+      clearInterval(timer);
+    }
+
+    return () => clearInterval(timer);
+  });
+
+  function handleNextTeam() {
+    const currentTeamIndex = teams.findIndex(
+      (team) => currentTeamID === team.id
+    );
+
+    const nextTeamIndex = currentTeamIndex + 1;
+
+    if (nextTeamIndex < teams.length) {
+      dispatch(updateTeam(teams[nextTeamIndex]));
+    } else {
+      dispatch(setGameOngoing(false));
     }
   }
 
   return (
     <main className="relative flex h-full flex-col">
       <div className="navbar justify-between">
-        <button onClick={handleUpdateTeam} className="btn-info btn">
+        <button onClick={handleNextTeam} className="btn-info btn">
           Change
         </button>
-        {teamsLeft ? (
-          <div className="text-info">{teamsLeft} stadiums remaining</div>
-        ) : (
-          <div className="text-info">No stadiums remaining</div>
-        )}
       </div>
       <DynamicMap />
       <Stats />
