@@ -4,11 +4,15 @@ import { type Team } from "@prisma/client";
 interface gameState {
   score: number;
   currentTeam: Team | null;
+  teamsLeft: number;
+  timeRemaining: number;
 }
 
 const initialState: gameState = {
   score: 0,
   currentTeam: null,
+  teamsLeft: 20,
+  timeRemaining: 120,
 };
 
 const gameSlice = createSlice({
@@ -24,8 +28,20 @@ const gameSlice = createSlice({
     updateTeam(state, action: PayloadAction<Team>) {
       state.currentTeam = action.payload;
     },
+    removeTeamLeft(state) {
+      if (state.teamsLeft) state.teamsLeft--;
+    },
+    updateTimeRemaining(state) {
+      state.timeRemaining--;
+    },
   },
 });
 
-export const { incrementScore, decrementScore, updateTeam } = gameSlice.actions;
+export const {
+  incrementScore,
+  decrementScore,
+  updateTeam,
+  removeTeamLeft,
+  updateTimeRemaining,
+} = gameSlice.actions;
 export default gameSlice.reducer;
