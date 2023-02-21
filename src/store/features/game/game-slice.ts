@@ -3,7 +3,7 @@ import { type Team } from "@prisma/client";
 
 interface gameState {
   score: number;
-  currentTeam: Team | null;
+  currentTeam: Team;
   teamsLeft: number;
   timeRemaining: number;
   gameOngoing: boolean;
@@ -11,7 +11,14 @@ interface gameState {
 
 const initialState: gameState = {
   score: 0,
-  currentTeam: null,
+  currentTeam: {
+    id: "1",
+    name: "1",
+    stadium: "1",
+    capacity: 1,
+    latitude: 1,
+    longitude: 1,
+  },
   teamsLeft: 20,
   timeRemaining: 180,
   gameOngoing: false,
@@ -27,8 +34,9 @@ const gameSlice = createSlice({
     decrementScore(state, action: PayloadAction<number>) {
       state.score -= action.payload;
     },
-    updateTeam(state, action: PayloadAction<Team>) {
-      state.currentTeam = action.payload;
+    updateTeam(state, action: PayloadAction<Team | undefined>) {
+      if (typeof action.payload !== "undefined")
+        state.currentTeam = action.payload;
     },
     removeTeamLeft(state) {
       if (state.teamsLeft) state.teamsLeft--;

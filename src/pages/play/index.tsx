@@ -10,7 +10,7 @@ import {
   updateTimeRemaining,
 } from "../../store/features/game/game-slice";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Stats from "../../components/Stats";
 
 // Leaflet needs the window object, so this needs to have dynamic import
@@ -44,9 +44,10 @@ interface PlayPageProps {
 
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
-  const currentTeamID = useAppSelector((state) => state.game.currentTeam?.id);
-  const gameOngoing = useAppSelector((state) => state.game.gameOngoing);
+  const currentTeam = useAppSelector((state) => state.game.currentTeam);
   const timeRemaining = useAppSelector((state) => state.game.timeRemaining);
+
+  currentTeam.id;
 
   useEffect(() => {
     dispatch(setGameOngoing(true));
@@ -68,9 +69,8 @@ export default function PlayPage({ teams }: PlayPageProps) {
 
   function handleNextTeam() {
     const currentTeamIndex = teams.findIndex(
-      (team) => currentTeamID === team.id
+      (team) => currentTeam.id === team.id
     );
-
     const nextTeamIndex = currentTeamIndex + 1;
 
     if (nextTeamIndex < teams.length) {
@@ -82,12 +82,22 @@ export default function PlayPage({ teams }: PlayPageProps) {
 
   return (
     <main className="relative flex h-full flex-col">
-      <div className="navbar justify-between">
+      {/* <div className="navbar justify-center">
         <button onClick={handleNextTeam} className="btn-info btn">
           Change
         </button>
-      </div>
+      </div> */}
       <DynamicMap />
+      <div className="absolute top-8 left-1/2 z-[9999] -translate-x-1/2">
+        <form className="w-96">
+          <input
+            type="text"
+            className="input-primary input input-lg w-full text-center"
+            id="answer-input"
+            placeholder={`Who is the team of this stadium?`}
+          />
+        </form>
+      </div>
       <Stats />
     </main>
   );
