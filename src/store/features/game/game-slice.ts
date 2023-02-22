@@ -14,6 +14,7 @@ const initialState: gameState = {
   currentTeam: {
     id: "1",
     name: "1",
+    alternativeName: "1",
     stadium: "1",
     capacity: 1,
     latitude: 1,
@@ -51,6 +52,11 @@ const gameSlice = createSlice({
     setGameOngoing(state, action: PayloadAction<boolean>) {
       state.gameOngoing = action.payload;
     },
+    resetZoom(state) {
+      state.currentTeam = {
+        ...state.currentTeam,
+      };
+    },
   },
 });
 
@@ -61,5 +67,6 @@ export const {
   removeTeamLeft,
   updateTimeRemaining,
   setGameOngoing,
+  resetZoom,
 } = gameSlice.actions;
 export default gameSlice.reducer;

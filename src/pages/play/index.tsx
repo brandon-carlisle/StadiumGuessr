@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { type Team } from "@prisma/client";
 import {
   incrementScore,
+  removeTeamLeft,
+  resetZoom,
   setGameOngoing,
   updateTeam,
   updateTimeRemaining,
@@ -83,17 +85,25 @@ export default function PlayPage({ teams }: PlayPageProps) {
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (inputText.toLowerCase() === currentTeam.name.toLowerCase()) {
+    if (
+      inputText.toLowerCase() === currentTeam.name.toLowerCase() ||
+      inputText.toLowerCase() === currentTeam.alternativeName.toLowerCase()
+    ) {
       dispatch(incrementScore(5));
+      dispatch(removeTeamLeft());
       setInputText("");
       handleNextTeam();
     }
   }
 
+  function handleResetZoom() {
+    dispatch(resetZoom());
+  }
+
   return (
     <main className="relative flex h-full flex-col">
       <DynamicMap />
-      <div className="absolute top-8 left-1/2 z-[9999] -translate-x-1/2">
+      <div className="absolute top-8 left-1/2 z-[9999] flex -translate-x-1/2 flex-col items-center gap-1">
         <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
           <input
             type="text"
@@ -104,6 +114,9 @@ export default function PlayPage({ teams }: PlayPageProps) {
             onChange={(e) => setInputText(e.currentTarget.value)}
           />
         </form>
+        <button className="btn-secondary btn" onClick={handleResetZoom}>
+          Reset Zoom
+        </button>
       </div>
       <Stats />
     </main>

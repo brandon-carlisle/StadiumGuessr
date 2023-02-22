@@ -15,7 +15,10 @@ function MapSubscriber() {
   const map = useMap();
   useEffect(() => {
     if (team) {
-      map.panTo([team?.latitude, team?.longitude] as LatLngExpression);
+      map.setView(
+        [team?.latitude, team?.longitude] as LatLngExpression,
+        INTIAL_ZOOM
+      );
     }
   }, [map, team]);
 
@@ -32,8 +35,8 @@ export default function DynamicMap() {
     >
       <MapSubscriber />
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       />
     </MapContainer>
   );

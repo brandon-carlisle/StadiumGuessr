@@ -72,10 +72,11 @@ model VerificationToken {
 // New Models
 
 model Team {
-    id        String @id @default(cuid())
-    name      String
-    stadium   String
-    capacity  Int
-    latitude  Float
-    longitude Float
+    id              String @id @default(cuid())
+    name            String
+    alternativeName String @default("")
+    stadium         String
+    capacity        Int
+    latitude        Float
+    longitude       Float
 }
