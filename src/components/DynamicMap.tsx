@@ -15,7 +15,7 @@ function MapSubscriber() {
   const map = useMap();
   useEffect(() => {
     if (team) {
-      map.flyTo([team?.latitude, team?.longitude] as LatLngExpression);
+      map.panTo([team?.latitude, team?.longitude] as LatLngExpression);
     }
   }, [map, team]);
 

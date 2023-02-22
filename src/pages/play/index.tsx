@@ -5,12 +5,13 @@ import { prisma } from "../../server/db";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { type Team } from "@prisma/client";
 import {
+  incrementScore,
   setGameOngoing,
   updateTeam,
   updateTimeRemaining,
 } from "../../store/features/game/game-slice";
-
-import { useEffect } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
 import Stats from "../../components/Stats";
 
 // Leaflet needs the window object, so this needs to have dynamic import
@@ -44,10 +45,8 @@ interface PlayPageProps {
 
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
-  const currentTeam = useAppSelector((state) => state.game.currentTeam);
-  const timeRemaining = useAppSelector((state) => state.game.timeRemaining);
-
-  currentTeam.id;
+  const { currentTeam, timeRemaining } = useAppSelector((state) => state.game);
+  const [inputText, setInputText] = useState<string>("");
 
   useEffect(() => {
     dispatch(setGameOngoing(true));
@@ -79,22 +78,30 @@ export default function PlayPage({ teams }: PlayPageProps) {
       dispatch(setGameOngoing(false));
     }
   }
+  console.log("Is this rerendering?");
+
+  function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (inputText.toLowerCase() === currentTeam.name.toLowerCase()) {
+      dispatch(incrementScore(5));
+      setInputText("");
+      handleNextTeam();
+    }
+  }
 
   return (
     <main className="relative flex h-full flex-col">
-      {/* <div className="navbar justify-center">
-        <button onClick={handleNextTeam} className="btn-info btn">
-          Change
-        </button>
-      </div> */}
       <DynamicMap />
       <div className="absolute top-8 left-1/2 z-[9999] -translate-x-1/2">
-        <form className="w-96">
+        <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
           <input
             type="text"
             className="input-primary input input-lg w-full text-center"
             id="answer-input"
             placeholder={`Who is the team of this stadium?`}
+            value={inputText}
+            onChange={(e) => setInputText(e.currentTarget.value)}
           />
         </form>
       </div>
