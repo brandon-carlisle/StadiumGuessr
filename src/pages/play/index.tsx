@@ -15,7 +15,6 @@ import {
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import Stats from "../../components/Stats";
-import { number } from "zod";
 
 // Leaflet needs the window object, so this needs to have dynamic import
 const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
@@ -111,7 +110,11 @@ export default function PlayPage({ teams }: PlayPageProps) {
         break;
       case QUESTIONS["q2"]:
         // Question login
-        if (inputText.toLowerCase() === currentTeam.stadium.toLowerCase()) {
+        if (
+          inputText.toLowerCase() === currentTeam.stadium.toLowerCase() ||
+          inputText.toLowerCase() ===
+            currentTeam.alternativeStadium.toLowerCase()
+        ) {
           dispatch(incrementScore(5));
           setInputText("");
           setCurrentQuestion(QUESTIONS["q3"]);
@@ -133,6 +136,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
           setCurrentQuestion(QUESTIONS["q1"]);
           handleNextTeam();
         } else if (
+          // Check if score is in range of +/- 10k
           checkIfInRange(
             capacityGuess,
             currentTeam.capacity - 10000,
@@ -143,12 +147,12 @@ export default function PlayPage({ teams }: PlayPageProps) {
           setInputText("");
           setCurrentQuestion(QUESTIONS["q1"]);
           handleNextTeam();
-        } else {
+        } // If out of both ranges, move on with no added points
+        else {
           setInputText("");
           setCurrentQuestion(QUESTIONS["q1"]);
           handleNextTeam();
         }
-
         break;
     }
   }
