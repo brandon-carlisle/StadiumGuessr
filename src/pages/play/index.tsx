@@ -15,6 +15,7 @@ import {
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import Stats from "../../components/Stats";
+import { number } from "zod";
 
 // Leaflet needs the window object, so this needs to have dynamic import
 const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
@@ -41,6 +42,16 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   };
 }
 
+const QUESTIONS = {
+  q1: "Name the team of this stadium",
+  q2: "What is this stadium called?",
+  q3: "What is the capacity of this stadium?",
+};
+
+function checkIfInRange(capacity: number, min: number, max: number) {
+  return capacity >= min && capacity <= max;
+}
+
 interface PlayPageProps {
   teams: Team[];
 }
@@ -49,6 +60,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
   const { currentTeam, timeRemaining } = useAppSelector((state) => state.game);
   const [inputText, setInputText] = useState<string>("");
+  const [currentQuestion, setCurrentQuestion] = useState(QUESTIONS["q1"]);
 
   useEffect(() => {
     dispatch(setGameOngoing(true));
@@ -76,23 +88,68 @@ export default function PlayPage({ teams }: PlayPageProps) {
 
     if (nextTeamIndex < teams.length) {
       dispatch(updateTeam(teams[nextTeamIndex]));
+      dispatch(removeTeamLeft());
     } else {
       dispatch(setGameOngoing(false));
     }
   }
-  console.log("Is this rerendering?");
 
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (
-      inputText.toLowerCase() === currentTeam.name.toLowerCase() ||
-      inputText.toLowerCase() === currentTeam.alternativeName.toLowerCase()
-    ) {
-      dispatch(incrementScore(5));
-      dispatch(removeTeamLeft());
-      setInputText("");
-      handleNextTeam();
+    switch (currentQuestion) {
+      case QUESTIONS["q1"]:
+        // Question logic
+        if (
+          inputText.toLowerCase() === currentTeam.name.toLowerCase() ||
+          inputText.toLowerCase() === currentTeam.alternativeName.toLowerCase()
+        ) {
+          dispatch(incrementScore(5));
+          setInputText("");
+          setCurrentQuestion(QUESTIONS["q2"]);
+        }
+        break;
+      case QUESTIONS["q2"]:
+        // Question login
+        if (inputText.toLowerCase() === currentTeam.stadium.toLowerCase()) {
+          dispatch(incrementScore(5));
+          setInputText("");
+          setCurrentQuestion(QUESTIONS["q3"]);
+        }
+        break;
+      case QUESTIONS["q3"]:
+        const capacityGuess = parseInt(inputText);
+
+        // Check if score is in range of +/- 5k
+        if (
+          checkIfInRange(
+            capacityGuess,
+            currentTeam.capacity - 5000,
+            currentTeam.capacity + 5000
+          )
+        ) {
+          dispatch(incrementScore(10));
+          setInputText("");
+          setCurrentQuestion(QUESTIONS["q1"]);
+          handleNextTeam();
+        } else if (
+          checkIfInRange(
+            capacityGuess,
+            currentTeam.capacity - 10000,
+            currentTeam.capacity + 10000
+          )
+        ) {
+          dispatch(incrementScore(5));
+          setInputText("");
+          setCurrentQuestion(QUESTIONS["q1"]);
+          handleNextTeam();
+        } else {
+          setInputText("");
+          setCurrentQuestion(QUESTIONS["q1"]);
+          handleNextTeam();
+        }
+
+        break;
     }
   }
 
@@ -106,10 +163,10 @@ export default function PlayPage({ teams }: PlayPageProps) {
       <div className="absolute top-8 left-1/2 z-[9999] flex -translate-x-1/2 flex-col items-center gap-1">
         <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
           <input
-            type="text"
+            type={currentQuestion === QUESTIONS["q3"] ? "number" : "text"}
             className="input-primary input input-lg w-full text-center"
             id="answer-input"
-            placeholder={`Who is the team of this stadium?`}
+            placeholder={currentQuestion}
             value={inputText}
             onChange={(e) => setInputText(e.currentTarget.value)}
           />
