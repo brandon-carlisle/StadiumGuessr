@@ -8,6 +8,7 @@ import {
   updateTeam,
 } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useRouter } from "next/navigation";
 
 function checkIfInRange(capacity: number, min: number, max: number) {
   return capacity >= min && capacity <= max;
@@ -27,9 +28,11 @@ interface GameControlsProps {
 }
 
 export default function GameControls({ teams }: GameControlsProps) {
+  const router = useRouter();
   const [inputText, setInputText] = useState<string>("");
   const [currentQuestion, setCurrentQuestion] = useState(QUESTIONS["q1"]);
-  const { currentTeam } = useAppSelector((state) => state.game);
+  const { currentTeam, gameOngoing } = useAppSelector((state) => state.game);
+  const teamsLeft = useAppSelector((state) => state.game.teamsLeft);
   const dispatch = useAppDispatch();
 
   function handleNextTeam() {
@@ -38,7 +41,7 @@ export default function GameControls({ teams }: GameControlsProps) {
     );
     const nextTeamIndex = currentTeamIndex + 1;
 
-    if (nextTeamIndex < teams.length) {
+    if (nextTeamIndex <= teams.length) {
       dispatch(updateTeam(teams[nextTeamIndex]));
       dispatch(removeTeamLeft());
     } else {
@@ -115,6 +118,11 @@ export default function GameControls({ teams }: GameControlsProps) {
     dispatch(resetZoom());
   }
 
+  function handleCompleteGame() {
+    dispatch(setGameOngoing(false));
+    router.push("/");
+  }
+
   function handleSkipQuestion() {
     const currentQuestionIndex = Object.keys(QUESTIONS).find(
       (key) => QUESTIONS[key] === currentQuestion
@@ -132,7 +140,13 @@ export default function GameControls({ teams }: GameControlsProps) {
       return;
     }
 
-    if (currentQuestionIndex === "q3") {
+    if (currentQuestionIndex === "q3" && teamsLeft === 1) {
+      setInputText("");
+      setCurrentQuestion(QUESTIONS["q1"]);
+      handleCompleteGame();
+    }
+
+    if (currentQuestionIndex === "q3" && teamsLeft > 1) {
       setInputText("");
       setCurrentQuestion(QUESTIONS["q1"]);
       handleNextTeam();
@@ -151,12 +165,23 @@ export default function GameControls({ teams }: GameControlsProps) {
           onChange={(e) => setInputText(e.currentTarget.value)}
         />
       </form>
-      <button className="btn-secondary btn" onClick={handleResetZoom}>
-        Reset Zoom
-      </button>
-      <button className="btn-secondary btn" onClick={handleSkipQuestion}>
-        Skip Question
-      </button>
+      <div className="flex gap-2">
+        <button className="btn-secondary btn" onClick={handleResetZoom}>
+          Reset Zoom
+        </button>
+
+        {teamsLeft > 1 && (
+          <button className="btn-secondary btn" onClick={handleSkipQuestion}>
+            Skip Question
+          </button>
+        )}
+
+        {teamsLeft === 1 && (
+          <button className="btn-secondary btn" onClick={handleCompleteGame}>
+            Finish Game
+          </button>
+        )}
+      </div>
     </div>
   );
 }
