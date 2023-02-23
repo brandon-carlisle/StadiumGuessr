@@ -13,7 +13,10 @@ function checkIfInRange(capacity: number, min: number, max: number) {
   return capacity >= min && capacity <= max;
 }
 
-const QUESTIONS = {
+interface Questions {
+  [key: string]: string;
+}
+const QUESTIONS: Questions = {
   q1: "Name the team of this stadium",
   q2: "What is this stadium called?",
   q3: "What is the capacity of this stadium?",
@@ -46,6 +49,7 @@ export default function GameControls({ teams }: GameControlsProps) {
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // This can be DRY -- FIX THIS
     switch (currentQuestion) {
       case QUESTIONS["q1"]:
         // Question logic
@@ -111,6 +115,30 @@ export default function GameControls({ teams }: GameControlsProps) {
     dispatch(resetZoom());
   }
 
+  function handleSkipQuestion() {
+    const currentQuestionIndex = Object.keys(QUESTIONS).find(
+      (key) => QUESTIONS[key] === currentQuestion
+    );
+
+    if (currentQuestionIndex === "q1") {
+      setInputText("");
+      setCurrentQuestion(QUESTIONS["q2"]);
+      return;
+    }
+
+    if (currentQuestionIndex === "q2") {
+      setInputText("");
+      setCurrentQuestion(QUESTIONS["q3"]);
+      return;
+    }
+
+    if (currentQuestionIndex === "q3") {
+      setInputText("");
+      setCurrentQuestion(QUESTIONS["q1"]);
+      handleNextTeam();
+    }
+  }
+
   return (
     <div className="absolute top-8 left-1/2 z-[9999] flex -translate-x-1/2 flex-col items-center gap-1">
       <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
@@ -125,6 +153,9 @@ export default function GameControls({ teams }: GameControlsProps) {
       </form>
       <button className="btn-secondary btn" onClick={handleResetZoom}>
         Reset Zoom
+      </button>
+      <button className="btn-secondary btn" onClick={handleSkipQuestion}>
+        Skip Question
       </button>
     </div>
   );
