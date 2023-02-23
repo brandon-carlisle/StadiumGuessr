@@ -3,22 +3,18 @@ import { type FormEvent, useState } from "react";
 import {
   incrementScore,
   removeTeamLeft,
-  resetGame,
-  resetZoom,
   setGameOngoing,
   updateTeam,
 } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { useRouter } from "next/navigation";
+import { checkIfInRange } from "../utils/utils";
+import ResetZoom from "./ResetZoom";
+import SkipControls from "./SkipControls";
 
-function checkIfInRange(capacity: number, min: number, max: number) {
-  return capacity >= min && capacity <= max;
-}
-
-interface Questions {
+export interface Questions {
   [key: string]: string;
 }
-const QUESTIONS: Questions = {
+const GAME_QUESTIONS: Questions = {
   q1: "Name the team of this stadium",
   q2: "What is this stadium called?",
   q3: "What is the capacity of this stadium?",
@@ -29,11 +25,9 @@ interface GameControlsProps {
 }
 
 export default function GameControls({ teams }: GameControlsProps) {
-  const router = useRouter();
   const [inputText, setInputText] = useState<string>("");
-  const [currentQuestion, setCurrentQuestion] = useState(QUESTIONS["q1"]);
-  const { currentTeam, gameOngoing } = useAppSelector((state) => state.game);
-  const teamsLeft = useAppSelector((state) => state.game.teamsLeft);
+  const [currentQuestion, setCurrentQuestion] = useState(GAME_QUESTIONS["q1"]);
+  const { currentTeam } = useAppSelector((state) => state.game);
   const dispatch = useAppDispatch();
 
   function handleNextTeam() {
@@ -55,7 +49,7 @@ export default function GameControls({ teams }: GameControlsProps) {
 
     // This can be DRY -- FIX THIS
     switch (currentQuestion) {
-      case QUESTIONS["q1"]:
+      case GAME_QUESTIONS["q1"]:
         // Question logic
         if (
           inputText.toLowerCase() === currentTeam.name.toLowerCase() ||
@@ -63,10 +57,10 @@ export default function GameControls({ teams }: GameControlsProps) {
         ) {
           dispatch(incrementScore(5));
           setInputText("");
-          setCurrentQuestion(QUESTIONS["q2"]);
+          setCurrentQuestion(GAME_QUESTIONS["q2"]);
         }
         break;
-      case QUESTIONS["q2"]:
+      case GAME_QUESTIONS["q2"]:
         // Question login
         if (
           inputText.toLowerCase() === currentTeam.stadium.toLowerCase() ||
@@ -75,10 +69,10 @@ export default function GameControls({ teams }: GameControlsProps) {
         ) {
           dispatch(incrementScore(5));
           setInputText("");
-          setCurrentQuestion(QUESTIONS["q3"]);
+          setCurrentQuestion(GAME_QUESTIONS["q3"]);
         }
         break;
-      case QUESTIONS["q3"]:
+      case GAME_QUESTIONS["q3"]:
         const capacityGuess = parseInt(inputText);
 
         // Check if score is in range of +/- 5k
@@ -91,7 +85,7 @@ export default function GameControls({ teams }: GameControlsProps) {
         ) {
           dispatch(incrementScore(10));
           setInputText("");
-          setCurrentQuestion(QUESTIONS["q1"]);
+          setCurrentQuestion(GAME_QUESTIONS["q1"]);
           handleNextTeam();
         } else if (
           // Check if score is in range of +/- 10k
@@ -103,65 +97,23 @@ export default function GameControls({ teams }: GameControlsProps) {
         ) {
           dispatch(incrementScore(5));
           setInputText("");
-          setCurrentQuestion(QUESTIONS["q1"]);
+          setCurrentQuestion(GAME_QUESTIONS["q1"]);
           handleNextTeam();
         } // If out of both ranges, move on with no added points
         else {
           setInputText("");
-          setCurrentQuestion(QUESTIONS["q1"]);
+          setCurrentQuestion(GAME_QUESTIONS["q1"]);
           handleNextTeam();
         }
         break;
     }
   }
 
-  function handleResetZoom() {
-    dispatch(resetZoom());
-  }
-
-  // Improve this logic
-  function handleCompleteGame() {
-    dispatch(resetGame());
-    router.replace("/");
-  }
-
-  const currentQuestionIndex = Object.keys(QUESTIONS).find(
-    (key) => QUESTIONS[key] === currentQuestion
-  );
-
-  function handleSkipQuestion() {
-    if (currentQuestionIndex === "q1") {
-      setInputText("");
-      setCurrentQuestion(QUESTIONS["q2"]);
-      return;
-    }
-
-    if (currentQuestionIndex === "q2") {
-      setInputText("");
-      setCurrentQuestion(QUESTIONS["q3"]);
-      return;
-    }
-
-    if (currentQuestionIndex === "q3" && teamsLeft === 1) {
-      setInputText("");
-      setCurrentQuestion(QUESTIONS["q1"]);
-      handleCompleteGame();
-    }
-
-    if (currentQuestionIndex === "q3" && teamsLeft > 1) {
-      setInputText("");
-      setCurrentQuestion(QUESTIONS["q1"]);
-      handleNextTeam();
-    }
-  }
-
-  const isFinalQuestion = currentQuestionIndex === "q3" && teamsLeft === 1;
-
   return (
     <div className="absolute top-8 left-1/2 z-[9999] flex -translate-x-1/2 flex-col items-center gap-1">
       <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
         <input
-          type={currentQuestion === QUESTIONS["q3"] ? "number" : "text"}
+          type={currentQuestion === GAME_QUESTIONS["q3"] ? "number" : "text"}
           className="input-primary input input-lg w-full text-center"
           id="answer-input"
           placeholder={currentQuestion}
@@ -170,21 +122,14 @@ export default function GameControls({ teams }: GameControlsProps) {
         />
       </form>
       <div className="flex gap-2">
-        <button className="btn-secondary btn" onClick={handleResetZoom}>
-          Reset Zoom
-        </button>
-
-        {!isFinalQuestion && (
-          <button className="btn-secondary btn" onClick={handleSkipQuestion}>
-            Skip Question
-          </button>
-        )}
-
-        {isFinalQuestion && (
-          <button className="btn-secondary btn" onClick={handleCompleteGame}>
-            Finish Game
-          </button>
-        )}
+        <ResetZoom />
+        <SkipControls
+          questions={GAME_QUESTIONS}
+          setInputText={setInputText}
+          handleNextTeam={handleNextTeam}
+          currentQuestion={currentQuestion}
+          setCurrentQuestion={setCurrentQuestion}
+        />
       </div>
     </div>
   );
