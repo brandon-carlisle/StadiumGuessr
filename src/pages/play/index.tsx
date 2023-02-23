@@ -45,25 +45,11 @@ interface PlayPageProps {
 
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
-  const { timeRemaining } = useAppSelector((state) => state.game);
 
   useEffect(() => {
     dispatch(setGameOngoing(true));
     dispatch(updateTeam(teams[0]));
   }, [dispatch, teams]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      dispatch(updateTimeRemaining());
-    }, 1000);
-
-    if (timeRemaining < 1) {
-      dispatch(setGameOngoing(false));
-      clearInterval(timer);
-    }
-
-    return () => clearInterval(timer);
-  });
 
   return (
     <main className="relative flex h-full flex-col">

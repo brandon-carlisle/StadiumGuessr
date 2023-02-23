@@ -118,16 +118,18 @@ export default function GameControls({ teams }: GameControlsProps) {
     dispatch(resetZoom());
   }
 
+  // Improve this logic
   function handleCompleteGame() {
     dispatch(setGameOngoing(false));
-    router.push("/");
+    dispatch(removeTeamLeft());
+    router.replace("/");
   }
 
-  function handleSkipQuestion() {
-    const currentQuestionIndex = Object.keys(QUESTIONS).find(
-      (key) => QUESTIONS[key] === currentQuestion
-    );
+  const currentQuestionIndex = Object.keys(QUESTIONS).find(
+    (key) => QUESTIONS[key] === currentQuestion
+  );
 
+  function handleSkipQuestion() {
     if (currentQuestionIndex === "q1") {
       setInputText("");
       setCurrentQuestion(QUESTIONS["q2"]);
@@ -153,6 +155,8 @@ export default function GameControls({ teams }: GameControlsProps) {
     }
   }
 
+  const isFinalQuestion = currentQuestionIndex === "q3" && teamsLeft === 1;
+
   return (
     <div className="absolute top-8 left-1/2 z-[9999] flex -translate-x-1/2 flex-col items-center gap-1">
       <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
@@ -170,13 +174,13 @@ export default function GameControls({ teams }: GameControlsProps) {
           Reset Zoom
         </button>
 
-        {teamsLeft > 1 && (
+        {!isFinalQuestion && (
           <button className="btn-secondary btn" onClick={handleSkipQuestion}>
             Skip Question
           </button>
         )}
 
-        {teamsLeft === 1 && (
+        {isFinalQuestion && (
           <button className="btn-secondary btn" onClick={handleCompleteGame}>
             Finish Game
           </button>
