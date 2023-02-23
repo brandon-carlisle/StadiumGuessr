@@ -3,6 +3,7 @@ import { type FormEvent, useState } from "react";
 import {
   incrementScore,
   removeTeamLeft,
+  resetGame,
   resetZoom,
   setGameOngoing,
   updateTeam,
@@ -120,8 +121,7 @@ export default function GameControls({ teams }: GameControlsProps) {
 
   // Improve this logic
   function handleCompleteGame() {
-    dispatch(setGameOngoing(false));
-    dispatch(removeTeamLeft());
+    dispatch(resetGame());
     router.replace("/");
   }
 

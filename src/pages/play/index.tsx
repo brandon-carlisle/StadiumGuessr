@@ -47,6 +47,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    // Refactor to start game reducer
     dispatch(setGameOngoing(true));
     dispatch(updateTeam(teams[0]));
   }, [dispatch, teams]);

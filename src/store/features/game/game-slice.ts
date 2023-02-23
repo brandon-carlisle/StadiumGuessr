@@ -16,6 +16,7 @@ const initialState: gameState = {
     name: "1",
     alternativeName: "1",
     stadium: "1",
+    alternativeStadium: "",
     capacity: 1,
     latitude: 1,
     longitude: 1,
@@ -57,6 +58,13 @@ const gameSlice = createSlice({
         ...state.currentTeam,
       };
     },
+    resetGame(state) {
+      state.score = initialState.score;
+      state.currentTeam = initialState.currentTeam;
+      state.teamsLeft = initialState.teamsLeft;
+      state.timeRemaining = initialState.timeRemaining;
+      state.gameOngoing = initialState.gameOngoing;
+    },
   },
 });
 
@@ -68,5 +76,6 @@ export const {
   updateTimeRemaining,
   setGameOngoing,
   resetZoom,
+  resetGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;
