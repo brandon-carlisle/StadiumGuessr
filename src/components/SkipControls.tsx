@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 interface SkipControlsProps {
   questions: Questions;
   setInputText: Dispatch<SetStateAction<string>>;
+  currentQuestion: string | undefined;
   setCurrentQuestion: Dispatch<SetStateAction<string | undefined>>;
   handleNextTeam: () => void;
-  currentQuestion: string | undefined;
 }
 
 export default function SkipControls({
