@@ -1,8 +1,7 @@
-import { resetGame } from "../store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { type Questions } from "./GameControls";
 import type { Dispatch, SetStateAction } from "react";
-import { useRouter } from "next/navigation";
+import { updateUserHasFinishedGame } from "../store/features/game/game-slice";
 
 interface SkipControlsProps {
   questions: Questions;
@@ -15,13 +14,12 @@ interface SkipControlsProps {
 export default function SkipControls({
   questions,
   setInputText,
+  currentQuestion,
   setCurrentQuestion,
   handleNextTeam,
-  currentQuestion,
 }: SkipControlsProps) {
-  const dispatch = useAppDispatch();
   const { teamsLeft } = useAppSelector((state) => state.game);
-  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const currentQuestionIndex = Object.keys(questions).find(
     (key) => questions[key] === currentQuestion
@@ -45,7 +43,6 @@ export default function SkipControls({
     if (currentQuestionIndex === "q3" && teamsLeft === 1) {
       setInputText("");
       setCurrentQuestion(questions["q1"]);
-      handleCompleteGame();
     }
 
     if (currentQuestionIndex === "q3" && teamsLeft > 1) {
@@ -56,8 +53,7 @@ export default function SkipControls({
   }
 
   function handleCompleteGame() {
-    dispatch(resetGame());
-    router.replace("/");
+    dispatch(updateUserHasFinishedGame(true));
   }
 
   return (

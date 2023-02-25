@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import {
-  setGameOngoing,
   updateTimeRemaining,
+  updateUserHasFinishedGame,
 } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 
@@ -15,7 +15,7 @@ export default function TimeRemaining() {
     }, 1000);
 
     if (time < 1) {
-      dispatch(setGameOngoing(false));
+      dispatch(updateUserHasFinishedGame(true));
       clearInterval(timer);
     }
 

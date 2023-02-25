@@ -6,7 +6,7 @@ interface gameState {
   currentTeam: Team;
   teamsLeft: number;
   timeRemaining: number;
-  gameOngoing: boolean;
+  userHasFinishedGame: boolean;
 }
 
 const initialState: gameState = {
@@ -22,8 +22,8 @@ const initialState: gameState = {
     longitude: 1,
   },
   teamsLeft: 20,
-  timeRemaining: 180,
-  gameOngoing: false,
+  timeRemaining: 20,
+  userHasFinishedGame: false,
 };
 
 const gameSlice = createSlice({
@@ -41,17 +41,10 @@ const gameSlice = createSlice({
         state.currentTeam = action.payload;
     },
     removeTeamLeft(state) {
-      if (state.teamsLeft) state.teamsLeft--;
+      state.teamsLeft--;
     },
     updateTimeRemaining(state) {
-      if (!state.gameOngoing) {
-        state.timeRemaining = 0;
-      } else {
-        state.timeRemaining--;
-      }
-    },
-    setGameOngoing(state, action: PayloadAction<boolean>) {
-      state.gameOngoing = action.payload;
+      state.timeRemaining--;
     },
     resetZoom(state) {
       state.currentTeam = {
@@ -63,7 +56,15 @@ const gameSlice = createSlice({
       state.currentTeam = initialState.currentTeam;
       state.teamsLeft = initialState.teamsLeft;
       state.timeRemaining = initialState.timeRemaining;
-      state.gameOngoing = initialState.gameOngoing;
+    },
+    updateUserHasFinishedGame(state, action: PayloadAction<boolean>) {
+      state.userHasFinishedGame = action.payload;
+
+      // Check if can call other reducer in here
+      state.score = initialState.score;
+      state.currentTeam = initialState.currentTeam;
+      state.teamsLeft = initialState.teamsLeft;
+      state.timeRemaining = initialState.timeRemaining;
     },
   },
 });
@@ -74,8 +75,8 @@ export const {
   updateTeam,
   removeTeamLeft,
   updateTimeRemaining,
-  setGameOngoing,
   resetZoom,
   resetGame,
+  updateUserHasFinishedGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;

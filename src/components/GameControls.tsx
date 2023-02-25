@@ -2,8 +2,8 @@ import { type Team } from "@prisma/client";
 import { useState } from "react";
 import {
   removeTeamLeft,
-  setGameOngoing,
   updateTeam,
+  updateUserHasFinishedGame,
 } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 
@@ -40,7 +40,7 @@ export default function GameControls({ teams }: GameControlsProps) {
       dispatch(updateTeam(teams[nextTeamIndex]));
       dispatch(removeTeamLeft());
     } else {
-      dispatch(setGameOngoing(false));
+      dispatch(removeTeamLeft());
     }
   }
 

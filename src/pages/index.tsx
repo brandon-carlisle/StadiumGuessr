@@ -1,10 +1,9 @@
-import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 
-const Home: NextPage = () => {
+function Home() {
   const { data, status } = useSession();
 
   const handleSignIn = () => {
@@ -78,6 +77,6 @@ const Home: NextPage = () => {
       </main>
     </>
   );
-};
+}
 
 export default Home;
