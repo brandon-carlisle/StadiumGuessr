@@ -1,10 +1,6 @@
 import { type Team } from "@prisma/client";
 import { useState } from "react";
-import {
-  removeTeamLeft,
-  updateTeam,
-  updateUserHasFinishedGame,
-} from "../store/features/game/game-slice";
+import { removeTeamLeft, updateTeam } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 import AnswerForm from "./AnswerForm";
