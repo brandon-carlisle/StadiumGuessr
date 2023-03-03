@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../server/db";
 
-interface ResponseData {
+export interface ResponseData {
   message: string;
 }
 

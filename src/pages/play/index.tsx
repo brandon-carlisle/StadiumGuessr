@@ -38,6 +38,11 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   };
 }
 
+export interface MatchData {
+  score: number;
+  user: string | undefined;
+}
+
 interface PlayPageProps {
   teams: Team[];
 }
@@ -58,19 +63,10 @@ export default function PlayPage({ teams }: PlayPageProps) {
   // Once score has been uploaded -> redirect to leaderboard page
 
   if (userHasFinishedGame) {
-    const uploadMatchData = async () => {
-      const matchData = {
-        score,
-        user: session?.user.id,
-      };
-
-      const data = await fetch("/api/upload-match", {
-        method: "POST",
-        body: JSON.stringify(matchData),
-      });
+    const matchData: MatchData = {
+      score,
+      user: session?.user.id,
     };
-
-    uploadMatchData();
   }
 
   return (
