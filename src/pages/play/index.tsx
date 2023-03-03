@@ -3,13 +3,15 @@ import { getServerAuthSession } from "../../server/auth";
 import dynamic from "next/dynamic";
 import { prisma } from "../../server/db";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { type Team } from "@prisma/client";
+import { Match, type Team } from "@prisma/client";
 import { updateTeam } from "../../store/features/game/game-slice";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Stats from "../../components/Stats";
 import GameControls from "../../components/GameControls";
-import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
 // Leaflet needs the window object, so this needs to have dynamic import
 const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
@@ -42,18 +44,33 @@ interface PlayPageProps {
 
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
-  const { userHasFinishedGame } = useAppSelector((state) => state.game);
-
-  const router = useRouter();
+  const { userHasFinishedGame, score } = useAppSelector((state) => state.game);
+  const { data: session } = useSession();
 
   useEffect(() => {
     // Refactor to start game reducer
     dispatch(updateTeam(teams[0]));
   }, [dispatch, teams]);
 
-  // TODO: If timer ran out or questions ran out, redirect to 'finished' page
+  // TODO:
+  // When game has finished:
+  // Upload score and user (match data) to db
+  // Once score has been uploaded -> redirect to leaderboard page
+
   if (userHasFinishedGame) {
-    router.push("/finish");
+    const uploadMatchData = async () => {
+      const matchData = {
+        score,
+        user: session?.user.id,
+      };
+
+      const data = await fetch("/api/upload-match", {
+        method: "POST",
+        body: JSON.stringify(matchData),
+      });
+    };
+
+    uploadMatchData();
   }
 
   return (
@@ -64,5 +81,3 @@ export default function PlayPage({ teams }: PlayPageProps) {
     </main>
   );
 }
-
-// TODO: Add head and meta tags

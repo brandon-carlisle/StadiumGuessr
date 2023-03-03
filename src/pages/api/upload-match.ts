@@ -5,13 +5,14 @@ interface ResponseData {
   message: string;
 }
 
-export default async function handler(
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
-    res.status(200).json({ message: "A response message" });
-
-    const data = await prisma.match.create({ data: { score: 1, userId: "" } });
+    res.status(200).json({ message: "This was a POST REQUEST." });
+  } else {
+    // Handle any other HTTP method
+    res.status(405).json({ message: "Only POST requests are allowed." });
   }
 }
