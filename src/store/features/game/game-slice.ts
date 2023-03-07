@@ -59,12 +59,6 @@ const gameSlice = createSlice({
     },
     updateUserHasFinishedGame(state, action: PayloadAction<boolean>) {
       state.userHasFinishedGame = action.payload;
-
-      // Check if can call other reducer in here
-      state.score = initialState.score;
-      state.currentTeam = initialState.currentTeam;
-      state.teamsLeft = initialState.teamsLeft;
-      state.timeRemaining = initialState.timeRemaining;
     },
   },
 });

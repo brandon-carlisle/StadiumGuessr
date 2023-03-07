@@ -62,17 +62,28 @@ export default function PlayPage({ teams }: PlayPageProps) {
   // Upload score and user (match data) to db
   // Once score has been uploaded -> redirect to leaderboard page
 
-  if (userHasFinishedGame) {
-    const matchData: MatchData = {
-      score,
-      user: session?.user.id,
-    };
-  }
+  useEffect(() => {
+    if (userHasFinishedGame) {
+      const match: MatchData = {
+        score,
+        user: session?.user.id,
+      };
+
+      async function uploadMatch() {
+        await fetch("/api/upload-match", {
+          method: "POST",
+          body: JSON.stringify(match),
+        });
+      }
+
+      void uploadMatch();
+    }
+  }, [score, session?.user.id, userHasFinishedGame]);
 
   return (
     <main className="relative flex h-full flex-col">
       <DynamicMap />
-      <GameControls teams={teams} />
+      {!userHasFinishedGame && <GameControls teams={teams} />}
       <Stats />
     </main>
   );
