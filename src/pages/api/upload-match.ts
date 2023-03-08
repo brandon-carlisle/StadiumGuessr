@@ -4,19 +4,15 @@ export interface ResponseData {
   message: string;
 }
 
-interface HandlerProps {
-  req: NextApiRequest;
-  res: NextApiResponse<ResponseData>;
-}
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseData>
+) {
+  console.log(req.body);
 
-export default function handler({ req, res }: HandlerProps) {
-  const FAKE_RESPONSE = {
-    message: "Hello from API.",
-  };
-
-  if (req.method !== "POST") {
-    res.status(405).json({ message: "Only POST requests are allowed." });
+  if (req.method === "POST") {
+    res.status(200).json({ message: "Hello from API." });
   } else {
-    res.status(200).json(FAKE_RESPONSE);
+    res.status(405).json({ message: "Only POST requests are allowed." });
   }
 }
