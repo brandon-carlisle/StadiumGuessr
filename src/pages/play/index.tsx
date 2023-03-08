@@ -3,14 +3,11 @@ import { getServerAuthSession } from "../../server/auth";
 import dynamic from "next/dynamic";
 import { prisma } from "../../server/db";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { Match, type Team } from "@prisma/client";
+import { type Team } from "@prisma/client";
 import { updateTeam } from "../../store/features/game/game-slice";
-
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Stats from "../../components/Stats";
 import GameControls from "../../components/GameControls";
-import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 
 // Leaflet needs the window object, so this needs to have dynamic import
@@ -57,11 +54,6 @@ export default function PlayPage({ teams }: PlayPageProps) {
     dispatch(updateTeam(teams[0]));
   }, [dispatch, teams]);
 
-  // TODO:
-  // When game has finished:
-  // Upload score and user (match data) to db
-  // Once score has been uploaded -> redirect to leaderboard page
-
   useEffect(() => {
     if (userHasFinishedGame) {
       const match: MatchData = {
@@ -72,6 +64,9 @@ export default function PlayPage({ teams }: PlayPageProps) {
       async function uploadMatch() {
         await fetch("/api/upload-match", {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(match),
         });
       }
