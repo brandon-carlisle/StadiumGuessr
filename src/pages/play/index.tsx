@@ -75,6 +75,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
 
         if (!res.ok) return;
 
+        // TODO Fix hacky stuff
         const data = (await res.json()) as Promise<ResponseData>;
 
         if ((await data).message === "completed") {
