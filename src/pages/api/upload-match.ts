@@ -10,7 +10,8 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 }
 
 export interface ResponseData {
-  message: string;
+  message?: "completed" | "failed";
+  error?: string;
 }
 
 export default async function handler(
@@ -18,23 +19,23 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
-    res.status(200).json({ message: "Hello from API." });
-
     const { score, user } = req.body;
 
     try {
       await prisma.match.create({
         data: { score, userId: user },
       });
+
+      res.status(200).json({ message: "completed" });
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "failed" });
     }
   } else {
-    res.status(405).json({ message: "Only POST requests are allowed." });
+    res.status(405).json({ error: "Request must be a POST" });
   }
 }
 
 // TODO:
 // 1) Get the user from the body FIXED
 // 2) Use prisma to update that users Matches with new match FIXED
-// 3) Redirect to ('/leaderboard or /scores')
+// 3) Redirect to ('/leaderboard or /scores') -- this is on client
