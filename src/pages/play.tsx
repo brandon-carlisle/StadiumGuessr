@@ -30,7 +30,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
   }
   const teams = await prisma.team.findMany();
-  console.log("⚽ Some team info here: ", teams[1]);
 
   return {
     props: { teams },

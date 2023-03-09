@@ -1,16 +1,11 @@
+import type { Match } from "@prisma/client";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { getServerAuthSession } from "../server/auth";
 import { prisma } from "../server/db";
 import { resetGame } from "../store/features/game/game-slice";
 import { useAppDispatch } from "../store/hooks";
-
-interface LeaderboardEntry {
-  score: number;
-  user: string;
-  date: string;
-}
-type Leaderboard = LeaderboardEntry[];
+import superjson from "superjson";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getServerAuthSession(ctx);
@@ -24,24 +19,40 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
   }
 
-  const matches = await prisma.match.findMany({ take: 10 });
-
-  console.log(matches);
-
-  const FAKE_LEADERBOARD: Leaderboard = [
-    {
-      score: 20,
-      user: "beanz",
-      date: "09/03/23",
+  const allMatches = await prisma.match.findMany({
+    orderBy: {
+      score: "desc",
     },
-  ];
+    take: 10,
+    select: { date: true, score: true, User: { select: { name: true } } },
+  });
+
+  console.log(allMatches);
+
+  // const recentMatchFromUser = await prisma.match.findMany({
+  //   where: {
+  //     userId: { equals: session.user.id },
+  //   },
+
+  //   orderBy: {
+  //     date: "desc",
+  //   },
+  // });
+
+  const leaderboard = superjson.stringify(allMatches);
+
+  // console.log(leaderboard);
 
   return {
-    props: { FAKE_LEADERBOARD },
+    props: { leaderboard },
   };
 }
 
-export default function Leaderboard() {
+interface LeaderboardProps {
+  allMatches: Match[];
+}
+
+export default function Leaderboard({ allMatches }: LeaderboardProps) {
   const dispatch = useAppDispatch();
 
   return (
