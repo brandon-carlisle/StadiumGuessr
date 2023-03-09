@@ -56,6 +56,7 @@ const gameSlice = createSlice({
       state.currentTeam = initialState.currentTeam;
       state.teamsLeft = initialState.teamsLeft;
       state.timeRemaining = initialState.timeRemaining;
+      state.userHasFinishedGame = false;
     },
     updateUserHasFinishedGame(state, action: PayloadAction<boolean>) {
       state.userHasFinishedGame = action.payload;

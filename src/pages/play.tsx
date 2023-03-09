@@ -1,19 +1,19 @@
 import { type GetServerSidePropsContext } from "next";
-import { getServerAuthSession } from "../../server/auth";
+import { getServerAuthSession } from "../server/auth";
 import dynamic from "next/dynamic";
-import { prisma } from "../../server/db";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { prisma } from "../server/db";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { type Team } from "@prisma/client";
-import { updateTeam } from "../../store/features/game/game-slice";
-import { useEffect } from "react";
-import Stats from "../../components/Stats";
-import GameControls from "../../components/GameControls";
+import { updateTeam } from "../store/features/game/game-slice";
+import { useEffect, useMemo } from "react";
+import Stats from "../components/Stats";
+import GameControls from "../components/GameControls";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { type ResponseData } from "../api/upload-match";
+import { type ResponseData } from "./api/upload-match";
 
 // Leaflet needs the window object, so this needs to have dynamic import
-const DynamicMap = dynamic(() => import("../../components/DynamicMap"), {
+const DynamicMap = dynamic(() => import("../components/DynamicMap"), {
   ssr: false,
   loading: () => <p className="text-4xl font-semibold">Map is loading..</p>,
 });
@@ -46,16 +46,25 @@ interface PlayPageProps {
   teams: Team[];
 }
 
+function shuffleTeams(input: Team[]) {
+  return input
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
+
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
   const { userHasFinishedGame, score } = useAppSelector((state) => state.game);
   const { data: session } = useSession();
   const router = useRouter();
 
+  const shuffledTeams = useMemo(() => shuffleTeams(teams), [teams]);
+
   useEffect(() => {
     // TODO Refactor to start game reducer
-    dispatch(updateTeam(teams[0]));
-  }, [dispatch, teams]);
+    dispatch(updateTeam(shuffledTeams[0]));
+  }, [dispatch, shuffledTeams]);
 
   useEffect(() => {
     if (userHasFinishedGame) {
@@ -97,7 +106,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
   return (
     <main className="relative flex h-full flex-col">
       <DynamicMap />
-      {!userHasFinishedGame && <GameControls teams={teams} />}
+      {!userHasFinishedGame && <GameControls teams={shuffledTeams} />}
       <Stats />
     </main>
   );

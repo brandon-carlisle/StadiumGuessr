@@ -2,17 +2,24 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAppDispatch } from "../store/hooks";
+import { useEffect } from "react";
+import { resetGame } from "../store/features/game/game-slice";
 
 function Home() {
   const { data, status } = useSession();
-
   const handleSignIn = () => {
     signIn("discord").catch((err) => console.error(err));
   };
-
   const handleSignOut = () => {
     signOut().catch((err) => console.error(err));
   };
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(resetGame());
+  }, [dispatch]);
 
   return (
     <>
