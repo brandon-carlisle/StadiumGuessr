@@ -24,35 +24,55 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       score: "desc",
     },
     take: 10,
-    select: { date: true, score: true, User: { select: { name: true } } },
+    select: {
+      date: true,
+      score: true,
+      User: { select: { name: true } },
+      id: true,
+    },
+  });
+  const leaderboardString = superjson.stringify(allMatches);
+  const leaderboard = superjson.parse(leaderboardString);
+
+  const recentMatchFromUser = await prisma.match.findFirst({
+    where: {
+      userId: { equals: session.user.id },
+    },
+
+    orderBy: {
+      date: "desc",
+    },
+    select: {
+      date: true,
+      score: true,
+      User: { select: { name: true } },
+      id: true,
+    },
   });
 
-  console.log(allMatches);
-
-  // const recentMatchFromUser = await prisma.match.findMany({
-  //   where: {
-  //     userId: { equals: session.user.id },
-  //   },
-
-  //   orderBy: {
-  //     date: "desc",
-  //   },
-  // });
-
-  const leaderboard = superjson.stringify(allMatches);
-
-  // console.log(leaderboard);
+  console.log(recentMatchFromUser);
 
   return {
-    props: { leaderboard },
+    props: { leaderboard, recentMatchFromUser },
   };
 }
 
-interface LeaderboardProps {
-  allMatches: Match[];
+interface LeaderboardEntry {
+  date: Date;
+  score: number;
+  User: { name: string };
+  id: string;
 }
 
-export default function Leaderboard({ allMatches }: LeaderboardProps) {
+interface LeaderboardProps {
+  leaderboard: LeaderboardEntry[];
+  recentMatchFromUser: LeaderboardEntry;
+}
+
+export default function Leaderboard({
+  leaderboard,
+  recentMatchFromUser,
+}: LeaderboardProps) {
   const dispatch = useAppDispatch();
 
   return (
@@ -62,25 +82,25 @@ export default function Leaderboard({ allMatches }: LeaderboardProps) {
         <table className="table-compact table w-full">
           <thead>
             <tr>
-              <th></th>
               <th>User</th>
               <th>Score</th>
               <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>1</th>
-              <td>Perez</td>
-              <td>65</td>
-              <td>05/02/23</td>
+            <tr className="active">
+              <td>{recentMatchFromUser.User.name}</td>
+              <td>{recentMatchFromUser.score}</td>
+              <td>{recentMatchFromUser.date.toUTCString()}</td>
             </tr>
-            <tr>
-              <th>2</th>
-              <td>Halogenix</td>
-              <td>55</td>
-              <td>09/03/23</td>
-            </tr>
+
+            {leaderboard.map((entry) => (
+              <tr key={entry.id}>
+                <td>{entry.User.name}</td>
+                <td>{entry.score}</td>
+                <td>{entry.date.toUTCString()}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
