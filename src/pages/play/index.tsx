@@ -53,7 +53,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
   const router = useRouter();
 
   useEffect(() => {
-    // Refactor to start game reducer
+    // TODO Refactor to start game reducer
     dispatch(updateTeam(teams[0]));
   }, [dispatch, teams]);
 
@@ -73,17 +73,24 @@ export default function PlayPage({ teams }: PlayPageProps) {
           body: JSON.stringify(match),
         });
 
-        if (!res.ok) return;
+        if (!res.ok) throw new Error("Could not create match");
 
-        // TODO Fix hacky stuff
-        const data = (await res.json()) as Promise<ResponseData>;
+        // TODO find better way to type this
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const data: ResponseData = await res.json();
 
-        if ((await data).message === "completed") {
+        if (data.message === "completed") {
+          await router.push("/leaderboard");
+        } else {
           await router.push("/");
         }
       }
 
-      void uploadMatch();
+      try {
+        void uploadMatch();
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [router, score, session?.user.id, userHasFinishedGame]);
 
