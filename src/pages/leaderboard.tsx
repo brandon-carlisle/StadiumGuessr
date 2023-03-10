@@ -110,12 +110,17 @@ export default function Leaderboard({
         </table>
       </div>
 
-      {/* TODO Check if this resets state */}
-      <button onClick={() => dispatch(resetGame())}>
-        <Link className="btn-primary btn" href={"/play"}>
-          Play again
+      <div className="flex gap-4">
+        <button onClick={() => dispatch(resetGame())}>
+          <Link className="btn btn-primary" href={"/play"}>
+            Play again
+          </Link>
+        </button>
+
+        <Link className="btn btn-secondary" href={"/"}>
+          home
         </Link>
-      </button>
+      </div>
     </main>
   );
 }

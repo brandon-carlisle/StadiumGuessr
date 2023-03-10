@@ -39,7 +39,7 @@ function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="hero min-h-screen bg-base-200">
+      <main className="hero relative min-h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">StadiumGuessr</h1>
@@ -56,21 +56,22 @@ function Home() {
                 </button>
               ) : (
                 <>
-                  <Link href={"/play"} className="btn-primary btn">
+                  <Link href={"/play"} className="btn btn-primary">
                     Play now
                   </Link>
-                  <button className="btn" onClick={handleModal}>
-                    How to play
-                  </button>
+
+                  <Link href={"/leaderboard"} className="btn btn-accent">
+                    Leaderboard
+                  </Link>
                 </>
               )}
 
               {status === "loading" || status === "unauthenticated" ? (
-                <button className="btn-secondary btn" onClick={handleSignIn}>
+                <button className="btn btn-secondary" onClick={handleSignIn}>
                   Login with discord
                 </button>
               ) : (
-                <button className="btn-warning btn" onClick={handleSignOut}>
+                <button className="btn btn-warning" onClick={handleSignOut}>
                   Sign Out
                 </button>
               )}
@@ -97,7 +98,7 @@ function Home() {
                 <div className="modal modal-open">
                   <div className="modal-box relative">
                     <label
-                      className="btn-sm btn-circle btn absolute right-2 top-2"
+                      className="btn btn-sm btn-circle absolute right-2 top-2"
                       onClick={handleModal}
                     >
                       ✕
@@ -118,6 +119,13 @@ function Home() {
             )}
           </div>
         </div>
+
+        <button
+          className="btn btn-secondary absolute bottom-8 left-8"
+          onClick={handleModal}
+        >
+          How to play
+        </button>
       </main>
     </>
   );
