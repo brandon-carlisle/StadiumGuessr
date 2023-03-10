@@ -104,7 +104,7 @@ function Home() {
                     </label>
                     <h3 className="mb-4 text-lg font-bold">How to play</h3>
                     <ol className="flex list-decimal flex-col gap-3 px-4 text-left">
-                      <li>Answer each question for every stadium</li>
+                      <li>Try to answer each question for every stadium</li>
                       <li>You can skip any questions you dont know</li>
                       <li>
                         When guessing the stadium capacity - you only get one
