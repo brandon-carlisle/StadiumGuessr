@@ -1,4 +1,3 @@
-import type { Match } from "@prisma/client";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { getServerAuthSession } from "../server/auth";
