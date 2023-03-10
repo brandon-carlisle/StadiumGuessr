@@ -75,11 +75,15 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   const dispatch = useAppDispatch();
 
+  function formatDate(date: number | Date) {
+    return new Intl.DateTimeFormat("en-GB").format(date);
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-2">
-      <h1 className="text-2xl font-semibold">Leaderboard</h1>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-4">
+      <h1 className="text-4xl font-semibold">Leaderboard</h1>
       <div className="w-[90%] overflow-x-auto p-2 md:w-2/3">
-        <table className="table-compact table w-full">
+        <table className="table-compact table w-full text-center">
           <thead>
             <tr>
               <th>User</th>
@@ -88,19 +92,23 @@ export default function Leaderboard({
             </tr>
           </thead>
           <tbody>
-            <tr className="active">
-              <td>{recentMatchFromUser.User.name}</td>
-              <td>{recentMatchFromUser.score}</td>
-              <td>{recentMatchFromUser.date.toUTCString()}</td>
-            </tr>
-
             {leaderboard.map((entry) => (
               <tr key={entry.id}>
                 <td>{entry.User.name}</td>
                 <td>{entry.score}</td>
-                <td>{entry.date.toUTCString()}</td>
+                <td>{formatDate(entry.date)}</td>
               </tr>
             ))}
+
+            {recentMatchFromUser && (
+              <tr className="bg-primary">
+                <td className="bg-inherit">{recentMatchFromUser.User.name}</td>
+                <td className="bg-inherit">{recentMatchFromUser.score}</td>
+                <td className="bg-inherit">
+                  {formatDate(recentMatchFromUser.date)}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
