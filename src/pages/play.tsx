@@ -61,7 +61,6 @@ export default function PlayPage({ teams }: PlayPageProps) {
   const shuffledTeams = useMemo(() => shuffleTeams(teams), [teams]);
 
   useEffect(() => {
-    // TODO Refactor to start game reducer
     dispatch(updateTeam(shuffledTeams[0]));
   }, [dispatch, shuffledTeams]);
 

@@ -3,14 +3,17 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch } from "../store/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { resetGame } from "../store/features/game/game-slice";
 
 function Home() {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { data, status } = useSession();
+
   const handleSignIn = () => {
     signIn("discord").catch((err) => console.error(err));
   };
+
   const handleSignOut = () => {
     signOut().catch((err) => console.error(err));
   };
@@ -20,6 +23,10 @@ function Home() {
   useEffect(() => {
     dispatch(resetGame());
   }, [dispatch]);
+
+  const handleModal = () => {
+    setModalOpen((prev) => !prev);
+  };
 
   return (
     <>
@@ -48,9 +55,14 @@ function Home() {
                   Play now
                 </button>
               ) : (
-                <Link href={"/play"} className="btn-primary btn">
-                  Play now
-                </Link>
+                <>
+                  <Link href={"/play"} className="btn-primary btn">
+                    Play now
+                  </Link>
+                  <button className="btn" onClick={handleModal}>
+                    How to play
+                  </button>
+                </>
               )}
 
               {status === "loading" || status === "unauthenticated" ? (
@@ -79,6 +91,31 @@ function Home() {
                 </div>
               </div>
             ) : null}
+
+            {modalOpen && (
+              <>
+                <div className="modal modal-open">
+                  <div className="modal-box relative">
+                    <label
+                      className="btn-sm btn-circle btn absolute right-2 top-2"
+                      onClick={handleModal}
+                    >
+                      ✕
+                    </label>
+                    <h3 className="mb-4 text-lg font-bold">How to play</h3>
+                    <ol className="flex list-decimal flex-col gap-3 px-4 text-left">
+                      <li>Answer each question for every stadium</li>
+                      <li>You can skip any questions you dont know</li>
+                      <li>
+                        When guessing the stadium capacity - you only get one
+                        chance, and will be scored on how close you get to the
+                        correct answer
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>
