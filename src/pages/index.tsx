@@ -5,10 +5,24 @@ import Image from "next/image";
 import { useAppDispatch } from "../store/hooks";
 import { useEffect, useState } from "react";
 import { resetGame } from "../store/features/game/game-slice";
+import { getServerAuthSession } from "../server/auth";
+import type { GetServerSidePropsContext } from "next";
+import type { Session, User } from "@prisma/client";
 
-function Home() {
+// TODO: Check auth server-side instead of useSession
+
+interface HomeProps {
+  auth: {
+    user: User;
+    expires: string;
+  };
+}
+
+function Home({ auth }: HomeProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const { data, status } = useSession();
+  // const { data: session, status } = useSession();
+
+  const authenticated = !!auth?.user;
 
   const handleSignIn = () => {
     signIn("discord").catch((err) => console.error(err));
@@ -50,45 +64,45 @@ function Home() {
             </p>
 
             <div className="flex items-center justify-center gap-4">
-              {status === "loading" || status === "unauthenticated" ? (
+              {!authenticated ? (
                 <button disabled className="btn-disabled btn">
                   Play now
                 </button>
               ) : (
                 <>
-                  <Link href={"/play"} className="btn btn-primary">
+                  <Link href={"/play"} className="btn-primary btn">
                     Play now
                   </Link>
 
-                  <Link href={"/leaderboard"} className="btn btn-accent">
+                  <Link href={"/leaderboard"} className="btn-accent btn">
                     Leaderboard
                   </Link>
                 </>
               )}
 
-              {status === "loading" || status === "unauthenticated" ? (
-                <button className="btn btn-secondary" onClick={handleSignIn}>
+              {!authenticated ? (
+                <button className="btn-secondary btn" onClick={handleSignIn}>
                   Login with discord
                 </button>
               ) : (
-                <button className="btn btn-warning" onClick={handleSignOut}>
+                <button className="btn-warning btn" onClick={handleSignOut}>
                   Sign Out
                 </button>
               )}
             </div>
 
-            {status === "authenticated" && data.user.image ? (
+            {authenticated && auth.user.image ? (
               <div className="mt-16 flex flex-col items-center gap-2">
                 <p>Welcome back,</p>
                 <div>
                   <Image
-                    src={data.user?.image}
+                    src={auth.user.image}
                     alt="Discord profile image of signed in user"
                     width={128}
                     height={128}
                     className="mb-1 h-16 w-16 rounded-full ring"
                   />
-                  <p>{data.user.name}</p>
+                  <p>{auth.user.name}</p>
                 </div>
               </div>
             ) : null}
@@ -98,7 +112,7 @@ function Home() {
                 <div className="modal modal-open">
                   <div className="modal-box relative">
                     <label
-                      className="btn btn-sm btn-circle absolute right-2 top-2"
+                      className="btn-sm btn-circle btn absolute right-2 top-2"
                       onClick={handleModal}
                     >
                       ✕
@@ -121,7 +135,7 @@ function Home() {
         </div>
 
         <button
-          className="btn btn-secondary absolute bottom-8 left-8"
+          className="btn-secondary btn absolute bottom-8 left-8"
           onClick={handleModal}
         >
           How to play
@@ -132,3 +146,11 @@ function Home() {
 }
 
 export default Home;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getServerAuthSession(ctx);
+
+  return {
+    props: { auth: session },
+  };
+}

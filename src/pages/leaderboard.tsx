@@ -112,12 +112,12 @@ export default function Leaderboard({
 
       <div className="flex gap-4">
         <button onClick={() => dispatch(resetGame())}>
-          <Link className="btn btn-primary" href={"/play"}>
+          <Link className="btn-primary btn" href={"/play"}>
             Play again
           </Link>
         </button>
 
-        <Link className="btn btn-secondary" href={"/"}>
+        <Link className="btn-secondary btn" href={"/"}>
           home
         </Link>
       </div>
