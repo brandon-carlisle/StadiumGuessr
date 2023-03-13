@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch } from "../store/hooks";
@@ -8,8 +8,6 @@ import { resetGame } from "../store/features/game/game-slice";
 import { getServerAuthSession } from "../server/auth";
 import type { GetServerSidePropsContext } from "next";
 import type { User } from "@prisma/client";
-
-// TODO: Check auth server-side instead of useSession
 
 interface HomeProps {
   auth: {
@@ -144,17 +142,4 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   return {
     props: { auth: session },
   };
-}
-
-function UnuthenticatedButtons() {
-  return (
-    <div>
-      <button disabled className="btn-disabled btn">
-        Play now
-      </button>
-      <button className="btn btn-secondary" onClick={handleSignIn}>
-        Login with discord
-      </button>
-    </div>
-  );
 }
