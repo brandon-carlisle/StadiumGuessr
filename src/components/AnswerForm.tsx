@@ -26,6 +26,7 @@ export default function AnswerForm({
 
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log(currentQuestion);
 
     // This can be DRY -- FIX THIS
     switch (currentQuestion) {
@@ -38,6 +39,9 @@ export default function AnswerForm({
           dispatch(incrementScore(5));
           setInputText("");
           setCurrentQuestion(questions["q2"]);
+        } else {
+          setInputText("");
+          setCurrentQuestion(questions["q2"]);
         }
         break;
       case questions["q2"]:
@@ -48,6 +52,9 @@ export default function AnswerForm({
             currentTeam.alternativeStadium.toLowerCase()
         ) {
           dispatch(incrementScore(5));
+          setInputText("");
+          setCurrentQuestion(questions["q3"]);
+        } else {
           setInputText("");
           setCurrentQuestion(questions["q3"]);
         }

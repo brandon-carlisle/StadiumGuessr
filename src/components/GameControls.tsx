@@ -11,9 +11,9 @@ export interface Questions {
   [key: string]: string;
 }
 const GAME_QUESTIONS: Questions = {
-  q1: "Name the team of this stadium",
-  q2: "What is this stadium called?",
-  q3: "What is the capacity of this stadium?",
+  q1: "Name the team",
+  q2: "Name the stadium",
+  q3: "Enter the capacity of the stadium",
 };
 
 interface GameControlsProps {
