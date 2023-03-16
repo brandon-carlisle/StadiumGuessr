@@ -22,7 +22,7 @@ const initialState: gameState = {
     longitude: 1,
   },
   teamsLeft: 20,
-  timeRemaining: 120,
+  timeRemaining: 180,
   userHasFinishedGame: false,
 };
 
