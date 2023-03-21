@@ -3,6 +3,7 @@ import { incrementScore } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { checkIfInRange } from "../utils/checkInRange";
 import { type Questions } from "./GameControls";
+import { checkAnswer } from "../utils/checkAnswer";
 
 interface AnswerFormProps {
   questions: Questions;
@@ -24,17 +25,19 @@ export default function AnswerForm({
   const { currentTeam } = useAppSelector((state) => state.game);
   const dispatch = useAppDispatch();
 
+  console.table(currentTeam);
+
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(currentQuestion);
 
-    // This can be DRY -- FIX THIS
     switch (currentQuestion) {
       case questions["q1"]:
         // Question logic
         if (
-          inputText.toLowerCase() === currentTeam.name.toLowerCase() ||
-          inputText.toLowerCase() === currentTeam.alternativeName.toLowerCase()
+          checkAnswer(inputText, [
+            currentTeam.name,
+            currentTeam.alternativeName,
+          ])
         ) {
           dispatch(incrementScore(5));
           setInputText("");
@@ -47,9 +50,10 @@ export default function AnswerForm({
       case questions["q2"]:
         // Question login
         if (
-          inputText.toLowerCase() === currentTeam.stadium.toLowerCase() ||
-          inputText.toLowerCase() ===
-            currentTeam.alternativeStadium.toLowerCase()
+          checkAnswer(inputText, [
+            currentTeam.stadium,
+            currentTeam.alternativeStadium,
+          ])
         ) {
           dispatch(incrementScore(5));
           setInputText("");
