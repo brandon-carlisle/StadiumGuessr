@@ -1,7 +1,7 @@
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import { incrementScore } from "../store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { checkIfInRange } from "../utils/utils";
+import { checkIfInRange } from "../utils/checkInRange";
 import { type Questions } from "./GameControls";
 
 interface AnswerFormProps {
