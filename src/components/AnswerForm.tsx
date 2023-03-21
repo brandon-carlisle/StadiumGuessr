@@ -25,75 +25,49 @@ export default function AnswerForm({
   const { currentTeam } = useAppSelector((state) => state.game);
   const dispatch = useAppDispatch();
 
-  console.table(currentTeam);
+  // prettier-ignore
+  function updateScoreAndMoveOn(score: number,nextQuestion: "q1" | "q2" | "q3") {
+    dispatch(incrementScore(score));
+    setInputText("");
+    setCurrentQuestion(questions[nextQuestion]);
+  }
 
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
+    // prettier-ignore
     switch (currentQuestion) {
       case questions["q1"]:
-        // Question logic
-        if (
-          checkAnswer(inputText, [
-            currentTeam.name,
-            currentTeam.alternativeName,
-          ])
-        ) {
-          dispatch(incrementScore(5));
-          setInputText("");
-          setCurrentQuestion(questions["q2"]);
+        if (checkAnswer(inputText, [currentTeam.name, currentTeam.alternativeName])) {
+          updateScoreAndMoveOn(5, "q2");
         } else {
-          setInputText("");
-          setCurrentQuestion(questions["q2"]);
+          updateScoreAndMoveOn(0, "q2");
         }
         break;
+
       case questions["q2"]:
-        // Question login
-        if (
-          checkAnswer(inputText, [
-            currentTeam.stadium,
-            currentTeam.alternativeStadium,
-          ])
-        ) {
-          dispatch(incrementScore(5));
-          setInputText("");
-          setCurrentQuestion(questions["q3"]);
+        if (checkAnswer(inputText, [currentTeam.stadium, currentTeam.alternativeStadium])) {
+          updateScoreAndMoveOn(5, 'q3');
         } else {
-          setInputText("");
-          setCurrentQuestion(questions["q3"]);
+          updateScoreAndMoveOn(0, 'q3');
         }
         break;
+
       case questions["q3"]:
         const capacityGuess = parseInt(inputText);
 
-        // Check if score is in range of +/- 5k
-        if (
-          checkIfInRange(
-            capacityGuess,
-            currentTeam.capacity - 5000,
-            currentTeam.capacity + 5000
-          )
-        ) {
-          dispatch(incrementScore(10));
-          setInputText("");
-          setCurrentQuestion(questions["q1"]);
+        if (checkIfInRange(capacityGuess, currentTeam.capacity - 5000, currentTeam.capacity + 5000)) {
+          // Check if score is in range of +/- 5k
+          updateScoreAndMoveOn(10, 'q1')
           handleNextTeam();
         } else if (
           // Check if score is in range of +/- 10k
-          checkIfInRange(
-            capacityGuess,
-            currentTeam.capacity - 10000,
-            currentTeam.capacity + 10000
-          )
-        ) {
-          dispatch(incrementScore(5));
-          setInputText("");
-          setCurrentQuestion(questions["q1"]);
+          checkIfInRange(capacityGuess, currentTeam.capacity - 10000, currentTeam.capacity + 10000)) {
+          updateScoreAndMoveOn(5, 'q1')
           handleNextTeam();
-        } // If out of both ranges, move on with no added points
+        } 
         else {
-          setInputText("");
-          setCurrentQuestion(questions["q1"]);
+          // If out of both ranges, move on with no added points
+          updateScoreAndMoveOn(0, 'q1')
           handleNextTeam();
         }
         break;
