@@ -27,8 +27,6 @@ export default function AnswerForm({
   const { currentTeam } = useAppSelector((state) => state.game);
   const dispatch = useAppDispatch();
 
-  console.table(currentTeam);
-
   const [playCorrectSfx] = useSound("/correctSfx.mp3");
   const [playIncorrectSfx] = useSound("/incorrectSfx.mp3");
 
