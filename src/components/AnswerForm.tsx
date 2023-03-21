@@ -5,6 +5,8 @@ import { checkIfInRange } from "../utils/checkInRange";
 import { type Questions } from "./GameControls";
 import { checkAnswer } from "../utils/checkAnswer";
 
+import useSound from "use-sound";
+
 interface AnswerFormProps {
   questions: Questions;
   currentQuestion: string | undefined;
@@ -25,8 +27,20 @@ export default function AnswerForm({
   const { currentTeam } = useAppSelector((state) => state.game);
   const dispatch = useAppDispatch();
 
+  console.table(currentTeam);
+
+  const [playCorrectSfx] = useSound("/correctSfx.mp3");
+  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3");
+
   // prettier-ignore
   function updateScoreAndMoveOn(score: number,nextQuestion: "q1" | "q2" | "q3") {
+
+    if (score > 0) {
+      playCorrectSfx()
+    } else {
+      playIncorrectSfx()
+    }
+
     dispatch(incrementScore(score));
     setInputText("");
     setCurrentQuestion(questions[nextQuestion]);
