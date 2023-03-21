@@ -18,7 +18,6 @@ interface HomeProps {
 
 function Home({ auth }: HomeProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  // const { data: session, status } = useSession();
 
   const authenticated = !!auth?.user;
 
@@ -65,24 +64,24 @@ function Home({ auth }: HomeProps) {
                 <button disabled className="btn-disabled btn">
                   Play now
                 </button>
-                <button className="btn btn-secondary" onClick={handleSignIn}>
+                <button className="btn-secondary btn" onClick={handleSignIn}>
                   Login with discord
                 </button>
               </div>
             )}
             {authenticated && (
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link href={"/play"} className="btn btn-primary">
+                <Link href={"/play"} className="btn-primary btn">
                   Play now
                 </Link>
 
-                <Link href={"/leaderboard"} className="btn btn-accent">
+                <Link href={"/leaderboard"} className="btn-accent btn">
                   Leaderboard
                 </Link>
-                <button className="btn btn-secondary" onClick={handleModal}>
+                <button className="btn-secondary btn" onClick={handleModal}>
                   How to play
                 </button>
-                <button className="btn btn-warning" onClick={handleSignOut}>
+                <button className="btn-warning btn" onClick={handleSignOut}>
                   Sign Out
                 </button>
               </div>
@@ -108,7 +107,7 @@ function Home({ auth }: HomeProps) {
                 <div className="modal modal-open">
                   <div className="modal-box relative">
                     <label
-                      className="btn btn-sm btn-circle absolute right-2 top-2"
+                      className="btn-sm btn-circle btn absolute right-2 top-2"
                       onClick={handleModal}
                     >
                       ✕
