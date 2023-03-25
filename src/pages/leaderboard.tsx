@@ -6,54 +6,6 @@ import { resetGame } from "../store/features/game/game-slice";
 import { useAppDispatch } from "../store/hooks";
 import superjson from "superjson";
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(ctx);
-
-  if (!session?.user) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-    };
-  }
-
-  const allMatches = await prisma.match.findMany({
-    orderBy: {
-      score: "desc",
-    },
-    take: 10,
-    select: {
-      date: true,
-      score: true,
-      User: { select: { name: true } },
-      id: true,
-    },
-  });
-  const leaderboardString = superjson.stringify(allMatches);
-  const leaderboard = superjson.parse(leaderboardString);
-
-  const recentMatchFromUser = await prisma.match.findFirst({
-    where: {
-      userId: { equals: session.user.id },
-    },
-
-    orderBy: {
-      date: "desc",
-    },
-    select: {
-      date: true,
-      score: true,
-      User: { select: { name: true } },
-      id: true,
-    },
-  });
-
-  return {
-    props: { leaderboard, recentMatchFromUser },
-  };
-}
-
 interface LeaderboardEntry {
   date: Date;
   score: number;
@@ -123,4 +75,52 @@ export default function Leaderboard({
       </div>
     </main>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getServerAuthSession(ctx);
+
+  if (!session?.user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+
+  const allMatches = await prisma.match.findMany({
+    orderBy: {
+      score: "desc",
+    },
+    take: 10,
+    select: {
+      date: true,
+      score: true,
+      User: { select: { name: true } },
+      id: true,
+    },
+  });
+  const leaderboardString = superjson.stringify(allMatches);
+  const leaderboard = superjson.parse(leaderboardString);
+
+  const recentMatchFromUser = await prisma.match.findFirst({
+    where: {
+      userId: { equals: session.user.id },
+    },
+
+    orderBy: {
+      date: "desc",
+    },
+    select: {
+      date: true,
+      score: true,
+      User: { select: { name: true } },
+      id: true,
+    },
+  });
+
+  return {
+    props: { leaderboard, recentMatchFromUser },
+  };
 }

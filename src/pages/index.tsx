@@ -1,25 +1,15 @@
 import Head from "next/head";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch } from "../store/hooks";
 import { useEffect, useState } from "react";
 import { resetGame } from "../store/features/game/game-slice";
-import { getServerAuthSession } from "../server/auth";
-import type { GetServerSidePropsContext } from "next";
-import type { User } from "@prisma/client";
 
-interface HomeProps {
-  auth: {
-    user: User;
-    expires: string;
-  };
-}
-
-function Home({ auth }: HomeProps) {
+function Home() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  const authenticated = !!auth?.user;
+  const { data } = useSession();
+  const dispatch = useAppDispatch();
 
   const handleSignIn = () => {
     signIn("discord").catch((err) => console.error(err));
@@ -28,8 +18,6 @@ function Home({ auth }: HomeProps) {
   const handleSignOut = () => {
     signOut().catch((err) => console.error(err));
   };
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(resetGame());
@@ -59,7 +47,7 @@ function Home({ auth }: HomeProps) {
               knowledge. You will get placed at a random stadium around Europe
               and you will have to guess various facts about it.
             </p>
-            {!authenticated && (
+            {!data && (
               <div className="flex items-center justify-center gap-4">
                 <button disabled className="btn-disabled btn">
                   Play now
@@ -69,7 +57,7 @@ function Home({ auth }: HomeProps) {
                 </button>
               </div>
             )}
-            {authenticated && (
+            {data && (
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link href={"/play"} className="btn-primary btn">
                   Play now
@@ -86,18 +74,18 @@ function Home({ auth }: HomeProps) {
                 </button>
               </div>
             )}
-            {authenticated && auth.user.image ? (
+            {data && data.user.image ? (
               <div className="mt-16 flex flex-col items-center gap-2">
                 <p>Welcome back,</p>
                 <div>
                   <Image
-                    src={auth.user.image}
+                    src={data.user.image}
                     alt="Discord profile image of signed in user"
                     width={128}
                     height={128}
                     className="mb-1 h-16 w-16 rounded-full ring"
                   />
-                  <p>{auth.user.name}</p>
+                  <p>{data.user.name}</p>
                 </div>
               </div>
             ) : null}
@@ -134,11 +122,3 @@ function Home({ auth }: HomeProps) {
 }
 
 export default Home;
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(ctx);
-
-  return {
-    props: { auth: session },
-  };
-}
