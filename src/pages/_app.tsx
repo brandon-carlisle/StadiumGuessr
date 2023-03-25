@@ -1,12 +1,13 @@
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { Provider as ReduxProvider } from "react-redux";
-import { store } from "../store/store";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { type Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
+import { type AppType } from 'next/app';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Provider as ReduxProvider } from 'react-redux';
 
-import "../styles/globals.css";
+import { store } from '@store/store';
+
+import '../styles/globals.css';
 
 function Loading() {
   return (
@@ -30,14 +31,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
     const handleComplete = (url: string) =>
       url === router.asPath && setLoading(false);
 
-    router.events.on("routeChangeStart", handleStart);
-    router.events.on("routeChangeComplete", handleComplete);
-    router.events.on("routeChangeError", handleComplete);
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
 
     return () => {
-      router.events.off("routeChangeStart", handleStart);
-      router.events.off("routeChangeComplete", handleComplete);
-      router.events.off("routeChangeError", handleComplete);
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
     };
   });
 

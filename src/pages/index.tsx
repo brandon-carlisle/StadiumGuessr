@@ -1,10 +1,11 @@
-import Head from "next/head";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import Image from "next/image";
-import { useAppDispatch } from "../store/hooks";
-import { useEffect, useState } from "react";
-import { resetGame } from "../store/features/game/game-slice";
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+import { resetGame } from '@store/features/game/game-slice';
+import { useAppDispatch } from '@store/hooks';
 
 function Home() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -12,7 +13,7 @@ function Home() {
   const dispatch = useAppDispatch();
 
   const handleSignIn = () => {
-    signIn("discord").catch((err) => console.error(err));
+    signIn('discord').catch((err) => console.error(err));
   };
 
   const handleSignOut = () => {
@@ -59,11 +60,11 @@ function Home() {
             )}
             {data && (
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link href={"/play"} className="btn-primary btn">
+                <Link href={'/play'} className="btn-primary btn">
                   Play now
                 </Link>
 
-                <Link href={"/leaderboard"} className="btn-accent btn">
+                <Link href={'/leaderboard'} className="btn-accent btn">
                   Leaderboard
                 </Link>
                 <button className="btn-secondary btn" onClick={handleModal}>

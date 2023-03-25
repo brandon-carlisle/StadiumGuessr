@@ -1,5 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../server/db";
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { prisma } from '@server/db';
 
 // Find better way to do this
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -10,15 +11,15 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 }
 
 export interface ResponseData {
-  message?: "completed" | "failed";
+  message?: 'completed' | 'failed';
   error?: string;
 }
 
 export default async function handler(
   req: ExtendedNextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ResponseData>,
 ) {
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     const { score, user } = req.body;
 
     try {
@@ -28,11 +29,11 @@ export default async function handler(
         });
       }
 
-      res.status(200).json({ message: "completed" });
+      res.status(200).json({ message: 'completed' });
     } catch (error) {
-      res.status(500).json({ message: "failed" });
+      res.status(500).json({ message: 'failed' });
     }
   } else {
-    res.status(405).json({ error: "Request must be a POST" });
+    res.status(405).json({ error: 'Request must be a POST' });
   }
 }

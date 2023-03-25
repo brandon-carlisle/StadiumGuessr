@@ -1,5 +1,5 @@
-import { resetZoom } from "../store/features/game/game-slice";
-import { useAppDispatch } from "../store/hooks";
+import { resetZoom } from '@store/features/game/game-slice';
+import { useAppDispatch } from '@store/hooks';
 
 export default function ResetZoom() {
   const dispatch = useAppDispatch();

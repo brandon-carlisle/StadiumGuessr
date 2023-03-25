@@ -1,6 +1,6 @@
-import Score from "./Score";
-import TeamsLeft from "./TeamsLeft";
-import TimeRemaining from "./TimeRemaining";
+import Score from './Score';
+import TeamsLeft from './TeamsLeft';
+import TimeRemaining from './TimeRemaining';
 
 export default function Stats() {
   return (

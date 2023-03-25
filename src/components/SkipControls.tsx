@@ -1,7 +1,9 @@
-import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { type Questions } from "./GameControls";
-import type { Dispatch, SetStateAction } from "react";
-import { updateUserHasFinishedGame } from "../store/features/game/game-slice";
+import type { Dispatch, SetStateAction } from 'react';
+
+import { updateUserHasFinishedGame } from '@store/features/game/game-slice';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+
+import { type Questions } from './GameControls';
 
 interface SkipControlsProps {
   questions: Questions;
@@ -22,32 +24,32 @@ export default function SkipControls({
   const dispatch = useAppDispatch();
 
   const currentQuestionIndex = Object.keys(questions).find(
-    (key) => questions[key] === currentQuestion
+    (key) => questions[key] === currentQuestion,
   );
 
-  const isFinalQuestion = currentQuestionIndex === "q3" && teamsLeft === 1;
+  const isFinalQuestion = currentQuestionIndex === 'q3' && teamsLeft === 1;
 
   function handleSkipQuestion() {
-    if (currentQuestionIndex === "q1") {
-      setInputText("");
-      setCurrentQuestion(questions["q2"]);
+    if (currentQuestionIndex === 'q1') {
+      setInputText('');
+      setCurrentQuestion(questions['q2']);
       return;
     }
 
-    if (currentQuestionIndex === "q2") {
-      setInputText("");
-      setCurrentQuestion(questions["q3"]);
+    if (currentQuestionIndex === 'q2') {
+      setInputText('');
+      setCurrentQuestion(questions['q3']);
       return;
     }
 
-    if (currentQuestionIndex === "q3" && teamsLeft === 1) {
-      setInputText("");
-      setCurrentQuestion(questions["q1"]);
+    if (currentQuestionIndex === 'q3' && teamsLeft === 1) {
+      setInputText('');
+      setCurrentQuestion(questions['q1']);
     }
 
-    if (currentQuestionIndex === "q3" && teamsLeft > 1) {
-      setInputText("");
-      setCurrentQuestion(questions["q1"]);
+    if (currentQuestionIndex === 'q3' && teamsLeft > 1) {
+      setInputText('');
+      setCurrentQuestion(questions['q1']);
       handleNextTeam();
     }
   }

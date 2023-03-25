@@ -1,5 +1,5 @@
-import { updateUserHasFinishedGame } from "../store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { updateUserHasFinishedGame } from '@store/features/game/game-slice';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 
 export default function TeamsLeft() {
   const teams = useAppSelector((state) => state.game.teamsLeft);

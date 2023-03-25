@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
+
 import {
   updateTimeRemaining,
   updateUserHasFinishedGame,
-} from "../store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+} from '@store/features/game/game-slice';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 
 export default function TimeRemaining() {
   const time = useAppSelector((state) => state.game.timeRemaining);

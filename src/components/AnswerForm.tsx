@@ -1,11 +1,13 @@
-import type { Dispatch, FormEvent, SetStateAction } from "react";
-import { incrementScore } from "../store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { checkIfInRange } from "../utils/checkInRange";
-import { type Questions } from "./GameControls";
-import { checkAnswer } from "../utils/checkAnswer";
+import type { Dispatch, FormEvent, SetStateAction } from 'react';
+import useSound from 'use-sound';
 
-import useSound from "use-sound";
+import { incrementScore } from '@store/features/game/game-slice';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
+
+import { checkAnswer } from '@utils/checkAnswer';
+import { checkIfInRange } from '@utils/checkInRange';
+
+import { type Questions } from './GameControls';
 
 interface AnswerFormProps {
   questions: Questions;
@@ -27,8 +29,8 @@ export default function AnswerForm({
   const { currentTeam } = useAppSelector((state) => state.game);
   const dispatch = useAppDispatch();
 
-  const [playCorrectSfx] = useSound("/correctSfx.mp3");
-  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3");
+  const [playCorrectSfx] = useSound('/correctSfx.mp3');
+  const [playIncorrectSfx] = useSound('/incorrectSfx.mp3');
 
   // prettier-ignore
   function updateScoreAndMoveOn(score: number,nextQuestion: "q1" | "q2" | "q3") {
@@ -89,7 +91,7 @@ export default function AnswerForm({
   return (
     <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
       <input
-        type={currentQuestion === questions["q3"] ? "number" : "text"}
+        type={currentQuestion === questions['q3'] ? 'number' : 'text'}
         className="input-primary input input-lg w-full text-center"
         id="answer-input"
         placeholder={currentQuestion}

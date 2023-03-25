@@ -1,5 +1,5 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type Team } from "@prisma/client";
+import { type Team } from '@prisma/client';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface gameState {
   score: number;
@@ -12,11 +12,11 @@ interface gameState {
 const initialState: gameState = {
   score: 0,
   currentTeam: {
-    id: "1",
-    name: "1",
-    alternativeName: "1",
-    stadium: "1",
-    alternativeStadium: "",
+    id: '1',
+    name: '1',
+    alternativeName: '1',
+    stadium: '1',
+    alternativeStadium: '',
     capacity: 1,
     latitude: 1,
     longitude: 1,
@@ -27,7 +27,7 @@ const initialState: gameState = {
 };
 
 const gameSlice = createSlice({
-  name: "game",
+  name: 'game',
   initialState,
   reducers: {
     incrementScore(state, action: PayloadAction<number>) {
@@ -37,7 +37,7 @@ const gameSlice = createSlice({
       state.score -= action.payload;
     },
     updateTeam(state, action: PayloadAction<Team | undefined>) {
-      if (typeof action.payload !== "undefined")
+      if (typeof action.payload !== 'undefined')
         state.currentTeam = action.payload;
     },
     removeTeamLeft(state) {
