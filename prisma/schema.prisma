@@ -75,10 +75,6 @@ model Team {
     capacity           Int
     latitude           Float
     longitude          Float
-    league             League @relation(fields: [leagueId], references: [id])
-    leagueId           String @default("")
-
-    @@index([leagueId])
 }
 
 model Match {
@@ -90,11 +86,4 @@ model Match {
     userId String?
 
     @@index([userId])
-}
-
-model League {
-    id String @id @default(cuid())
-
-    name String
-    Team Team[]
 }
