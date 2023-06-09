@@ -1,17 +1,16 @@
 import { type Team } from '@prisma/client';
-import { type GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 
-import { getServerAuthSession } from '@server/auth';
 import { prisma } from '@server/db';
 
 import { updateTeam } from '@store/features/game/game-slice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 
 import GameControls from '@components/GameControls';
+import Loading from '@components/Loading';
 import Stats from '@components/Stats';
 
 import { type ResponseData } from './api/upload-match';
@@ -19,20 +18,10 @@ import { type ResponseData } from './api/upload-match';
 // Leaflet needs the window object, so this needs to have dynamic import
 const DynamicMap = dynamic(() => import('../components/DynamicMap'), {
   ssr: false,
-  loading: () => <p className="text-4xl font-semibold">Map is loading..</p>,
+  loading: () => <Loading />,
 });
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(ctx);
-
-  if (!session?.user) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/',
-      },
-    };
-  }
+export async function getServerSideProps() {
   const teams = await prisma.team.findMany();
 
   return {
@@ -45,15 +34,15 @@ export interface MatchData {
   user: string | undefined;
 }
 
-interface PlayPageProps {
-  teams: Team[];
-}
-
 function shuffleTeams(input: Team[]) {
   return input
     .map((value) => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
+}
+
+interface PlayPageProps {
+  teams: Team[];
 }
 
 export default function PlayPage({ teams }: PlayPageProps) {
@@ -69,41 +58,23 @@ export default function PlayPage({ teams }: PlayPageProps) {
   }, [dispatch, shuffledTeams]);
 
   useEffect(() => {
-    if (userHasFinishedGame) {
+    if (!session && userHasFinishedGame) {
+      void router.push('/leaderboard');
+    }
+
+    if (session && userHasFinishedGame) {
       const match: MatchData = {
         score,
         user: session?.user.id,
       };
 
-      async function uploadMatch() {
-        const res = await fetch('/api/upload-match', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(match),
-        });
-
-        if (!res.ok) throw new Error('Could not create match');
-
-        // TODO find better way to type this
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data: ResponseData = await res.json();
-
-        if (data.message === 'completed') {
-          await router.push('/leaderboard');
-        } else {
-          await router.push('/');
-        }
-      }
-
-      try {
-        void uploadMatch();
-      } catch (error) {
-        console.error(error);
-      }
+      void (async () => {
+        const { status } = await uploadMatch(match);
+        if (status === 'completed') void router.push('/leaderboard');
+        else void router.push('/');
+      })();
     }
-  }, [router, score, session?.user.id, userHasFinishedGame]);
+  }, [router, score, session, session?.user.id, userHasFinishedGame]);
 
   return (
     <main className="relative flex h-full flex-col">
@@ -112,4 +83,22 @@ export default function PlayPage({ teams }: PlayPageProps) {
       <Stats />
     </main>
   );
+}
+
+async function uploadMatch(match: MatchData) {
+  const res = await fetch('/api/upload-match', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(match),
+  });
+
+  if (!res.ok) throw new Error('Could not create match');
+
+  // TODO find better way to type this
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const data: ResponseData = await res.json();
+
+  return { status: data.message };
 }

@@ -7,19 +7,12 @@ import { useEffect, useState } from 'react';
 import { resetGame } from '@store/features/game/game-slice';
 import { useAppDispatch } from '@store/hooks';
 
-function Home() {
+export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const { data } = useSession();
+  const { data: session } = useSession();
   const dispatch = useAppDispatch();
 
-  const handleSignIn = () => {
-    signIn('discord').catch((err) => console.error(err));
-  };
-
-  const handleSignOut = () => {
-    signOut().catch((err) => console.error(err));
-  };
-
+  // Reset game state whenever user goes to homepage
   useEffect(() => {
     dispatch(resetGame());
   }, [dispatch]);
@@ -42,55 +35,52 @@ function Home() {
       <main className="hero min-h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-3xl font-bold md:text-5xl">StadiumGuessr</h1>
-            <p className="py-6">
-              StadiumGuessr is a fun game to test your football stadium
-              knowledge. You will get placed at a random stadium around Europe
-              and you will have to guess various facts about it.
-            </p>
-            {!data && (
-              <div className="flex items-center justify-center gap-4">
-                <button disabled className="btn-disabled btn">
-                  Play now
-                </button>
-                <button className="btn-secondary btn" onClick={handleSignIn}>
-                  Login with discord
-                </button>
-              </div>
-            )}
-            {data && (
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link href={'/play'} className="btn-primary btn">
-                  Play now
-                </Link>
+            <WelcomeHeader />
 
-                <Link href={'/leaderboard'} className="btn-accent btn">
-                  Leaderboard
-                </Link>
-                <button className="btn-secondary btn" onClick={handleModal}>
-                  How to play
-                </button>
-                <button className="btn-warning btn" onClick={handleSignOut}>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link href={'/play'} className="btn-primary btn">
+                {session ? 'Play now' : 'Play as guest'}
+              </Link>
+
+              <Link href={'/leaderboard'} className="btn-accent btn">
+                Leaderboard
+              </Link>
+              <button className="btn-secondary btn" onClick={handleModal}>
+                How to play
+              </button>
+
+              {session ? (
+                <button
+                  className="btn-warning btn"
+                  onClick={() => void signOut()}
+                >
                   Sign Out
                 </button>
-              </div>
-            )}
-            {data && data.user.image ? (
+              ) : (
+                <button
+                  className="btn-warning btn"
+                  onClick={() => void signIn('discord')}
+                >
+                  Sign in
+                </button>
+              )}
+            </div>
+
+            {session && session.user.image ? (
               <div className="mt-16 flex flex-col items-center gap-2">
                 <p>Welcome back,</p>
                 <div>
                   <Image
-                    src={data.user.image}
+                    src={session.user.image}
                     alt="Discord profile image of signed in user"
                     width={128}
                     height={128}
                     className="mb-1 h-16 w-16 rounded-full ring"
                   />
-                  <p>{data.user.name}</p>
+                  <p>{session.user.name}</p>
                 </div>
               </div>
             ) : null}
-
             {modalOpen && (
               <>
                 <div className="modal modal-open">
@@ -105,11 +95,7 @@ function Home() {
                     <ol className="flex list-decimal flex-col gap-3 px-4 text-left">
                       <li>Try to answer each question for every stadium</li>
                       <li>You can skip any questions you dont know</li>
-                      <li>
-                        When guessing the stadium capacity - you only get one
-                        chance, and will be scored on how close you get to the
-                        correct answer
-                      </li>
+                      <li>You must sign in to save your scores</li>
                     </ol>
                   </div>
                 </div>
@@ -122,4 +108,15 @@ function Home() {
   );
 }
 
-export default Home;
+function WelcomeHeader() {
+  return (
+    <header>
+      <h1 className="text-3xl font-bold md:text-5xl">StadiumGuessr</h1>
+      <p className="py-6">
+        StadiumGuessr is a game to test your football stadium knowledge. You
+        will get placed at a random stadium around Europe and you will have to
+        guess various facts about it.
+      </p>
+    </header>
+  );
+}

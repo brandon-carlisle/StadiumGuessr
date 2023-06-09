@@ -7,15 +7,9 @@ import { Provider as ReduxProvider } from 'react-redux';
 
 import { store } from '@store/store';
 
-import '../styles/globals.css';
+import Loading from '@components/Loading';
 
-function Loading() {
-  return (
-    <div className="flex min-h-screen w-full items-center justify-center">
-      <progress className="progress progress-primary w-56"></progress>
-    </div>
-  );
-}
+import '../styles/globals.css';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
