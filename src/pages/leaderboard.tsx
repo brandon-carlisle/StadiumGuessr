@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import superjson from 'superjson';
 
 import { getServerAuthSession } from '@server/auth';
@@ -7,6 +8,8 @@ import { prisma } from '@server/db';
 
 import { resetGame } from '@store/features/game/game-slice';
 import { useAppDispatch } from '@store/hooks';
+
+import formatDate from '@utils/formatDate';
 
 interface LeaderboardEntry {
   date: Date;
@@ -17,18 +20,19 @@ interface LeaderboardEntry {
 
 interface LeaderboardProps {
   leaderboard: LeaderboardEntry[];
-  recentMatchFromUser: LeaderboardEntry;
+  recentMatchFromUser?: LeaderboardEntry;
 }
 
-export default function Leaderboard({
+export default function LeaderboardPage({
   leaderboard,
   recentMatchFromUser,
 }: LeaderboardProps) {
   const dispatch = useAppDispatch();
 
-  function formatDate(date: number | Date) {
-    return new Intl.DateTimeFormat('en-GB').format(date);
-  }
+  // Reset game state whenever user goes to leaderboard
+  useEffect(() => {
+    dispatch(resetGame());
+  }, [dispatch]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
@@ -43,13 +47,15 @@ export default function Leaderboard({
             </tr>
           </thead>
           <tbody>
-            {leaderboard.map((entry) => (
-              <tr key={entry.id}>
-                <td>{entry.User.name}</td>
-                <td>{entry.score}</td>
-                <td>{formatDate(entry.date)}</td>
-              </tr>
-            ))}
+            {leaderboard.map((entry) => {
+              return (
+                <tr key={entry.id}>
+                  <td>{entry.User.name}</td>
+                  <td>{entry.score}</td>
+                  <td>{formatDate(entry.date)}</td>
+                </tr>
+              );
+            })}
 
             {recentMatchFromUser && (
               <tr className="bg-primary">
@@ -65,14 +71,12 @@ export default function Leaderboard({
       </div>
 
       <div className="flex gap-4">
-        <button onClick={() => dispatch(resetGame())}>
-          <Link className="btn-primary btn" href={'/play'}>
-            Play again
-          </Link>
-        </button>
+        <Link className="btn-primary btn" href={'/play'}>
+          Play again
+        </Link>
 
         <Link className="btn-secondary btn" href={'/'}>
-          home
+          Home
         </Link>
       </div>
     </main>
@@ -81,15 +85,6 @@ export default function Leaderboard({
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getServerAuthSession(ctx);
-
-  if (!session?.user) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/',
-      },
-    };
-  }
 
   const allMatches = await prisma.match.findMany({
     orderBy: {
@@ -106,6 +101,14 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const leaderboardString = superjson.stringify(allMatches);
   const leaderboard = superjson.parse(leaderboardString);
 
+  // If user is in guesmode, just return leaderboard
+  if (!session) {
+    return {
+      props: { leaderboard },
+    };
+  }
+
+  // Else we return the leaderboard and users most recent match
   const recentMatchFromUser = await prisma.match.findFirst({
     where: {
       userId: { equals: session.user.id },
