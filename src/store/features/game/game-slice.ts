@@ -25,10 +25,10 @@ interface gameState {
 const initialState: gameState = {
   teams: [initialTeam],
   currentTeam: initialTeam,
-  teamsLeft: 0,
+  teamsLeft: 20,
 
   score: 0,
-  timeRemaining: 120,
+  timeRemaining: 1200,
   userHasFinishedGame: false,
 };
 

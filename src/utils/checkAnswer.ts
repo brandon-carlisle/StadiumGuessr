@@ -1,28 +1,27 @@
-function sanitize(input: string | string[]) {
-  if (typeof input === 'string') {
-    return input
+function sanitize(inputs: string[]) {
+  return inputs.map((item) =>
+    item
       .replaceAll(' ', '')
-      .replaceAll(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g, '')
-      .toLowerCase();
-  } else {
-    return input.map((item) =>
-      item
-        .replaceAll(' ', '')
-        .replaceAll(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
-        .toLowerCase(),
-    );
-  }
+      .replaceAll(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+      .toLowerCase(),
+  );
 }
 
-export function checkAnswer(input: string, answers: string[]) {
-  const sanitizedInput = sanitize(input);
+interface ValidateAnswerProps {
+  userAnswer: string;
+  answers: string[];
+}
+
+export function validateAnswer({ userAnswer, answers }: ValidateAnswerProps): {
+  valid: boolean;
+} {
+  const [sanitizedInput] = sanitize([userAnswer]);
   const sanitizedAnswers = sanitize(answers);
 
-  if (typeof sanitizedInput === 'string') {
-    if (sanitizedAnswers.includes(sanitizedInput)) {
-      return true;
-    } else {
-      return false;
-    }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  if (sanitizedAnswers.includes(sanitizedInput!)) {
+    return { valid: true };
   }
+
+  return { valid: false };
 }
