@@ -1,28 +1,34 @@
 import { type Team } from '@prisma/client';
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+const initialTeam: Team = {
+  id: '',
+  name: '',
+  alternativeName: '',
+  stadium: '',
+  alternativeStadium: '',
+  capacity: 0,
+  latitude: 0,
+  longitude: 0,
+};
+
 interface gameState {
-  score: number;
+  teams: Team[];
   currentTeam: Team;
   teamsLeft: number;
+
+  score: number;
   timeRemaining: number;
   userHasFinishedGame: boolean;
 }
 
 const initialState: gameState = {
+  teams: [initialTeam],
+  currentTeam: initialTeam,
+  teamsLeft: 0,
+
   score: 0,
-  currentTeam: {
-    id: '1',
-    name: '1',
-    alternativeName: '1',
-    stadium: '1',
-    alternativeStadium: '',
-    capacity: 1,
-    latitude: 1,
-    longitude: 1,
-  },
-  teamsLeft: 20,
-  timeRemaining: 180,
+  timeRemaining: 120,
   userHasFinishedGame: false,
 };
 
@@ -30,48 +36,98 @@ const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
+    /**
+     * Takes in an array of Teams
+     * to be set into current game state.
+     */
+    setTeams(state, action: PayloadAction<Team[]>) {
+      state.teams = action.payload;
+    },
+
+    /**
+     * Sets current team to the payload.
+     */
+    setCurrentTeam(state, action: PayloadAction<Team>) {
+      state.currentTeam = action.payload;
+    },
+
+    /**
+     * Sets current team to the next team,
+     * unless current team is the last team.
+     */
+    incrementCurrentTeam(state) {
+      const nextTeamIndex =
+        state.teams.findIndex((team) => team.id === state.currentTeam.id) + 1;
+
+      if (nextTeamIndex === state.teams.length) {
+        return;
+      }
+
+      state.currentTeam === state.teams[nextTeamIndex];
+    },
+
+    /**
+     * Adds payload to the current score.
+     */
     incrementScore(state, action: PayloadAction<number>) {
       state.score += action.payload;
     },
-    decrementScore(state, action: PayloadAction<number>) {
-      state.score -= action.payload;
+
+    /**
+     * Sets teams left based on payload
+     */
+    setTeamsLeft(state, action: PayloadAction<number>) {
+      state.teamsLeft = action.payload;
     },
-    updateTeam(state, action: PayloadAction<Team | undefined>) {
-      if (typeof action.payload !== 'undefined')
-        state.currentTeam = action.payload;
-    },
-    removeTeamLeft(state) {
-      state.teamsLeft--;
-    },
-    updateTimeRemaining(state) {
+
+    /**
+     * Decrements timeRemaining by 1.
+     */
+    decrementTimeRemaining(state) {
       state.timeRemaining--;
     },
+
+    /**
+     * Resets zoom level by recreating currentTeam state.
+     *
+     * (This is hacky)
+     */
     resetZoom(state) {
       state.currentTeam = {
         ...state.currentTeam,
       };
     },
+
+    /**
+     * Sets userHasFinishedGame based on payload
+     */
+    setUserHasFinishedGame(state, action: PayloadAction<boolean>) {
+      state.userHasFinishedGame = action.payload;
+    },
+
+    /**
+     * Resets game state to inital state
+     */
     resetGame(state) {
-      state.score = initialState.score;
+      state.teams = initialState.teams;
       state.currentTeam = initialState.currentTeam;
       state.teamsLeft = initialState.teamsLeft;
+      state.score = initialState.score;
       state.timeRemaining = initialState.timeRemaining;
-      state.userHasFinishedGame = false;
-    },
-    updateUserHasFinishedGame(state, action: PayloadAction<boolean>) {
-      state.userHasFinishedGame = action.payload;
+      state.userHasFinishedGame = initialState.userHasFinishedGame;
     },
   },
 });
 
 export const {
+  setTeams,
+  setCurrentTeam,
+  incrementCurrentTeam,
   incrementScore,
-  decrementScore,
-  updateTeam,
-  removeTeamLeft,
-  updateTimeRemaining,
+  setTeamsLeft,
+  decrementTimeRemaining,
   resetZoom,
+  setUserHasFinishedGame,
   resetGame,
-  updateUserHasFinishedGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;

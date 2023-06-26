@@ -6,7 +6,7 @@ import { useEffect, useMemo } from 'react';
 
 import { prisma } from '@server/db';
 
-import { updateTeam } from '@store/features/game/game-slice';
+import { setCurrentTeam, setTeams } from '@store/features/game/game-slice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 
 import GameControls from '@components/GameControls';
@@ -20,14 +20,6 @@ const DynamicMap = dynamic(() => import('../components/DynamicMap'), {
   ssr: false,
   loading: () => <Loading />,
 });
-
-export async function getServerSideProps() {
-  const teams = await prisma.team.findMany();
-
-  return {
-    props: { teams },
-  };
-}
 
 export interface MatchData {
   score: number;
@@ -46,15 +38,19 @@ interface PlayPageProps {
 }
 
 export default function PlayPage({ teams }: PlayPageProps) {
-  const dispatch = useAppDispatch();
-  const { userHasFinishedGame, score } = useAppSelector((state) => state.game);
   const { data: session } = useSession();
   const router = useRouter();
 
+  const dispatch = useAppDispatch();
+  const { userHasFinishedGame, score } = useAppSelector((state) => state.game);
   const shuffledTeams = useMemo(() => shuffleTeams(teams), [teams]);
 
   useEffect(() => {
-    dispatch(updateTeam(shuffledTeams[0]));
+    dispatch(setTeams(shuffledTeams));
+
+    if (shuffledTeams[0]) {
+      dispatch(setCurrentTeam(shuffledTeams[0]));
+    }
   }, [dispatch, shuffledTeams]);
 
   useEffect(() => {
@@ -101,4 +97,12 @@ async function uploadMatch(match: MatchData) {
   const data: ResponseData = await res.json();
 
   return { status: data.message };
+}
+
+export async function getServerSideProps() {
+  const teams = await prisma.team.findMany();
+
+  return {
+    props: { teams },
+  };
 }

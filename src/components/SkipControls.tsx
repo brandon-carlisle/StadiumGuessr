@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 
-import { updateUserHasFinishedGame } from '@store/features/game/game-slice';
+import { setUserHasFinishedGame } from '@store/features/game/game-slice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 
 import { type Questions } from './GameControls';
@@ -55,7 +55,7 @@ export default function SkipControls({
   }
 
   function handleCompleteGame() {
-    dispatch(updateUserHasFinishedGame(true));
+    dispatch(setUserHasFinishedGame(true));
   }
 
   return (
