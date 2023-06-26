@@ -20,8 +20,10 @@ export function validateAnswer({ userAnswer, answers }: ValidateAnswerProps): {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (sanitizedAnswers.includes(sanitizedInput!)) {
+    console.log('true');
     return { valid: true };
   }
 
+  console.log('false');
   return { valid: false };
 }
