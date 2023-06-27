@@ -2,7 +2,7 @@ import { type FormEvent, useState } from 'react';
 import useSound from 'use-sound';
 
 import {
-  decrementTeamsLeft,
+  decrementTeamsRemaining,
   incrementCurrentTeam,
   incrementScore,
 } from '@store/features/game/game-slice';
@@ -36,7 +36,7 @@ export default function AnswerForm() {
       playCorrectSfx();
       dispatch(incrementScore(10));
       dispatch(incrementCurrentTeam());
-      dispatch(decrementTeamsLeft());
+      dispatch(decrementTeamsRemaining());
     } else {
       playIncorrectSfx();
     }

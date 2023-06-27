@@ -1,73 +1,26 @@
-import type { Dispatch, SetStateAction } from 'react';
-
-import { setUserHasFinishedGame } from '@store/features/game/game-slice';
+import {
+  decrementTeamsRemaining,
+  incrementCurrentTeam,
+} from '@store/features/game/game-slice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 
-import { type Questions } from './GameControls';
-
-interface SkipControlsProps {
-  questions: Questions;
-  setInputText: Dispatch<SetStateAction<string>>;
-  currentQuestion: string | undefined;
-  setCurrentQuestion: Dispatch<SetStateAction<string | undefined>>;
-  handleNextTeam: () => void;
-}
-
-export default function SkipControls({
-  questions,
-  setInputText,
-  currentQuestion,
-  setCurrentQuestion,
-  handleNextTeam,
-}: SkipControlsProps) {
-  const { teamsLeft } = useAppSelector((state) => state.game);
+export default function SkipControls() {
   const dispatch = useAppDispatch();
+  const { teamsRemaining } = useAppSelector((state) => state.game);
 
-  const currentQuestionIndex = Object.keys(questions).find(
-    (key) => questions[key] === currentQuestion,
-  );
-
-  const isFinalQuestion = currentQuestionIndex === 'q3' && teamsLeft === 1;
-
-  function handleSkipQuestion() {
-    if (currentQuestionIndex === 'q1') {
-      setInputText('');
-      setCurrentQuestion(questions['q2']);
-      return;
-    }
-
-    if (currentQuestionIndex === 'q2') {
-      setInputText('');
-      setCurrentQuestion(questions['q3']);
-      return;
-    }
-
-    if (currentQuestionIndex === 'q3' && teamsLeft === 1) {
-      setInputText('');
-      setCurrentQuestion(questions['q1']);
-    }
-
-    if (currentQuestionIndex === 'q3' && teamsLeft > 1) {
-      setInputText('');
-      setCurrentQuestion(questions['q1']);
-      handleNextTeam();
-    }
-  }
-
-  function handleCompleteGame() {
-    dispatch(setUserHasFinishedGame(true));
-  }
+  const handleSkip = () => {
+    dispatch(incrementCurrentTeam());
+    dispatch(decrementTeamsRemaining());
+  };
 
   return (
     <>
-      {!isFinalQuestion && (
-        <button className="btn-secondary btn" onClick={handleSkipQuestion}>
+      {teamsRemaining > 1 ? (
+        <button className="btn-primary btn" onClick={handleSkip}>
           Skip Question
         </button>
-      )}
-
-      {isFinalQuestion && (
-        <button className="btn-secondary btn" onClick={handleCompleteGame}>
+      ) : (
+        <button className="btn-secondary btn" onClick={handleSkip}>
           Finish Game
         </button>
       )}

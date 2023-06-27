@@ -15,7 +15,7 @@ const initialTeam: Team = {
 interface gameState {
   teams: Team[];
   currentTeam: Team;
-  teamsLeft: number;
+  teamsRemaining: number;
 
   score: number;
   timeRemaining: number;
@@ -25,10 +25,10 @@ interface gameState {
 const initialState: gameState = {
   teams: [initialTeam],
   currentTeam: initialTeam,
-  teamsLeft: 20,
+  teamsRemaining: 20,
 
   score: 0,
-  timeRemaining: 1200,
+  timeRemaining: 60,
   userHasFinishedGame: false,
 };
 
@@ -52,20 +52,18 @@ const gameSlice = createSlice({
     },
 
     /**
-     * Sets current team to the next team,
-     * unless current team is the last team.
+     * Sets current team to the next team unless already at last team.
      */
     incrementCurrentTeam(state) {
       const nextTeamIndex =
         state.teams.findIndex((team) => team.id === state.currentTeam.id) + 1;
 
-      console.log(nextTeamIndex);
+      if (nextTeamIndex === state.teams.length - 1) return;
 
-      const nextTeamExists = state.teams[nextTeamIndex] ? true : false;
-
-      if (nextTeamExists && nextTeamIndex !== state.teams.length - 1) {
-        state.currentTeam = state.teams[nextTeamIndex];
-      }
+      if (state.teams[nextTeamIndex]) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        state.currentTeam = state.teams[nextTeamIndex]!;
+      } else return;
     },
 
     /**
@@ -78,15 +76,15 @@ const gameSlice = createSlice({
     /**
      * Sets teams left based on payload.
      */
-    setTeamsLeft(state, action: PayloadAction<number>) {
-      state.teamsLeft = action.payload;
+    setTeamsRemaining(state, action: PayloadAction<number>) {
+      state.teamsRemaining = action.payload;
     },
 
     /**
      * Decrements teams left by 1.
      */
-    decrementTeamsLeft(state) {
-      state.teamsLeft--;
+    decrementTeamsRemaining(state) {
+      if (state.teamsRemaining > 0) state.teamsRemaining--;
     },
 
     /**
@@ -120,7 +118,7 @@ const gameSlice = createSlice({
     resetGame(state) {
       state.teams = initialState.teams;
       state.currentTeam = initialState.currentTeam;
-      state.teamsLeft = initialState.teamsLeft;
+      state.teamsRemaining = initialState.teamsRemaining;
       state.score = initialState.score;
       state.timeRemaining = initialState.timeRemaining;
       state.userHasFinishedGame = initialState.userHasFinishedGame;
@@ -133,8 +131,8 @@ export const {
   setCurrentTeam,
   incrementCurrentTeam,
   incrementScore,
-  setTeamsLeft,
-  decrementTeamsLeft,
+  setTeamsRemaining,
+  decrementTeamsRemaining,
   decrementTimeRemaining,
   resetZoom,
   setUserHasFinishedGame,
