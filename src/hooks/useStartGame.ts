@@ -29,13 +29,8 @@ export default function useStartGame(teams: Team[]) {
       dispatch(decrementTimeRemaining());
     }, 1000);
 
-    // if (timeRemaining < 1) {
-    //   dispatch(setUserHasFinishedGame(true));
-    //   clearInterval(timer);
-    // }
-
     return () => clearInterval(timer);
-  });
+  }, [dispatch]);
 
   return { shuffledTeams };
 }

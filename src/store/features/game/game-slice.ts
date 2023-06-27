@@ -28,7 +28,7 @@ const initialState: gameState = {
   teamsRemaining: 20,
 
   score: 0,
-  timeRemaining: 60,
+  timeRemaining: 90,
   userHasFinishedGame: false,
 };
 
