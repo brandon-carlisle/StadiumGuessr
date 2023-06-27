@@ -24,14 +24,14 @@ export default function AnswerForm() {
 
     console.log(currentTeam);
 
-    const { valid } = validateAnswer({
+    const { isValid } = validateAnswer({
       userAnswer: input,
       answers: [currentTeam.stadium, currentTeam.alternativeStadium],
     });
 
     setInput("");
 
-    if (valid) {
+    if (isValid) {
       playCorrectSfx();
       dispatch(incrementScore(10));
       dispatch(incrementCurrentTeam());

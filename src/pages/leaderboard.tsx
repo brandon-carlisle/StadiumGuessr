@@ -98,6 +98,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       id: true,
     },
   });
+
   const leaderboardString = superjson.stringify(allMatches);
   const leaderboard = superjson.parse(leaderboardString);
 

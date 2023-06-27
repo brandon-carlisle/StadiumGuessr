@@ -13,17 +13,15 @@ interface ValidateAnswerProps {
 }
 
 export function validateAnswer({ userAnswer, answers }: ValidateAnswerProps): {
-  valid: boolean;
+  isValid: boolean;
 } {
   const [sanitizedInput] = sanitize([userAnswer]);
   const sanitizedAnswers = sanitize(answers);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (sanitizedAnswers.includes(sanitizedInput!)) {
-    console.log("true");
-    return { valid: true };
+    return { isValid: true };
+  } else {
+    return { isValid: false };
   }
-
-  console.log("false");
-  return { valid: false };
 }
