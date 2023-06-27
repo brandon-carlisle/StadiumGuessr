@@ -1,15 +1,15 @@
-import type { Team } from '@prisma/client';
-import { useEffect, useMemo } from 'react';
+import type { Team } from "@prisma/client";
+import { useEffect, useMemo } from "react";
+
+import { shuffleTeams } from "@utils/shuffleTeams";
 
 import {
   decrementTimeRemaining,
   setCurrentTeam,
   setTeams,
   setTeamsRemaining,
-} from '@store/features/game/game-slice';
-import { useAppDispatch } from '@store/hooks';
-
-import { shuffleTeams } from '@utils/shuffleTeams';
+} from "@store/features/game/game-slice";
+import { useAppDispatch } from "@store/hooks";
 
 export default function useStartGame(teams: Team[]) {
   const dispatch = useAppDispatch();

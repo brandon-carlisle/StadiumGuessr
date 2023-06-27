@@ -1,9 +1,9 @@
-import { type LatLngExpression } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { type LatLngExpression } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
-import { useAppSelector } from '@store/hooks';
+import { useAppSelector } from "@store/hooks";
 
 const TEMP_CENTER = [
   55.41569544345857, -1.7058989440046168,

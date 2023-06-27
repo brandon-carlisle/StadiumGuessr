@@ -1,4 +1,4 @@
-import { useAppSelector } from '@store/hooks';
+import { useAppSelector } from "@store/hooks";
 
 export default function TeamsLeft() {
   const { teamsRemaining } = useAppSelector((state) => state.game);

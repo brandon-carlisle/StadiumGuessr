@@ -1,12 +1,12 @@
-import { type Team } from '@prisma/client';
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type Team } from "@prisma/client";
+import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialTeam: Team = {
-  id: '',
-  name: '',
-  alternativeName: '',
-  stadium: '',
-  alternativeStadium: '',
+  id: "",
+  name: "",
+  alternativeName: "",
+  stadium: "",
+  alternativeStadium: "",
   capacity: 0,
   latitude: 0,
   longitude: 0,
@@ -33,7 +33,7 @@ const initialState: gameState = {
 };
 
 const gameSlice = createSlice({
-  name: 'game',
+  name: "game",
   initialState,
   reducers: {
     /**

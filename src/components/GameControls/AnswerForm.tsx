@@ -1,26 +1,26 @@
-import { type FormEvent, useState } from 'react';
-import useSound from 'use-sound';
+import { type FormEvent, useState } from "react";
+import useSound from "use-sound";
+
+import { validateAnswer } from "@utils/validateAnswer";
 
 import {
   decrementTeamsRemaining,
   incrementCurrentTeam,
   incrementScore,
-} from '@store/features/game/game-slice';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-
-import { validateAnswer } from '@utils/validateAnswer';
+} from "@store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
 
 export default function AnswerForm() {
   const dispatch = useAppDispatch();
   const { currentTeam } = useAppSelector((state) => state.game);
-  const [playCorrectSfx] = useSound('/correctSfx.mp3');
-  const [playIncorrectSfx] = useSound('/incorrectSfx.mp3');
+  const [playCorrectSfx] = useSound("/correctSfx.mp3");
+  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3");
 
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   function handleAnswerSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (input === '') return;
+    if (input === "") return;
 
     console.log(currentTeam);
 
@@ -29,7 +29,7 @@ export default function AnswerForm() {
       answers: [currentTeam.stadium, currentTeam.alternativeStadium],
     });
 
-    setInput('');
+    setInput("");
 
     if (valid) {
       playCorrectSfx();

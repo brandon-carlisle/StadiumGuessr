@@ -1,20 +1,21 @@
-import { type Team } from '@prisma/client';
-import useFinishGame from 'hooks/useFinishGame';
-import useStartGame from 'hooks/useStartGame';
-import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import { type Team } from "@prisma/client";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
-import { prisma } from '@server/db';
+import { prisma } from "@server/db";
 
-import { setUserHasFinishedGame } from '@store/features/game/game-slice';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { setUserHasFinishedGame } from "@store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
 
-import GameControls from '@components/GameControls/GameControls';
-import Stats from '@components/GameStatsOverlay/StatsOverlay';
-import Loading from '@components/ui/Loading';
+import GameControls from "@components/GameControls/GameControls";
+import Stats from "@components/GameStatsOverlay/GameStatsOverlay";
+import Loading from "@components/ui/Loading";
+
+import useFinishGame from "@hooks/useFinishGame";
+import useStartGame from "@hooks/useStartGame";
 
 // Leaflet needs the window object, so this needs to have dynamic import
-const DynamicMap = dynamic(() => import('../components/Map/DynamicMap'), {
+const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
   ssr: false,
   loading: () => <Loading />,
 });

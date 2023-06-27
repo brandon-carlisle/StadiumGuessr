@@ -1,8 +1,8 @@
 function sanitize(inputs: string[]) {
   return inputs.map((item) =>
     item
-      .replaceAll(' ', '')
-      .replaceAll(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+      .replaceAll(" ", "")
+      .replaceAll(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
       .toLowerCase(),
   );
 }
@@ -20,10 +20,10 @@ export function validateAnswer({ userAnswer, answers }: ValidateAnswerProps): {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (sanitizedAnswers.includes(sanitizedInput!)) {
-    console.log('true');
+    console.log("true");
     return { valid: true };
   }
 
-  console.log('false');
+  console.log("false");
   return { valid: false };
 }

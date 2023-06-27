@@ -1,11 +1,11 @@
-import { useAppDispatch } from '@/store/hooks';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { signIn, signOut, useSession } from "next-auth/react";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { resetGame } from '@store/features/game/game-slice';
+import { resetGame } from "@store/features/game/game-slice";
+import { useAppDispatch } from "@store/hooks";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -38,11 +38,11 @@ export default function HomePage() {
             <WelcomeHeader />
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href={'/play'} className="btn-primary btn">
-                {session ? 'Play now' : 'Play as guest'}
+              <Link href={"/play"} className="btn-primary btn">
+                {session ? "Play now" : "Play as guest"}
               </Link>
 
-              <Link href={'/leaderboard'} className="btn-accent btn">
+              <Link href={"/leaderboard"} className="btn-accent btn">
                 Leaderboard
               </Link>
               <button className="btn-secondary btn" onClick={handleModal}>
@@ -59,7 +59,7 @@ export default function HomePage() {
               ) : (
                 <button
                   className="btn-warning btn"
-                  onClick={() => void signIn('discord')}
+                  onClick={() => void signIn("discord")}
                 >
                   Sign in
                 </button>
@@ -83,7 +83,7 @@ export default function HomePage() {
             ) : null}
             {modalOpen && (
               <>
-                <div className="modal modal-open">
+                <div className="modal-open modal">
                   <div className="modal-box relative">
                     <label
                       className="btn-sm btn-circle btn absolute right-2 top-2"

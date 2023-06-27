@@ -1,8 +1,8 @@
 import {
   decrementTeamsRemaining,
   incrementCurrentTeam,
-} from '@store/features/game/game-slice';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
+} from "@store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
 
 export default function SkipControls() {
   const dispatch = useAppDispatch();

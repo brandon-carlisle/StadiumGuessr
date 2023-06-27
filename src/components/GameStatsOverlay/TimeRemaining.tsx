@@ -1,5 +1,5 @@
-import '@store/features/game/game-slice';
-import { useAppSelector } from '@store/hooks';
+import "@store/features/game/game-slice";
+import { useAppSelector } from "@store/hooks";
 
 export default function TimeRemaining() {
   const time = useAppSelector((state) => state.game.timeRemaining);

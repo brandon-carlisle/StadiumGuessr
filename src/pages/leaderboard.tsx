@@ -1,15 +1,15 @@
-import type { GetServerSidePropsContext } from 'next';
-import Link from 'next/link';
-import { useEffect } from 'react';
-import superjson from 'superjson';
+import type { GetServerSidePropsContext } from "next";
+import Link from "next/link";
+import { useEffect } from "react";
+import superjson from "superjson";
 
-import { getServerAuthSession } from '@server/auth';
-import { prisma } from '@server/db';
+import { getServerAuthSession } from "@server/auth";
+import { prisma } from "@server/db";
 
-import { resetGame } from '@store/features/game/game-slice';
-import { useAppDispatch } from '@store/hooks';
+import formatDate from "@utils/formatDate";
 
-import formatDate from '@utils/formatDate';
+import { resetGame } from "@store/features/game/game-slice";
+import { useAppDispatch } from "@store/hooks";
 
 interface LeaderboardEntry {
   date: Date;
@@ -71,11 +71,11 @@ export default function LeaderboardPage({
       </div>
 
       <div className="flex gap-4">
-        <Link className="btn-primary btn" href={'/play'}>
+        <Link className="btn-primary btn" href={"/play"}>
           Play again
         </Link>
 
-        <Link className="btn-secondary btn" href={'/'}>
+        <Link className="btn-secondary btn" href={"/"}>
           Home
         </Link>
       </div>
@@ -88,7 +88,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   const allMatches = await prisma.match.findMany({
     orderBy: {
-      score: 'desc',
+      score: "desc",
     },
     take: 10,
     select: {
@@ -115,7 +115,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     },
 
     orderBy: {
-      date: 'desc',
+      date: "desc",
     },
     select: {
       date: true,
