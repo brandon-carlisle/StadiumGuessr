@@ -1,3 +1,4 @@
+import { useAppDispatch } from '@/store/hooks';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -5,7 +6,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { resetGame } from '@store/features/game/game-slice';
-import { useAppDispatch } from '@store/hooks';
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);

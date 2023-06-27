@@ -9,12 +9,12 @@ import { prisma } from '@server/db';
 import { setUserHasFinishedGame } from '@store/features/game/game-slice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 
-import GameControls from '@components/GameControls';
-import Loading from '@components/Loading';
-import Stats from '@components/Stats';
+import GameControls from '@components/GameControls/GameControls';
+import Stats from '@components/GameStatsOverlay/StatsOverlay';
+import Loading from '@components/ui/Loading';
 
 // Leaflet needs the window object, so this needs to have dynamic import
-const DynamicMap = dynamic(() => import('../components/DynamicMap'), {
+const DynamicMap = dynamic(() => import('../components/Map/DynamicMap'), {
   ssr: false,
   loading: () => <Loading />,
 });

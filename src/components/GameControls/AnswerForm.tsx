@@ -32,7 +32,6 @@ export default function AnswerForm() {
     setInput('');
 
     if (valid) {
-      // TODO: move these in hooks
       playCorrectSfx();
       dispatch(incrementScore(10));
       dispatch(incrementCurrentTeam());

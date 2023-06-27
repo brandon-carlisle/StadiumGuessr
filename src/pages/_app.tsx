@@ -1,3 +1,4 @@
+import '@/styles/globals.css';
 import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
@@ -5,11 +6,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 
-import { store } from '@store/store';
+import { store } from '@store/index';
 
-import Loading from '@components/Loading';
-
-import '../styles/globals.css';
+import Loading from '@components/ui/Loading';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

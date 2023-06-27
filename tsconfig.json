@@ -19,9 +19,11 @@
     "baseUrl": "./src/",
     "paths": {
       "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@server/*": ["server/*"],
       "@store/*": ["store/*"],
-      "@utils/*": ["utils/*"],
-      "@server/*": ["server/*"]
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": [
