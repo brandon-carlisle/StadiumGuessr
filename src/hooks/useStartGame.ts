@@ -26,18 +26,18 @@ export default function useStartGame(teams: Team[]) {
     }
   }, [dispatch, shuffledTeams]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      dispatch(decrementTimeRemaining());
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     dispatch(decrementTimeRemaining());
+  //   }, 1000);
 
-    if (timeRemaining < 1) {
-      dispatch(setUserHasFinishedGame(true));
-      clearInterval(timer);
-    }
+  //   if (timeRemaining < 1) {
+  //     dispatch(setUserHasFinishedGame(true));
+  //     clearInterval(timer);
+  //   }
 
-    return () => clearInterval(timer);
-  });
+  //   return () => clearInterval(timer);
+  // });
 
   return { shuffledTeams };
 }

@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "^1.9.2",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "babel-plugin-superjson-next": "^0.4.5",
-    "daisyui": "^2.50.1",
+    "daisyui": "^3.1.6",
     "leaflet": "^1.9.3",
     "next": "13.1.6",
     "next-auth": "^4.19.0",

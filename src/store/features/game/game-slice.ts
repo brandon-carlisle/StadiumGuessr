@@ -59,11 +59,13 @@ const gameSlice = createSlice({
       const nextTeamIndex =
         state.teams.findIndex((team) => team.id === state.currentTeam.id) + 1;
 
-      if (nextTeamIndex === state.teams.length) {
-        return;
-      }
+      console.log(nextTeamIndex);
 
-      state.currentTeam === state.teams[nextTeamIndex];
+      const nextTeamExists = state.teams[nextTeamIndex] ? true : false;
+
+      if (nextTeamExists && nextTeamIndex !== state.teams.length - 1) {
+        state.currentTeam = state.teams[nextTeamIndex];
+      }
     },
 
     /**
@@ -74,10 +76,17 @@ const gameSlice = createSlice({
     },
 
     /**
-     * Sets teams left based on payload
+     * Sets teams left based on payload.
      */
     setTeamsLeft(state, action: PayloadAction<number>) {
       state.teamsLeft = action.payload;
+    },
+
+    /**
+     * Decrements teams left by 1.
+     */
+    decrementTeamsLeft(state) {
+      state.teamsLeft--;
     },
 
     /**
@@ -125,6 +134,7 @@ export const {
   incrementCurrentTeam,
   incrementScore,
   setTeamsLeft,
+  decrementTeamsLeft,
   decrementTimeRemaining,
   resetZoom,
   setUserHasFinishedGame,

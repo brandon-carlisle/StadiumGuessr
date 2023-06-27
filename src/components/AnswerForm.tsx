@@ -1,7 +1,11 @@
 import { type FormEvent, useState } from 'react';
 import useSound from 'use-sound';
 
-import { incrementScore } from '@store/features/game/game-slice';
+import {
+  decrementTeamsLeft,
+  incrementCurrentTeam,
+  incrementScore,
+} from '@store/features/game/game-slice';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 
 import { validateAnswer } from '@utils/validateAnswer';
@@ -18,16 +22,21 @@ export default function AnswerForm() {
     e.preventDefault();
     if (input === '') return;
 
+    console.log(currentTeam);
+
     const { valid } = validateAnswer({
       userAnswer: input,
-      answers: ['test', 'another'],
+      answers: [currentTeam.stadium, currentTeam.alternativeStadium],
     });
 
     setInput('');
 
     if (valid) {
+      // TODO: move these in hooks
       playCorrectSfx();
       dispatch(incrementScore(10));
+      dispatch(incrementCurrentTeam());
+      dispatch(decrementTeamsLeft());
     } else {
       playIncorrectSfx();
     }
@@ -41,6 +50,7 @@ export default function AnswerForm() {
         id="answer-input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        placeholder="What stadium is this?"
       />
     </form>
   );
