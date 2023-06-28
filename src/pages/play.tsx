@@ -1,45 +1,24 @@
-import { type Team } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { useEffect, useMemo } from 'react';
+import { type Team } from "@prisma/client";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
-import { prisma } from '@server/db';
+import { prisma } from "@server/db";
 
-import { updateTeam } from '@store/features/game/game-slice';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
+import { setUserHasFinishedGame } from "@store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
 
-import GameControls from '@components/GameControls';
-import Loading from '@components/Loading';
-import Stats from '@components/Stats';
+import GameControls from "@components/GameControls/GameControls";
+import Stats from "@components/GameStatsOverlay/GameStatsOverlay";
+import Loading from "@components/ui/Loading";
 
-import { type ResponseData } from './api/upload-match';
+import useFinishGame from "@hooks/useFinishGame";
+import useStartGame from "@hooks/useStartGame";
 
 // Leaflet needs the window object, so this needs to have dynamic import
-const DynamicMap = dynamic(() => import('../components/DynamicMap'), {
+const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
   ssr: false,
   loading: () => <Loading />,
 });
-
-export async function getServerSideProps() {
-  const teams = await prisma.team.findMany();
-
-  return {
-    props: { teams },
-  };
-}
-
-export interface MatchData {
-  score: number;
-  user: string | undefined;
-}
-
-function shuffleTeams(input: Team[]) {
-  return input
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-}
 
 interface PlayPageProps {
   teams: Team[];
@@ -47,58 +26,32 @@ interface PlayPageProps {
 
 export default function PlayPage({ teams }: PlayPageProps) {
   const dispatch = useAppDispatch();
-  const { userHasFinishedGame, score } = useAppSelector((state) => state.game);
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { timeRemaining, teamsRemaining } = useAppSelector(
+    (state) => state.game,
+  );
 
-  const shuffledTeams = useMemo(() => shuffleTeams(teams), [teams]);
-
-  useEffect(() => {
-    dispatch(updateTeam(shuffledTeams[0]));
-  }, [dispatch, shuffledTeams]);
+  useStartGame(teams);
+  const { completedGame } = useFinishGame();
 
   useEffect(() => {
-    if (!session && userHasFinishedGame) {
-      void router.push('/leaderboard');
+    if (timeRemaining === 0 || teamsRemaining === 0) {
+      dispatch(setUserHasFinishedGame(true));
     }
-
-    if (session && userHasFinishedGame) {
-      const match: MatchData = {
-        score,
-        user: session?.user.id,
-      };
-
-      void (async () => {
-        const { status } = await uploadMatch(match);
-        if (status === 'completed') void router.push('/leaderboard');
-        else void router.push('/');
-      })();
-    }
-  }, [router, score, session, session?.user.id, userHasFinishedGame]);
+  }, [dispatch, teamsRemaining, timeRemaining]);
 
   return (
     <main className="relative flex h-full flex-col">
       <DynamicMap />
-      {!userHasFinishedGame && <GameControls teams={shuffledTeams} />}
+      {!completedGame && <GameControls />}
       <Stats />
     </main>
   );
 }
 
-async function uploadMatch(match: MatchData) {
-  const res = await fetch('/api/upload-match', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(match),
-  });
+export async function getServerSideProps() {
+  const teams = await prisma.team.findMany();
 
-  if (!res.ok) throw new Error('Could not create match');
-
-  // TODO find better way to type this
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const data: ResponseData = await res.json();
-
-  return { status: data.message };
+  return {
+    props: { teams },
+  };
 }

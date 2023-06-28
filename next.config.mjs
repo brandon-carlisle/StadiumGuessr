@@ -10,6 +10,18 @@
 const config = {
   reactStrictMode: true,
 
+  // Replacement for the babel transform plugin
+  experimental: {
+    swcPlugins: [
+      [
+        "next-superjson-plugin",
+        {
+          excluded: [],
+        },
+      ],
+    ],
+  },
+
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
    * must comment the below `i18n` config out.

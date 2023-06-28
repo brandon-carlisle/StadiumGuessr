@@ -2,15 +2,17 @@
   "printWidth": 80,
   "tabWidth": 2,
   "trailingComma": "all",
-  "singleQuote": true,
+  "singleQuote": false,
   "semi": true,
   "importOrder": [
+    "^[./]",
     "^@core/(.*)$",
     "^@server/(.*)$",
-    "^@store/(.*)$",
     "^@utils/(.*)$",
+    "^@store/(.*)$",
+    "^@styles/(.*)$",
     "^@components/(.*)$",
-    "^[./]"
+    "^@hooks/(.*)$"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,

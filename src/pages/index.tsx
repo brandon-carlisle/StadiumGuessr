@@ -1,11 +1,11 @@
-import { signIn, signOut, useSession } from 'next-auth/react';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { signIn, signOut, useSession } from "next-auth/react";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { resetGame } from '@store/features/game/game-slice';
-import { useAppDispatch } from '@store/hooks';
+import { resetGame } from "@store/features/game/game-slice";
+import { useAppDispatch } from "@store/hooks";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -38,11 +38,11 @@ export default function HomePage() {
             <WelcomeHeader />
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href={'/play'} className="btn-primary btn">
-                {session ? 'Play now' : 'Play as guest'}
+              <Link href={"/play"} className="btn-primary btn">
+                {session ? "Play now" : "Play as guest"}
               </Link>
 
-              <Link href={'/leaderboard'} className="btn-accent btn">
+              <Link href={"/leaderboard"} className="btn-accent btn">
                 Leaderboard
               </Link>
               <button className="btn-secondary btn" onClick={handleModal}>
@@ -59,7 +59,7 @@ export default function HomePage() {
               ) : (
                 <button
                   className="btn-warning btn"
-                  onClick={() => void signIn('discord')}
+                  onClick={() => void signIn("discord")}
                 >
                   Sign in
                 </button>
@@ -83,7 +83,7 @@ export default function HomePage() {
             ) : null}
             {modalOpen && (
               <>
-                <div className="modal modal-open">
+                <div className="modal-open modal">
                   <div className="modal-box relative">
                     <label
                       className="btn-sm btn-circle btn absolute right-2 top-2"
@@ -93,9 +93,11 @@ export default function HomePage() {
                     </label>
                     <h3 className="mb-4 text-lg font-bold">How to play</h3>
                     <ol className="flex list-decimal flex-col gap-3 px-4 text-left">
-                      <li>Try to answer each question for every stadium</li>
-                      <li>You can skip any questions you dont know</li>
-                      <li>You must sign in to save your scores</li>
+                      <li>
+                        Use the map to look around and figure out where you are
+                      </li>
+                      <li>Enter your guess or skip if you do not know</li>
+                      <li>If you want scores to save, you must sign in</li>
                     </ol>
                   </div>
                 </div>
@@ -104,6 +106,20 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+
+      <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 py-4">
+        <p className="font-mono">
+          Made by{" "}
+          <a
+            href="https://www.carlisle.dev/"
+            className="link-accent link"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Brandon
+          </a>
+        </p>
+      </footer>
     </>
   );
 }
@@ -113,9 +129,9 @@ function WelcomeHeader() {
     <header>
       <h1 className="text-3xl font-bold md:text-5xl">StadiumGuessr</h1>
       <p className="py-6">
-        StadiumGuessr is a game to test your football stadium knowledge. You
-        will get placed at a random stadium around Europe and you will have to
-        guess various facts about it.
+        Explore a map and find yourself at a random football stadium. Your
+        challenge is to guess the correct name of the stadium. How many can you
+        identify?
       </p>
     </header>
   );

@@ -1,15 +1,15 @@
-import type { GetServerSidePropsContext } from 'next';
-import Link from 'next/link';
-import { useEffect } from 'react';
-import superjson from 'superjson';
+import type { GetServerSidePropsContext } from "next";
+import Link from "next/link";
+import { useEffect } from "react";
+import superjson from "superjson";
 
-import { getServerAuthSession } from '@server/auth';
-import { prisma } from '@server/db';
+import { getServerAuthSession } from "@server/auth";
+import { prisma } from "@server/db";
 
-import { resetGame } from '@store/features/game/game-slice';
-import { useAppDispatch } from '@store/hooks';
+import formatDate from "@utils/formatDate";
 
-import formatDate from '@utils/formatDate';
+import { resetGame } from "@store/features/game/game-slice";
+import { useAppDispatch } from "@store/hooks";
 
 interface LeaderboardEntry {
   date: Date;
@@ -38,7 +38,7 @@ export default function LeaderboardPage({
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
       <h1 className="text-4xl font-semibold">Leaderboard</h1>
       <div className="w-[90%] overflow-x-auto p-2 md:w-2/3">
-        <table className="table-compact table w-full text-center">
+        <table className="table w-full text-center">
           <thead>
             <tr>
               <th>User</th>
@@ -71,11 +71,11 @@ export default function LeaderboardPage({
       </div>
 
       <div className="flex gap-4">
-        <Link className="btn-primary btn" href={'/play'}>
-          Play again
+        <Link className="btn-primary btn" href={"/play"}>
+          Play
         </Link>
 
-        <Link className="btn-secondary btn" href={'/'}>
+        <Link className="btn-secondary btn" href={"/"}>
           Home
         </Link>
       </div>
@@ -88,7 +88,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   const allMatches = await prisma.match.findMany({
     orderBy: {
-      score: 'desc',
+      score: "desc",
     },
     take: 10,
     select: {
@@ -98,6 +98,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       id: true,
     },
   });
+
   const leaderboardString = superjson.stringify(allMatches);
   const leaderboard = superjson.parse(leaderboardString);
 
@@ -115,7 +116,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     },
 
     orderBy: {
-      date: 'desc',
+      date: "desc",
     },
     select: {
       date: true,
