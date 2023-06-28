@@ -38,7 +38,7 @@ export default function LeaderboardPage({
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
       <h1 className="text-4xl font-semibold">Leaderboard</h1>
       <div className="w-[90%] overflow-x-auto p-2 md:w-2/3">
-        <table className="table-compact table w-full text-center">
+        <table className="table w-full text-center">
           <thead>
             <tr>
               <th>User</th>
@@ -72,7 +72,7 @@ export default function LeaderboardPage({
 
       <div className="flex gap-4">
         <Link className="btn-primary btn" href={"/play"}>
-          Play again
+          Play
         </Link>
 
         <Link className="btn-secondary btn" href={"/"}>

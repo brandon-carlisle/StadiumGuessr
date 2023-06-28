@@ -22,8 +22,6 @@ export default function AnswerForm() {
     e.preventDefault();
     if (input === "") return;
 
-    console.log(currentTeam);
-
     const { isValid } = validateAnswer({
       userAnswer: input,
       answers: [currentTeam.stadium, currentTeam.alternativeStadium],
