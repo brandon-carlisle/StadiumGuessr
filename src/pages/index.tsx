@@ -38,27 +38,33 @@ export default function HomePage() {
             <WelcomeHeader />
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href={"/play"} className="btn-primary btn">
+              <Link href={"/play"} className="btn-primary btn-sm btn md:btn-md">
                 {session ? "Play now" : "Play as guest"}
               </Link>
 
-              <Link href={"/leaderboard"} className="btn-accent btn">
+              <Link
+                href={"/leaderboard"}
+                className="btn-accent btn-sm btn md:btn-md"
+              >
                 Leaderboard
               </Link>
-              <button className="btn-secondary btn" onClick={handleModal}>
+              <button
+                className="btn-secondary btn-sm btn md:btn-md"
+                onClick={handleModal}
+              >
                 How to play
               </button>
 
               {session ? (
                 <button
-                  className="btn-warning btn"
+                  className="btn-warning btn-sm btn md:btn-md"
                   onClick={() => void signOut()}
                 >
                   Sign Out
                 </button>
               ) : (
                 <button
-                  className="btn-warning btn"
+                  className="btn-warning btn-sm btn md:btn-md"
                   onClick={() => void signIn("discord")}
                 >
                   Sign in

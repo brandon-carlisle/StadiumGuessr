@@ -1,5 +1,6 @@
 import { type Team } from "@prisma/client";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useEffect } from "react";
 
 import { prisma } from "@server/db";
@@ -40,11 +41,16 @@ export default function PlayPage({ teams }: PlayPageProps) {
   }, [dispatch, teamsRemaining, timeRemaining]);
 
   return (
-    <main className="relative flex h-full flex-col">
-      <DynamicMap />
-      {!completedGame && <GameControls />}
-      <Stats />
-    </main>
+    <>
+      <Head>
+        <title>StadiumGuessr / Play</title>
+      </Head>
+      <main className="relative flex h-full flex-col">
+        <DynamicMap />
+        {!completedGame && <GameControls />}
+        <Stats />
+      </main>
+    </>
   );
 }
 

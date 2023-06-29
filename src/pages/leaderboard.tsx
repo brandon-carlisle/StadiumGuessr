@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useEffect } from "react";
 import superjson from "superjson";
@@ -35,51 +36,59 @@ export default function LeaderboardPage({
   }, [dispatch]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-4xl font-semibold">Leaderboard</h1>
-      <div className="w-[90%] overflow-x-auto p-2 md:w-2/3">
-        <table className="table w-full text-center">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Score</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaderboard.map((entry) => {
-              return (
-                <tr key={entry.id}>
-                  <td>{entry.User.name}</td>
-                  <td>{entry.score}</td>
-                  <td>{formatDate(entry.date)}</td>
-                </tr>
-              );
-            })}
+    <>
+      <Head>
+        <title>StadiumGuessr / Leaderboard</title>
+      </Head>
 
-            {recentMatchFromUser && (
-              <tr className="bg-primary">
-                <td className="bg-inherit">{recentMatchFromUser.User.name}</td>
-                <td className="bg-inherit">{recentMatchFromUser.score}</td>
-                <td className="bg-inherit">
-                  {formatDate(recentMatchFromUser.date)}
-                </td>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <h1 className="text-4xl font-semibold">Leaderboard</h1>
+        <div className="w-[90%] overflow-x-auto p-2 md:w-2/3">
+          <table className="table-sm w-full text-center md:table-md">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Score</th>
+                <th>Date</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {leaderboard.map((entry) => {
+                return (
+                  <tr key={entry.id}>
+                    <td>{entry.User.name}</td>
+                    <td>{entry.score}</td>
+                    <td>{formatDate(entry.date)}</td>
+                  </tr>
+                );
+              })}
 
-      <div className="flex gap-4">
-        <Link className="btn-primary btn" href={"/play"}>
-          Play
-        </Link>
+              {recentMatchFromUser && (
+                <tr className="bg-primary">
+                  <td className="bg-inherit">
+                    {recentMatchFromUser.User.name}
+                  </td>
+                  <td className="bg-inherit">{recentMatchFromUser.score}</td>
+                  <td className="bg-inherit">
+                    {formatDate(recentMatchFromUser.date)}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        <Link className="btn-secondary btn" href={"/"}>
-          Home
-        </Link>
-      </div>
-    </main>
+        <div className="flex gap-4">
+          <Link className="btn-primary btn-sm btn md:btn-md" href={"/play"}>
+            Play
+          </Link>
+
+          <Link className="btn-secondary btn-sm btn md:btn-md" href={"/"}>
+            Home
+          </Link>
+        </div>
+      </main>
+    </>
   );
 }
 

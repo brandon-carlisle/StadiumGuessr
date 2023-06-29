@@ -5,8 +5,8 @@ export default function Score() {
 
   return (
     <div className="stat">
-      <div className="stat-title">Current Score</div>
-      <div className="stat-value text-center">{score}</div>
+      <div className="stat-title">⚽️ Score</div>
+      <div className="stat-value text-center text-2xl md:text-4xl">{score}</div>
     </div>
   );
 }

@@ -16,11 +16,17 @@ export default function SkipControls() {
   return (
     <>
       {teamsRemaining > 1 ? (
-        <button className="btn-primary btn" onClick={handleSkip}>
+        <button
+          className="btn-primary btn-sm btn md:btn-md"
+          onClick={handleSkip}
+        >
           Skip Question
         </button>
       ) : (
-        <button className="btn-secondary btn" onClick={handleSkip}>
+        <button
+          className="btn-secondary btn-sm btn md:btn-md"
+          onClick={handleSkip}
+        >
           Finish Game
         </button>
       )}
