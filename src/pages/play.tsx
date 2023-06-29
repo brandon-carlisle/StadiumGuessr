@@ -8,7 +8,7 @@ import { prisma } from "@server/db";
 import { setUserHasFinishedGame } from "@store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 
-import GameControls from "@components/GameControls/GameControls";
+import GameControlsOverlay from "@components/GameControlsOverlay/GameControlsOverlay";
 import Stats from "@components/GameStatsOverlay/GameStatsOverlay";
 import Loading from "@components/ui/Loading";
 
@@ -47,7 +47,7 @@ export default function PlayPage({ teams }: PlayPageProps) {
       </Head>
       <main className="relative flex h-full flex-col">
         <DynamicMap />
-        {!completedGame && <GameControls />}
+        {!completedGame && <GameControlsOverlay />}
         <Stats />
       </main>
     </>

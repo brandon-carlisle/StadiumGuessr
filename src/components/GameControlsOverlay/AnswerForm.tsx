@@ -40,10 +40,13 @@ export default function AnswerForm() {
   }
 
   return (
-    <form className="w-96" onSubmit={(e) => handleAnswerSubmit(e)}>
+    <form
+      className="flex w-full items-center justify-center md:w-96"
+      onSubmit={(e) => handleAnswerSubmit(e)}
+    >
       <input
         type="text"
-        className="input-primary input w-full text-center md:input-lg"
+        className="input-primary input text-center md:input-lg md:w-full"
         id="answer-input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
