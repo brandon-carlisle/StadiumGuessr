@@ -9,7 +9,7 @@ import { store } from "@store/index";
 
 import "@styles/globals.css";
 
-import Loading from "@components/ui/Loading";
+// import Loading from "@components/ui/Loading";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
