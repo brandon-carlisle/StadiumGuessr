@@ -4,13 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { resetGame } from "@store/features/game/game-slice";
-import { useAppDispatch } from "@store/hooks";
+import { api } from "@/utils/api";
+
+import { resetGame } from "@/store/features/game/game-slice";
+import { useAppDispatch } from "@/store/hooks";
+
+// import { useAppDispatch } from "@store/hooks";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
+
+  const { data } = api.example.get.useQuery({ name: "Brandon" });
+
+  console.log(data?.message);
 
   // Reset game state whenever user goes to homepage
   useEffect(() => {
