@@ -54,6 +54,11 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum UserRole {
+    USER
+    ADMIN
+}
+
 model User {
     id            String    @id @default(cuid())
     name          String?
@@ -63,6 +68,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     matches       Match[]
+
+    role UserRole @default(USER)
 }
 
 model Match {

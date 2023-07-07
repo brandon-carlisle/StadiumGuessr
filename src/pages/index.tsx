@@ -16,9 +16,8 @@ export default function HomePage() {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
 
-  const { data } = api.example.get.useQuery({ name: "Brandon" });
-
-  console.log(data?.message);
+  // const { data } = api.example.get.useQuery({ name: "Brandon" });
+  const { data } = api.example.getRole.useQuery();
 
   // Reset game state whenever user goes to homepage
   useEffect(() => {
