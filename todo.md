@@ -1,4 +1,11 @@
-# Things to work on
+TODO:
 
-- Autocomplete when typing answers
-- Make it so you can get 3 trys on each question
+UI:
+
+- Create AuthButton
+- Add admin dashboard / create stadium form
+
+Backend:
+
+- TRPC router for Stadium (used to create and delete Stadiums)
+- TRPC router for Match (used to create Matches when user completes game)

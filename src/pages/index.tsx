@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { api } from "@/utils/api";
-
+// import { api } from "@/utils/api";
 import { resetGame } from "@/store/features/game/game-slice";
 import { useAppDispatch } from "@/store/hooks";
 
@@ -17,7 +16,7 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
 
   // const { data } = api.example.get.useQuery({ name: "Brandon" });
-  const { data } = api.example.getRole.useQuery();
+  // const { data } = api.example.getRole.useQuery();
 
   // Reset game state whenever user goes to homepage
   useEffect(() => {
