@@ -9,6 +9,8 @@ import { store } from "@store/index";
 
 import "@styles/globals.css";
 
+import ReworkScreen from "@components/ui/ReworkScreen";
+
 // import Loading from "@components/ui/Loading";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -39,8 +41,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <ReduxProvider store={store}>
-        {/* {loading ? <Loading /> : <Component {...pageProps} />} */}
-        <Component {...pageProps} />
+        <ReworkScreen />
       </ReduxProvider>
     </SessionProvider>
   );
