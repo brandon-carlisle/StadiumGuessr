@@ -7,6 +7,7 @@ import { z } from "zod";
 import { api } from "@/utils/api";
 
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import Unauthorised from "@/components/ui/Unauthorised";
 
 export default function AdminPage() {
   const { data: session, status: sessionStatus } = useSession();
@@ -19,8 +20,7 @@ export default function AdminPage() {
       </div>
     );
 
-  if (!session || session.user.role !== "ADMIN")
-    return <p>You are not authorized</p>;
+  if (!session || session.user.role !== "ADMIN") return <Unauthorised />;
 
   return (
     <>
