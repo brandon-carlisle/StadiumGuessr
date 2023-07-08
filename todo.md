@@ -2,7 +2,7 @@ TODO:
 
 UI:
 
-- Create AuthButton
+- Create AuthButton (DONE)
 - Add admin dashboard / create stadium form
 
 Backend:
