@@ -134,7 +134,7 @@ export default function HomePage() {
 function WelcomeHeader() {
   return (
     <header className="mb-8">
-      <h1 className="text-3xl font-bold text-primary-content md:text-6xl">
+      <h1 className="text-3xl text-primary-content md:text-6xl">
         StadiumGuessr
       </h1>
       <p className="py-6">

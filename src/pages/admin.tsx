@@ -23,35 +23,62 @@ export default function AdminPage() {
 
   return (
     <main className="p-8">
-      <h1 className="mb-10 text-2xl font-bold text-primary-content/90 md:text-4xl">
+      <h1 className="mb-16 text-2xl text-primary-content md:text-4xl">
         Welcome back, {session.user.name}
       </h1>
 
-      <section className="mb-10">
-        <h2 className="mb-5 text-xl font-semibold">View all stadiums</h2>
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <section className="mb-10">
+          <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
+            View all stadiums
+          </h2>
 
-        {isLoading && <LoadingSpinner />}
+          {isLoading && <LoadingSpinner />}
 
-        {!stadiums || (!stadiums.length && !isLoading) ? (
-          <p>No stadiums found...</p>
-        ) : (
-          stadiums.map((stadium) => <div key={stadium.id}>{stadium.club}</div>)
-        )}
-      </section>
+          {!stadiums || !stadiums.length ? (
+            <p>No stadiums found...</p>
+          ) : (
+            stadiums.map((stadium) => (
+              <div
+                key={stadium.id}
+                className="flex flex-col gap-2 bg-neutral-focus p-5"
+              >
+                <h3 className="font-semibold capitalize">{stadium.club}</h3>
+                <div>
+                  <span className="mr-1">Possible names:</span>
+                  {stadium.names.map((name) => (
+                    <span key={name} className="mr-1">
+                      {name}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <p>Lat: {stadium.latitude}</p>
+                  <p>Long: {stadium.longitude}</p>
+                </div>
 
-      <section>
-        <h2 className="mb-5 text-xl font-semibold">Add a new stadium</h2>
-        <AdminForm />
-      </section>
+                <p>Capacity: {stadium.capacity}</p>
+              </div>
+            ))
+          )}
+        </section>
+
+        <section>
+          <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
+            Add a new stadium
+          </h2>
+          <AdminForm />
+        </section>
+      </div>
     </main>
   );
 }
 
 const schema = z.object({
   names: z.string().min(1),
-  capacity: z.coerce.number(),
-  latitude: z.coerce.number(),
-  longitude: z.coerce.number(),
+  capacity: z.string().min(1),
+  latitude: z.string().min(1),
+  longitude: z.string().min(1),
   club: z.string().min(1),
 });
 type FormData = z.infer<typeof schema>;
@@ -82,18 +109,21 @@ function AdminForm() {
 
     mutate({
       names: data.names.split(","),
-      capacity: data.capacity,
+      capacity: Number.parseInt(data.capacity),
       club: data.club,
-      latitude: data.latitude,
-      longitude: data.longitude,
+      latitude: Number.parseFloat(data.latitude),
+      longitude: Number.parseFloat(data.longitude),
     });
   };
 
   return (
     <>
-      {/*  eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-        <div className="form-control w-full max-w-xs">
+      <form
+        //eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full flex-col gap-3"
+      >
+        <div className="form-control w-full">
           <label className="label" htmlFor="names">
             <span className="label-text">
               Stadium names seperated with a comma
@@ -103,7 +133,7 @@ function AdminForm() {
             id="names"
             type="text"
             placeholder="old trafford,theatre of dreams"
-            className="input-bordered input w-full max-w-xs placeholder:font-thin"
+            className="input-bordered input w-full placeholder:font-thin"
             {...register("names")}
           />
           {errors.names?.message && (
@@ -111,7 +141,7 @@ function AdminForm() {
           )}
         </div>
 
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control w-full">
           <label className="label" htmlFor="capacity">
             <span className="label-text">Stadium capacity</span>
           </label>
@@ -119,7 +149,7 @@ function AdminForm() {
             id="capacity"
             type="number"
             placeholder="60000"
-            className="input-bordered input w-full max-w-xs placeholder:font-thin"
+            className="input-bordered input w-full placeholder:font-thin"
             {...register("capacity")}
           />
           {errors.capacity?.message && (
@@ -127,7 +157,7 @@ function AdminForm() {
           )}
         </div>
 
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control w-full">
           <label className="label" htmlFor="latitude">
             <span className="label-text">Stadium latitude</span>
           </label>
@@ -135,7 +165,7 @@ function AdminForm() {
             id="latitude"
             type="text"
             placeholder="53.463056"
-            className="input-bordered input w-full max-w-xs placeholder:font-thin"
+            className="input-bordered input w-full placeholder:font-thin"
             {...register("latitude")}
           />
           {errors.latitude?.message && (
@@ -143,7 +173,7 @@ function AdminForm() {
           )}
         </div>
 
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control w-full">
           <label className="label" htmlFor="longitude">
             <span className="label-text">Stadium longitude</span>
           </label>
@@ -151,7 +181,7 @@ function AdminForm() {
             id="longitude"
             type="text"
             placeholder="-2.291389"
-            className="input-bordered input w-full max-w-xs placeholder:font-thin"
+            className="input-bordered input w-full placeholder:font-thin"
             {...register("longitude")}
           />
           {errors.longitude?.message && (
@@ -159,7 +189,7 @@ function AdminForm() {
           )}
         </div>
 
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control w-full">
           <label className="label" htmlFor="longitude">
             <span className="label-text">Club</span>
           </label>
@@ -167,7 +197,7 @@ function AdminForm() {
             id="club"
             type="text"
             placeholder="Manchester United"
-            className="input-bordered input w-full max-w-xs placeholder:font-thin"
+            className="input-bordered input w-full placeholder:font-thin"
             {...register("club")}
           />
 
