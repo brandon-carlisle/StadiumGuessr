@@ -5,13 +5,18 @@ import { z } from "zod";
 
 import { api } from "@/utils/api";
 
-import Loading from "@/components/ui/Loading";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function AdminPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const { data: stadiums, isLoading } = api.stadium.getAll.useQuery();
 
-  if (status === "loading") return <Loading />;
+  if (sessionStatus === "loading")
+    return (
+      <div className="grid h-screen w-screen place-items-center">
+        <LoadingSpinner />
+      </div>
+    );
 
   if (!session || session.user.role !== "ADMIN")
     return <p>You are not authorized</p>;
@@ -25,10 +30,13 @@ export default function AdminPage() {
       <section className="mb-10">
         <h2 className="mb-5 text-xl font-semibold">View all stadiums</h2>
 
-        {isLoading && <p>Loading stadiums...</p>}
+        {isLoading && <LoadingSpinner />}
 
-        {!stadiums ||
-          (!stadiums.length && !isLoading && <p>No stadiums found...</p>)}
+        {!stadiums || (!stadiums.length && !isLoading) ? (
+          <p>No stadiums found...</p>
+        ) : (
+          stadiums.map((stadium) => <div key={stadium.id}>{stadium.club}</div>)
+        )}
       </section>
 
       <section>
@@ -41,31 +49,50 @@ export default function AdminPage() {
 
 const schema = z.object({
   names: z.string().min(1),
-  capacity: z.number(),
-  latitude: z.number(),
-  longitude: z.number(),
+  capacity: z.coerce.number(),
+  latitude: z.coerce.number(),
+  longitude: z.coerce.number(),
   club: z.string().min(1),
 });
 type FormData = z.infer<typeof schema>;
 
+// TODO: This form can be cleaned up later (mostly the inputs)
 function AdminForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
+  const { mutate, error, isError, isLoading, isSuccess } =
+    api.stadium.create.useMutation();
+
+  if (isError) {
+    alert(error.message);
+  }
+
+  if (isSuccess) reset();
+
   const onSubmit = (data: FormData) => {
     console.log("ran");
     console.log(data);
+
+    mutate({
+      names: data.names.split(","),
+      capacity: data.capacity,
+      club: data.club,
+      latitude: data.latitude,
+      longitude: data.longitude,
+    });
   };
 
   return (
     <>
       {/*  eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <div className="form-control w-full max-w-xs">
           <label className="label" htmlFor="names">
             <span className="label-text">
@@ -76,7 +103,7 @@ function AdminForm() {
             id="names"
             type="text"
             placeholder="old trafford,theatre of dreams"
-            className="input-bordered input w-full max-w-xs"
+            className="input-bordered input w-full max-w-xs placeholder:font-thin"
             {...register("names")}
           />
           {errors.names?.message && (
@@ -92,7 +119,7 @@ function AdminForm() {
             id="capacity"
             type="number"
             placeholder="60000"
-            className="input-bordered input w-full max-w-xs"
+            className="input-bordered input w-full max-w-xs placeholder:font-thin"
             {...register("capacity")}
           />
           {errors.capacity?.message && (
@@ -108,7 +135,7 @@ function AdminForm() {
             id="latitude"
             type="text"
             placeholder="53.463056"
-            className="input-bordered input w-full max-w-xs"
+            className="input-bordered input w-full max-w-xs placeholder:font-thin"
             {...register("latitude")}
           />
           {errors.latitude?.message && (
@@ -124,7 +151,7 @@ function AdminForm() {
             id="longitude"
             type="text"
             placeholder="-2.291389"
-            className="input-bordered input w-full max-w-xs"
+            className="input-bordered input w-full max-w-xs placeholder:font-thin"
             {...register("longitude")}
           />
           {errors.longitude?.message && (
@@ -140,7 +167,7 @@ function AdminForm() {
             id="club"
             type="text"
             placeholder="Manchester United"
-            className="input-bordered input w-full max-w-xs"
+            className="input-bordered input w-full max-w-xs placeholder:font-thin"
             {...register("club")}
           />
 
@@ -149,9 +176,15 @@ function AdminForm() {
           )}
         </div>
 
-        <button type="submit" className="btn-primary btn-wide btn mt-10">
-          Add stadium
-        </button>
+        {!isLoading ? (
+          <button type="submit" className="btn-primary btn-wide btn mt-5">
+            Add stadium
+          </button>
+        ) : (
+          <button className="btn-disabled btn-wide btn mt-5">
+            <LoadingSpinner />
+          </button>
+        )}
       </form>
     </>
   );
