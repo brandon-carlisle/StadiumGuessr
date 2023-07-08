@@ -11,13 +11,11 @@ export const stadiumRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        stadium: z.object({
-          names: z.array(z.string()),
-          capacity: z.number(),
-          latitude: z.number(),
-          longitude: z.number(),
-          club: z.string(),
-        }),
+        names: z.array(z.string()),
+        capacity: z.number(),
+        latitude: z.number(),
+        longitude: z.number(),
+        club: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -27,7 +25,7 @@ export const stadiumRouter = createTRPCRouter({
           message: "You are not an admin",
         });
 
-      const stadium = await ctx.prisma.stadium.create({ data: input.stadium });
+      const stadium = await ctx.prisma.stadium.create({ data: input });
 
       return { stadium };
     }),
