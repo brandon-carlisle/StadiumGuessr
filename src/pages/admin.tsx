@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,55 +23,61 @@ export default function AdminPage() {
     return <p>You are not authorized</p>;
 
   return (
-    <main className="p-8">
-      <h1 className="mb-16 text-2xl text-primary-content md:text-4xl">
-        Welcome back, {session.user.name}
-      </h1>
+    <>
+      <header className="mb-10 flex justify-between p-8">
+        <h1 className="text-2xl text-primary-content md:text-4xl">
+          Welcome back, {session.user.name}
+        </h1>
+        <Link href={"/"} className="btn-md btn">
+          Go home
+        </Link>
+      </header>
+      <main className="p-8">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <section>
+            <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
+              View all stadiums
+            </h2>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <section className="mb-10">
-          <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
-            View all stadiums
-          </h2>
+            {isLoading && <LoadingSpinner />}
 
-          {isLoading && <LoadingSpinner />}
+            {!stadiums || !stadiums.length ? (
+              <p>No stadiums found...</p>
+            ) : (
+              stadiums.map((stadium) => (
+                <div
+                  key={stadium.id}
+                  className="flex flex-col gap-2 rounded-lg bg-neutral-focus p-5"
+                >
+                  <h3 className="font-semibold capitalize">{stadium.club}</h3>
+                  <div>
+                    <span className="mr-1">Possible names:</span>
+                    {stadium.names.map((name) => (
+                      <span key={name} className="mr-1">
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <p>Lat: {stadium.latitude}</p>
+                    <p>Long: {stadium.longitude}</p>
+                  </div>
 
-          {!stadiums || !stadiums.length ? (
-            <p>No stadiums found...</p>
-          ) : (
-            stadiums.map((stadium) => (
-              <div
-                key={stadium.id}
-                className="flex flex-col gap-2 bg-neutral-focus p-5"
-              >
-                <h3 className="font-semibold capitalize">{stadium.club}</h3>
-                <div>
-                  <span className="mr-1">Possible names:</span>
-                  {stadium.names.map((name) => (
-                    <span key={name} className="mr-1">
-                      {name}
-                    </span>
-                  ))}
+                  <p>Capacity: {stadium.capacity}</p>
                 </div>
-                <div className="flex gap-2">
-                  <p>Lat: {stadium.latitude}</p>
-                  <p>Long: {stadium.longitude}</p>
-                </div>
+              ))
+            )}
+          </section>
 
-                <p>Capacity: {stadium.capacity}</p>
-              </div>
-            ))
-          )}
-        </section>
-
-        <section>
-          <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
-            Add a new stadium
-          </h2>
-          <AdminForm />
-        </section>
-      </div>
-    </main>
+          <section>
+            <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
+              Add a new stadium
+            </h2>
+            <AdminForm />
+          </section>
+        </div>
+      </main>
+    </>
   );
 }
 
