@@ -68,21 +68,19 @@ model User {
     accounts      Account[]
     sessions      Session[]
     matches       Match[]
-
-    role UserRole @default(USER)
+    role          UserRole  @default(USER)
 }
 
 model Match {
-    id               String    @id @default(cuid())
-    date             DateTime  @default(now())
-    score            Int
-    timeRemaining    Int
-    teamsRemaning    Int
-    correctTeamIds   String[]
-    incorrectTeamIds String[]
-    User             User?     @relation(fields: [userId], references: [id])
-    userId           String?
-    Stadium          Stadium[]
+    id                  String   @id @default(cuid())
+    date                DateTime @default(now())
+    score               Int
+    timeRemaining       Int
+    teamsRemaning       Int
+    correctStadiumIds   String[]
+    incorrectStadiumIds String[]
+    User                User?    @relation(fields: [userId], references: [id])
+    userId              String?
 
     @@index([userId])
 }
@@ -94,8 +92,4 @@ model Stadium {
     latitude  Float
     longitude Float
     club      String
-    matchId   String?
-    Match     Match?   @relation(fields: [matchId], references: [id])
-
-    @@index([matchId])
 }

@@ -9,8 +9,8 @@ export const matchRouter = createTRPCRouter({
         score: z.number(),
         timeRemaining: z.number(),
         teamsRemaining: z.number(),
-        correctTeamIds: z.array(z.string()),
-        incorrectTeamIds: z.array(z.string()),
+        correctStadiumIds: z.array(z.string()),
+        incorrectStadiumIds: z.array(z.string()),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -19,8 +19,8 @@ export const matchRouter = createTRPCRouter({
           score: input.score,
           timeRemaining: input.timeRemaining,
           teamsRemaning: input.teamsRemaining,
-          correctTeamIds: input.correctTeamIds,
-          incorrectTeamIds: input.incorrectTeamIds,
+          correctStadiumIds: input.correctStadiumIds,
+          incorrectStadiumIds: input.incorrectStadiumIds,
           userId: ctx.session.user.id,
         },
       });
