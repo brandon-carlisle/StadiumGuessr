@@ -30,6 +30,22 @@ export const stadiumRouter = createTRPCRouter({
       return { stadium };
     }),
 
+  deleteById: protectedProcedure
+    .input(z.object({ stadiumId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.session.user.role !== "ADMIN")
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not an admin",
+        });
+
+      await ctx.prisma.stadium.delete({
+        where: {
+          id: input.stadiumId,
+        },
+      });
+    }),
+
   getAll: publicProcedure.query(async ({ ctx }) => {
     const stadiums = await ctx.prisma.stadium.findMany();
 
