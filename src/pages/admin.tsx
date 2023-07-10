@@ -126,14 +126,13 @@ function AdminForm() {
     resolver: zodResolver(schema),
   });
 
-  const { mutate, error, isError, isLoading, isSuccess } =
-    api.stadium.create.useMutation();
-
-  if (isError) {
-    alert(error.message);
-  }
-
-  // if (isSuccess) reset();
+  const utils = api.useContext();
+  const { mutate, isLoading } = api.stadium.create.useMutation({
+    async onSuccess() {
+      reset();
+      await utils.stadium.getAll.invalidate();
+    },
+  });
 
   const onSubmit = (data: FormData) => {
     mutate({
