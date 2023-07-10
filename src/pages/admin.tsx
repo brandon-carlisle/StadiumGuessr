@@ -12,8 +12,13 @@ import Unauthorised from "@/components/ui/Unauthorised";
 export default function AdminPage() {
   const { data: session, status: sessionStatus } = useSession();
   const { data: stadiums, isLoading } = api.stadium.getAll.useQuery();
+  const utils = api.useContext();
 
-  const { mutate } = api.stadium.deleteById.useMutation();
+  const { mutate } = api.stadium.deleteById.useMutation({
+    async onSuccess() {
+      await utils.stadium.getAll.invalidate();
+    },
+  });
 
   if (sessionStatus === "loading")
     return (
@@ -27,7 +32,6 @@ export default function AdminPage() {
   const handleDelete = (id: string) => {
     if (!confirm(`Are you sure you want to delete this?`)) return;
 
-    console.log("Deleting...");
     mutate({ stadiumId: id });
   };
 
@@ -50,40 +54,44 @@ export default function AdminPage() {
 
             {isLoading && <LoadingSpinner />}
 
-            {!stadiums || !stadiums.length ? (
-              <p>No stadiums found...</p>
-            ) : (
-              stadiums.map((stadium) => (
-                <div
-                  key={stadium.id}
-                  className="flex flex-col gap-2 rounded-lg bg-neutral-focus p-5"
-                >
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold capitalize">{stadium.club}</h3>
-                    <button
-                      className="btn-error btn-sm btn"
-                      onClick={() => handleDelete(stadium.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                  <div>
-                    <span className="mr-1">Possible names:</span>
-                    {stadium.names.map((name) => (
-                      <span key={name} className="mr-1">
-                        {name}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <p>Lat: {stadium.latitude}</p>
-                    <p>Long: {stadium.longitude}</p>
-                  </div>
+            <div className="flex flex-col gap-3">
+              {!stadiums || !stadiums.length ? (
+                <p>No stadiums found...</p>
+              ) : (
+                stadiums.map((stadium) => (
+                  <div
+                    key={stadium.id}
+                    className="flex flex-col gap-2 rounded-lg bg-neutral-focus p-5"
+                  >
+                    <div className="flex justify-between">
+                      <h3 className="font-semibold capitalize">
+                        {stadium.club}
+                      </h3>
+                      <button
+                        className="btn-error btn-sm btn"
+                        onClick={() => void handleDelete(stadium.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    <div>
+                      <span className="mr-1">Possible names:</span>
+                      {stadium.names.map((name) => (
+                        <span key={name} className="mr-1">
+                          {name}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <p>Lat: {stadium.latitude}</p>
+                      <p>Long: {stadium.longitude}</p>
+                    </div>
 
-                  <p>Capacity: {stadium.capacity}</p>
-                </div>
-              ))
-            )}
+                    <p>Capacity: {stadium.capacity}</p>
+                  </div>
+                ))
+              )}
+            </div>
           </section>
 
           <section>
@@ -125,12 +133,9 @@ function AdminForm() {
     alert(error.message);
   }
 
-  if (isSuccess) reset();
+  // if (isSuccess) reset();
 
   const onSubmit = (data: FormData) => {
-    console.log("ran");
-    console.log(data);
-
     mutate({
       names: data.names.split(","),
       capacity: Number.parseInt(data.capacity),

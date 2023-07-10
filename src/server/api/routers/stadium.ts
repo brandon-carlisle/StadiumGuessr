@@ -55,8 +55,6 @@ export const stadiumRouter = createTRPCRouter({
         message: "Could not find any stadiums",
       });
 
-    console.log("server: ", stadiums);
-
     return stadiums;
   }),
 });
