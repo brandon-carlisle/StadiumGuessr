@@ -10,4 +10,4 @@ Backend:
 
 - TRPC router for Stadium (used to create and delete Stadiums) (DONE)
 - TRPC router for Match (used to create Matches when user completes game) (DONE)
-- TRPC edit fn for Stadium
+- TRPC add edit endpoint for Stadium

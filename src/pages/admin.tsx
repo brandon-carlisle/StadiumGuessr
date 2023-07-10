@@ -37,16 +37,16 @@ export default function AdminPage() {
 
   return (
     <>
-      <header className="mb-10 flex justify-between p-8">
-        <h1 className="text-2xl text-primary-content md:text-4xl">
-          Welcome back, {session.user.name}
+      <header className="mb-3 flex justify-between p-8">
+        <h1 className="text-2xl font-semibold text-primary-content md:text-4xl">
+          Admin Panel
         </h1>
         <Link href={"/"} className="btn-md btn">
           Go home
         </Link>
       </header>
-      <main className="p-8">
-        <div className="grid grid-cols-1 gap-5  md:grid-cols-2">
+      <main className="px-8">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <section>
             <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
               View all stadiums
@@ -103,7 +103,7 @@ export default function AdminPage() {
 
           <section>
             <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
-              Add a new stadium
+              Add stadium
             </h2>
             <AdminForm />
           </section>
