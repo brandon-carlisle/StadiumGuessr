@@ -49,6 +49,14 @@ export const stadiumRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const stadiums = await ctx.prisma.stadium.findMany();
 
+    if (stadiums.length === 0)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Could not find any stadiums",
+      });
+
+    console.log("server: ", stadiums);
+
     return stadiums;
   }),
 });

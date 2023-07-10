@@ -139,8 +139,8 @@ function WelcomeHeader() {
       </h1>
       <p className="py-6">
         Explore a map and find yourself at a random football stadium. Your
-        challenge is to guess the correct name of the stadium. How many can you
-        identify?
+        challenge is to correctly guess the name of the stadium. How many can
+        you identify?
       </p>
     </header>
   );

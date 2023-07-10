@@ -13,6 +13,8 @@ export default function AdminPage() {
   const { data: session, status: sessionStatus } = useSession();
   const { data: stadiums, isLoading } = api.stadium.getAll.useQuery();
 
+  const { mutate } = api.stadium.deleteById.useMutation();
+
   if (sessionStatus === "loading")
     return (
       <div className="grid h-screen w-screen place-items-center">
@@ -21,6 +23,13 @@ export default function AdminPage() {
     );
 
   if (!session || session.user.role !== "ADMIN") return <Unauthorised />;
+
+  const handleDelete = (id: string) => {
+    if (!confirm(`Are you sure you want to delete this?`)) return;
+
+    console.log("Deleting...");
+    mutate({ stadiumId: id });
+  };
 
   return (
     <>
@@ -49,7 +58,15 @@ export default function AdminPage() {
                   key={stadium.id}
                   className="flex flex-col gap-2 rounded-lg bg-neutral-focus p-5"
                 >
-                  <h3 className="font-semibold capitalize">{stadium.club}</h3>
+                  <div className="flex justify-between">
+                    <h3 className="font-semibold capitalize">{stadium.club}</h3>
+                    <button
+                      className="btn-error btn-sm btn"
+                      onClick={() => handleDelete(stadium.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                   <div>
                     <span className="mr-1">Possible names:</span>
                     {stadium.names.map((name) => (
