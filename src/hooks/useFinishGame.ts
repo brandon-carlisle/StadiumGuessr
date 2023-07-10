@@ -2,13 +2,22 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { useAppSelector } from "@/store/hooks";
+import { setUserHasFinishedGame } from "@/store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function useFinishGame() {
   const { data: session } = useSession();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const { userHasFinishedGame, score } = useAppSelector((state) => state.game);
+  const { userHasFinishedGame, score, timeRemaining, stadiumsRemaining } =
+    useAppSelector((state) => state.game);
+
+  useEffect(() => {
+    if (timeRemaining === 0 || stadiumsRemaining === 0) {
+      dispatch(setUserHasFinishedGame(true));
+    }
+  }, [dispatch, stadiumsRemaining, timeRemaining]);
 
   useEffect(() => {
     if (!session && userHasFinishedGame) {

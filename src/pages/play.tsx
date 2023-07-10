@@ -1,10 +1,6 @@
 import useFinishGame from "@/hooks/useFinishGame";
 import useStartGame from "@/hooks/useStartGame";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
-
-import { setUserHasFinishedGame } from "@/store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import GameControlsOverlay from "@/components/GameControlsOverlay/GameControlsOverlay";
 import GameStatsOverlay from "@/components/GameStatsOverlay/GameStatsOverlay";
@@ -17,25 +13,14 @@ const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
 });
 
 export default function PlayPage() {
-  const dispatch = useAppDispatch();
-  const { timeRemaining, teamsRemaining } = useAppSelector(
-    (state) => state.game,
-  );
-
-  useStartGame(teams);
+  useStartGame();
   useFinishGame();
-
-  useEffect(() => {
-    if (timeRemaining === 0 || teamsRemaining === 0) {
-      dispatch(setUserHasFinishedGame(true));
-    }
-  }, [dispatch, teamsRemaining, timeRemaining]);
 
   return (
     <>
       <main className="relative flex h-full flex-col">
         <DynamicMap />
-        {!completedGame && <GameControlsOverlay />}
+        <GameControlsOverlay />
         <GameStatsOverlay />
       </main>
     </>
