@@ -4,7 +4,8 @@ UI:
 
 - Create AuthButton (DONE)
 - Add admin dashboard / create stadium form (DONE)
-- Add UI for editing a Stadium in admin route
+- Add UI for editing a Stadium in admin panel
+- Add ability to search/filter Stadium in admin panel
 
 Backend:
 

@@ -1,7 +1,7 @@
-import type { Team } from "@prisma/client";
+import type { Stadium } from "@prisma/client";
 
-export function shuffleTeams(input: Team[]) {
-  return input
+export function shuffleStadiumArray(arr: Stadium[]) {
+  return arr
     .map((value) => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
