@@ -46,7 +46,7 @@ export default function AdminPage() {
         </Link>
       </header>
       <main className="p-8">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5  md:grid-cols-2">
           <section>
             <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
               View all stadiums
@@ -54,7 +54,7 @@ export default function AdminPage() {
 
             {isLoading && <LoadingSpinner />}
 
-            <div className="flex flex-col gap-3">
+            <div className="flex h-[70vh] flex-col gap-3 overflow-y-auto">
               {!stadiums || !stadiums.length ? (
                 <p>No stadiums found...</p>
               ) : (
@@ -64,7 +64,7 @@ export default function AdminPage() {
                     className="flex flex-col gap-2 rounded-lg bg-neutral-focus p-5"
                   >
                     <div className="flex justify-between">
-                      <h3 className="font-semibold capitalize">
+                      <h3 className="text-lg font-semibold capitalize">
                         {stadium.club}
                       </h3>
                       <button
@@ -75,19 +75,26 @@ export default function AdminPage() {
                       </button>
                     </div>
                     <div>
-                      <span className="mr-1">Possible names:</span>
+                      <span className="mr-1 font-semibold">
+                        Possible names:
+                      </span>
                       {stadium.names.map((name) => (
-                        <span key={name} className="mr-1">
+                        <div key={name} className="mr-1 capitalize">
                           {name}
-                        </span>
+                        </div>
                       ))}
                     </div>
                     <div className="flex gap-2">
-                      <p>Lat: {stadium.latitude}</p>
-                      <p>Long: {stadium.longitude}</p>
+                      <p className="font-semibold">Lat:</p>
+                      <span>{stadium.latitude}</span>
+                      <p className="font-semibold">Long:</p>
+                      <span>{stadium.longitude}</span>
                     </div>
 
-                    <p>Capacity: {stadium.capacity}</p>
+                    <div className="flex gap-2">
+                      <p className="font-semibold">Capacity:</p>
+                      <span>{stadium.capacity}</span>
+                    </div>
                   </div>
                 ))
               )}
@@ -152,10 +159,25 @@ function AdminForm() {
         className="flex w-full flex-col gap-3"
       >
         <div className="form-control w-full">
+          <label className="label" htmlFor="longitude">
+            <span className="label-text">Club</span>
+          </label>
+          <input
+            id="club"
+            type="text"
+            placeholder="Manchester United"
+            className="input-bordered input w-full placeholder:font-thin"
+            {...register("club")}
+          />
+
+          {errors.club?.message && (
+            <p className="mt-2 text-error">{errors.club?.message}</p>
+          )}
+        </div>
+
+        <div className="form-control w-full">
           <label className="label" htmlFor="names">
-            <span className="label-text">
-              Stadium names seperated with a comma
-            </span>
+            <span className="label-text">Stadium names seperated by comma</span>
           </label>
           <input
             id="names"
@@ -214,23 +236,6 @@ function AdminForm() {
           />
           {errors.longitude?.message && (
             <p className="mt-2 text-error">{errors.longitude?.message}</p>
-          )}
-        </div>
-
-        <div className="form-control w-full">
-          <label className="label" htmlFor="longitude">
-            <span className="label-text">Club</span>
-          </label>
-          <input
-            id="club"
-            type="text"
-            placeholder="Manchester United"
-            className="input-bordered input w-full placeholder:font-thin"
-            {...register("club")}
-          />
-
-          {errors.club?.message && (
-            <p className="mt-2 text-error">{errors.club?.message}</p>
           )}
         </div>
 
