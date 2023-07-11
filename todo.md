@@ -6,9 +6,24 @@ UI:
 - Add admin dashboard / create stadium form (DONE)
 - Add UI for editing a Stadium in admin panel
 - Add ability to search/filter Stadium in admin panel
+- Add round length tabs before on homescreen e.g. 10 / 20 / 40 teams
+- Add finished modal for when user has finished game:
+  - if user is logged in, add button to take to full match summary
+  - if user is not logged it, add button to play again or return home
 
 Backend:
 
 - TRPC router for Stadium (used to create and delete Stadiums) (DONE)
 - TRPC router for Match (used to create Matches when user completes game) (DONE)
 - TRPC add edit endpoint for Stadium
+- TRPC add abilty to take certain amount of Stadium
+
+Game logic:
+
+- When user skips, add skipped team to incorrectTeams
+- When user gets answer correct, add to correctTeams
+- Stop timer when it reaches zero
+
+Admin:
+
+- Add more teams to DB

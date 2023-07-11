@@ -10,7 +10,7 @@ export default function ResetZoom() {
 
   return (
     <button
-      className="btn-secondary btn-sm btn md:btn-md"
+      className="btn-neutral btn-sm btn md:btn-md"
       onClick={handleResetZoom}
     >
       Reset Zoom

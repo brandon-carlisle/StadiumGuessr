@@ -16,12 +16,6 @@ export default function useStartGame() {
 
   const { data: stadiums, isSuccess } = api.stadium.getAll.useQuery();
 
-  // Dont think this is needed anymore
-  // const shuffledStadiums = useMemo(
-  //   () => shuffleStadiumArray(stadiums),
-  //   [stadiums],
-  // );
-
   useEffect(() => {
     if (isSuccess) {
       const shuffledStadiums = shuffleStadiumArray(stadiums);

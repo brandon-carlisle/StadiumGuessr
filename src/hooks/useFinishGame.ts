@@ -29,7 +29,5 @@ export default function useFinishGame() {
     }
   }, [router, score, session, userHasFinishedGame]);
 
-  return {
-    completedGame: userHasFinishedGame,
-  };
+  return;
 }
