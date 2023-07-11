@@ -1,6 +1,6 @@
 import type { Stadium } from "@prisma/client";
 
-export function shuffleStadiumArray(arr: Stadium[] | undefined) {
+export function shuffleStadiumArray(arr: Stadium[]) {
   if (!arr) throw new Error("Could not shuffle stadiums");
 
   return arr

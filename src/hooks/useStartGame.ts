@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { api } from "@/utils/api";
 import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
@@ -14,21 +14,24 @@ import { useAppDispatch } from "@/store/hooks";
 export default function useStartGame() {
   const dispatch = useAppDispatch();
 
-  const { data: stadiums } = api.stadium.getAll.useQuery();
+  const { data: stadiums, isSuccess } = api.stadium.getAll.useQuery();
 
-  const shuffledStadiums = useMemo(
-    () => shuffleStadiumArray(stadiums),
-    [stadiums],
-  );
+  // Dont think this is needed anymore
+  // const shuffledStadiums = useMemo(
+  //   () => shuffleStadiumArray(stadiums),
+  //   [stadiums],
+  // );
 
   useEffect(() => {
-    dispatch(setStadiums(shuffledStadiums));
-    dispatch(setStadiumsRemaining(shuffledStadiums.length));
+    if (isSuccess) {
+      const shuffledStadiums = shuffleStadiumArray(stadiums);
 
-    if (shuffledStadiums[0]) {
-      dispatch(setCurrentStadium(shuffledStadiums[0]));
+      dispatch(setStadiums(shuffledStadiums));
+      dispatch(setStadiumsRemaining(shuffledStadiums.length));
+
+      if (shuffledStadiums[0]) dispatch(setCurrentStadium(shuffledStadiums[0]));
     }
-  }, [dispatch, shuffledStadiums]);
+  }, [dispatch, isSuccess, stadiums]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,5 +41,5 @@ export default function useStartGame() {
     return () => clearInterval(timer);
   }, [dispatch]);
 
-  return { shuffledStadiums };
+  return;
 }

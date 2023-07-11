@@ -26,11 +26,3 @@ export default function PlayPage() {
     </>
   );
 }
-
-// export async function getServerSideProps() {
-//   const teams = await prisma.team.findMany();
-
-//   return {
-//     props: { teams },
-//   };
-// }
