@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
@@ -28,5 +29,23 @@ export const matchRouter = createTRPCRouter({
       return {
         matchId: match.id,
       };
+    }),
+
+  getById: protectedProcedure
+    .input(z.object({ matchId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const match = await ctx.prisma.match.findUnique({
+        where: {
+          id: input.matchId,
+        },
+      });
+
+      if (!match)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No match found with that ID",
+        });
+
+      return match;
     }),
 });
