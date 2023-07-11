@@ -4,6 +4,7 @@ import useSound from "use-sound";
 import { validateAnswer } from "@/utils/validate-answer";
 
 import {
+  addCorrectStadiumId,
   decrementStadiumsRemaining,
   incrementCurrentStadium,
   incrementScore,
@@ -33,6 +34,7 @@ export default function AnswerForm() {
     if (isValid) {
       playCorrectSfx();
       dispatch(incrementScore(10));
+      dispatch(addCorrectStadiumId(currentStadium.id));
       dispatch(incrementCurrentStadium());
       dispatch(decrementStadiumsRemaining());
     } else {

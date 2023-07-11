@@ -1,16 +1,12 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingButton from "./LoadingButton";
 
 export default function AuthButton() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return (
-      <button className="btn-disabled btn-sm btn md:btn-md">
-        <LoadingSpinner />
-      </button>
-    );
+    return <LoadingButton />;
   }
 
   return (

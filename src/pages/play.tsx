@@ -2,6 +2,9 @@ import useFinishGame from "@/hooks/useFinishGame";
 import useStartGame from "@/hooks/useStartGame";
 import dynamic from "next/dynamic";
 
+import { useAppSelector } from "@/store/hooks";
+
+import GameCompleteOverlay from "@/components/GameCompleteOverlay/GameCompleteOverlay";
 import GameControlsOverlay from "@/components/GameControlsOverlay/GameControlsOverlay";
 import GameStatsOverlay from "@/components/GameStatsOverlay/GameStatsOverlay";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
@@ -13,6 +16,8 @@ const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
 });
 
 export default function PlayPage() {
+  const { userHasFinishedGame } = useAppSelector((state) => state.game);
+
   useStartGame();
   useFinishGame();
 
@@ -20,8 +25,15 @@ export default function PlayPage() {
     <>
       <main className="relative flex h-full flex-col">
         <DynamicMap />
-        <GameControlsOverlay />
-        <GameStatsOverlay />
+
+        {!userHasFinishedGame ? (
+          <>
+            <GameControlsOverlay />
+            <GameStatsOverlay />
+          </>
+        ) : (
+          <GameCompleteOverlay />
+        )}
       </main>
     </>
   );

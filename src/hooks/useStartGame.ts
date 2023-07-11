@@ -27,13 +27,13 @@ export default function useStartGame() {
     }
   }, [dispatch, isSuccess, stadiums]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      dispatch(decrementTimeRemaining());
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     dispatch(decrementTimeRemaining());
+  //   }, 1000);
 
-    return () => clearInterval(timer);
-  }, [dispatch]);
+  //   return () => clearInterval(timer);
+  // }, [dispatch]);
 
   return;
 }

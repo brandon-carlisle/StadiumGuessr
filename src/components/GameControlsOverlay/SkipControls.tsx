@@ -1,4 +1,5 @@
 import {
+  addIncorrectStadiumId,
   decrementStadiumsRemaining,
   incrementCurrentStadium,
 } from "@/store/features/game/game-slice";
@@ -6,9 +7,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function SkipControls() {
   const dispatch = useAppDispatch();
-  const { stadiumsRemaining } = useAppSelector((state) => state.game);
+  const { stadiumsRemaining, currentStadium } = useAppSelector(
+    (state) => state.game,
+  );
 
   const handleSkip = () => {
+    dispatch(addIncorrectStadiumId(currentStadium.id));
     dispatch(incrementCurrentStadium());
     dispatch(decrementStadiumsRemaining());
   };

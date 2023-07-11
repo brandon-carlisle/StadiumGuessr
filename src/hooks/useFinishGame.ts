@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { setUserHasFinishedGame } from "@/store/features/game/game-slice";
@@ -7,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function useFinishGame() {
   const { data: session } = useSession();
-  const router = useRouter();
+
   const dispatch = useAppDispatch();
 
   const { userHasFinishedGame, score, timeRemaining, stadiumsRemaining } =
@@ -27,7 +26,7 @@ export default function useFinishGame() {
     if (session && userHasFinishedGame) {
       console.log("User HAS session, and completed game");
     }
-  }, [router, score, session, userHasFinishedGame]);
+  }, [score, session, userHasFinishedGame]);
 
   return;
 }

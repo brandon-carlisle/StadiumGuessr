@@ -18,6 +18,9 @@ interface GameState {
   score: number;
   timeRemaining: number;
   userHasFinishedGame: boolean;
+
+  correctStadiumIds: string[];
+  incorrectStadiumIds: string[];
 }
 
 const initialState: GameState = {
@@ -28,6 +31,9 @@ const initialState: GameState = {
   score: 0,
   timeRemaining: 90,
   userHasFinishedGame: false,
+
+  correctStadiumIds: [],
+  incorrectStadiumIds: [],
 };
 
 const gameSlice = createSlice({
@@ -113,6 +119,20 @@ const gameSlice = createSlice({
     },
 
     /**
+     * Adds a team id to correctStadiumIds based on payload
+     */
+    addCorrectStadiumId(state, action: PayloadAction<string>) {
+      state.correctStadiumIds.push(action.payload);
+    },
+
+    /**
+     * Adds a team id to incorrectStadiumIds based on payload
+     */
+    addIncorrectStadiumId(state, action: PayloadAction<string>) {
+      state.incorrectStadiumIds.push(action.payload);
+    },
+
+    /**
      * Resets game state to inital state
      */
     resetGame(state) {
@@ -136,6 +156,8 @@ export const {
   decrementTimeRemaining,
   resetZoom,
   setUserHasFinishedGame,
+  addCorrectStadiumId,
+  addIncorrectStadiumId,
   resetGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;

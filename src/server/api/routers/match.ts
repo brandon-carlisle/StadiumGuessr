@@ -8,7 +8,7 @@ export const matchRouter = createTRPCRouter({
       z.object({
         score: z.number(),
         timeRemaining: z.number(),
-        teamsRemaining: z.number(),
+        stadiumsRemaining: z.number(),
         correctStadiumIds: z.array(z.string()),
         incorrectStadiumIds: z.array(z.string()),
       }),
@@ -18,7 +18,7 @@ export const matchRouter = createTRPCRouter({
         data: {
           score: input.score,
           timeRemaining: input.timeRemaining,
-          teamsRemaning: input.teamsRemaining,
+          stadiumsRemaining: input.stadiumsRemaining,
           correctStadiumIds: input.correctStadiumIds,
           incorrectStadiumIds: input.incorrectStadiumIds,
           userId: ctx.session.user.id,

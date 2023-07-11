@@ -76,7 +76,7 @@ model Match {
     date                DateTime @default(now())
     score               Int
     timeRemaining       Int
-    teamsRemaning       Int
+    stadiumsRemaining   Int
     correctStadiumIds   String[]
     incorrectStadiumIds String[]
     User                User?    @relation(fields: [userId], references: [id])
