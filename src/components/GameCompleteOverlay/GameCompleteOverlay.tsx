@@ -13,7 +13,7 @@ export default function GameCompleteOverlay() {
 
   const { game } = useAppSelector((state) => state);
 
-  const { mutate, isLoading, isSuccess } = api.match.create.useMutation();
+  const { mutate, isLoading } = api.match.create.useMutation();
 
   const handlePlayAgain = () => {
     if (!session) {
@@ -62,22 +62,21 @@ export default function GameCompleteOverlay() {
           <div className="mt-4 flex gap-3">
             {session ? (
               <>
-                {!isLoading || !isSuccess ? (
+                {!isLoading && (
                   <button
                     className="btn-primary btn"
                     onClick={handleViewSummary}
                   >
                     View summary
                   </button>
-                ) : (
-                  <LoadingButton />
                 )}
-                {!isLoading || !isSuccess ? (
+
+                {isLoading && <LoadingButton />}
+
+                {!isLoading && (
                   <button className="btn-neutral btn" onClick={handlePlayAgain}>
                     Play again
                   </button>
-                ) : (
-                  <LoadingButton />
                 )}
               </>
             ) : (
