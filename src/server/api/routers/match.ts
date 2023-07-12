@@ -10,8 +10,8 @@ export const matchRouter = createTRPCRouter({
         score: z.number(),
         timeRemaining: z.number(),
         stadiumsRemaining: z.number(),
-        correctStadiumIds: z.array(z.string()),
-        incorrectStadiumIds: z.array(z.string()),
+        correctStadiums: z.array(z.string()), // Array of stadium IDs for correct guesses
+        incorrectStadiums: z.array(z.string()), // Array of stadium IDs for incorrect guesses
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -20,9 +20,17 @@ export const matchRouter = createTRPCRouter({
           score: input.score,
           timeRemaining: input.timeRemaining,
           stadiumsRemaining: input.stadiumsRemaining,
-          correctStadiumIds: input.correctStadiumIds,
-          incorrectStadiumIds: input.incorrectStadiumIds,
           userId: ctx.session.user.id,
+          correctStadiums: {
+            connect: input.correctStadiums.map((stadiumId) => ({
+              id: stadiumId,
+            })),
+          },
+          incorrectStadiums: {
+            connect: input.incorrectStadiums.map((stadiumId) => ({
+              id: stadiumId,
+            })),
+          },
         },
       });
 
@@ -37,6 +45,10 @@ export const matchRouter = createTRPCRouter({
       const match = await ctx.prisma.match.findUnique({
         where: {
           id: input.matchId,
+        },
+        include: {
+          correctStadiums: true,
+          incorrectStadiums: true,
         },
       });
 

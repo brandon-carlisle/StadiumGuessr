@@ -1,9 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// TODO: Fix jsonProtocol
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+    provider = "prisma-client-js"
+    // previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
@@ -71,25 +72,30 @@ model User {
     role          UserRole  @default(USER)
 }
 
-model Match {
-    id                  String   @id @default(cuid())
-    date                DateTime @default(now())
-    score               Int
-    timeRemaining       Int
-    stadiumsRemaining   Int
-    correctStadiumIds   String[]
-    incorrectStadiumIds String[]
-    User                User?    @relation(fields: [userId], references: [id])
-    userId              String?
-
-    @@index([userId])
-}
-
 model Stadium {
     id        String   @id @default(cuid())
     names     String[]
     capacity  Int
     latitude  Float
     longitude Float
-    club      String
+    club      String?
+
+    correctGuesses   Match[] @relation("CorrectGuess")
+    incorrectGuesses Match[] @relation("IncorrectGuess")
+}
+
+model Match {
+    id                String   @id @default(cuid())
+    date              DateTime @default(now())
+    score             Int
+    timeRemaining     Int
+    stadiumsRemaining Int
+
+    correctStadiums   Stadium[] @relation("CorrectGuess")
+    incorrectStadiums Stadium[] @relation("IncorrectGuess")
+
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String?
+
+    @@index([userId])
 }

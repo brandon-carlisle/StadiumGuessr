@@ -93,14 +93,14 @@ export default function HomePage() {
 
       <footer className="fixed bottom-0 left-1/2 flex w-full  -translate-x-1/2 items-center justify-center py-4">
         <p className="font-mono">
-          Made by{" "}
+          Source code{" "}
           <a
-            href="https://www.carlisle.dev/"
+            href="https://github.com/brandon-carlisle/StadiumGuessr"
             className="link-accent link"
             target="_blank"
             rel="noreferrer"
           >
-            Brandon
+            here
           </a>
         </p>
 
@@ -128,7 +128,7 @@ export default function HomePage() {
 function WelcomeHeader() {
   return (
     <header className="mb-8">
-      <h1 className="text-3xl text-primary-content md:text-6xl">
+      <h1 className="text-3xl font-semibold text-primary-content md:text-6xl">
         StadiumGuessr
       </h1>
       <p className="py-6">

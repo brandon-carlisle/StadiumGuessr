@@ -9,12 +9,13 @@ import {
   setStadiums,
   setStadiumsRemaining,
 } from "@/store/features/game/game-slice";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function useStartGame() {
   const dispatch = useAppDispatch();
 
   const { data: stadiums, isSuccess } = api.stadium.getAll.useQuery();
+  const { timeRemaining } = useAppSelector((state) => state.game);
 
   useEffect(() => {
     if (isSuccess) {
@@ -27,13 +28,20 @@ export default function useStartGame() {
     }
   }, [dispatch, isSuccess, stadiums]);
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     dispatch(decrementTimeRemaining());
-  //   }, 1000);
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | null = null;
+    if (timeRemaining > 0) {
+      timer = setInterval(() => {
+        dispatch(decrementTimeRemaining());
+      }, 1000);
+    }
 
-  //   return () => clearInterval(timer);
-  // }, [dispatch]);
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [dispatch, timeRemaining]);
 
   return;
 }

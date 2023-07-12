@@ -6,7 +6,7 @@ import { useAppSelector } from "@/store/hooks";
 
 import GameCompleteOverlay from "@/components/GameCompleteOverlay/GameCompleteOverlay";
 import GameControlsOverlay from "@/components/GameControlsOverlay/GameControlsOverlay";
-import GameStatsOverlay from "@/components/GameStatsOverlay/GameStatsOverlay";
+import GameStatsOverlay from "@/components/Stats/GameStatsOverlay";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 // Leaflet needs the window object, so this needs to have dynamic

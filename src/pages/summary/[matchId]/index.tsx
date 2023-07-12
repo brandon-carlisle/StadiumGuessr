@@ -1,5 +1,7 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { type GetStaticPropsContext, type InferGetStaticPropsType } from "next";
+import Link from "next/link";
+import { useEffect } from "react";
 import superjson from "superjson";
 
 import { appRouter } from "@/server/api/root";
@@ -7,20 +9,95 @@ import { prisma } from "@/server/db";
 
 import { api } from "@/utils/api";
 
+import { resetGame } from "@/store/features/game/game-slice";
+import { useAppDispatch } from "@/store/hooks";
+
+import StatsSummary from "@/components/Stats/StatsSummmary";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function MatchSummaryPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
+  const dispatch = useAppDispatch();
+
+  // Reset game state whenever user goes to homepage
+  useEffect(() => {
+    dispatch(resetGame());
+  }, [dispatch]);
+
   const { data: match, isLoading } = api.match.getById.useQuery({
     matchId: props.matchId,
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading)
+    return (
+      <div className="grid h-screen w-screen place-items-center">
+        <LoadingSpinner />
+      </div>
+    );
 
-  if (!match) return <p>Could not find that match...</p>;
+  if (!match)
+    return (
+      <div className="grid h-screen w-screen place-items-center">
+        <div className="flex flex-col gap-3">
+          <p>Could not find that match...</p>
+          <Link href={"/"} className="btn">
+            Go Home
+          </Link>
+        </div>
+      </div>
+    );
 
-  return <p>This is a summary page for match: {match.id}</p>;
+  return (
+    <>
+      <header className="mb-3 flex justify-between p-8">
+        <h1 className="px-2 text-2xl font-semibold md:text-4xl">
+          Match Summary
+        </h1>
+        <Link href={"/play"} className="btn-primary btn-md btn">
+          Play again
+        </Link>
+      </header>
+      <main className="flex flex-col justify-center gap-10 p-10">
+        <StatsSummary match={match} />
+
+        <div>
+          <h2 className="text-xl font-semibold md:text-3xl">
+            How you answered
+          </h2>
+
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold">Correct Answers</h3>
+
+            <div className="mt-2 space-y-2">
+              {match.correctStadiums.map((stadium) => (
+                <div
+                  key={stadium.id}
+                  className="rounded-md bg-green-200 px-4 py-2 capitalize text-green-800"
+                >
+                  {stadium.names[0]}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold">Incorrect Answers</h3>
+
+            <div className="mt-2 space-y-2">
+              {match.incorrectStadiums.map((stadium) => (
+                <div
+                  key={stadium.id}
+                  className="rounded-md bg-red-200 px-4 py-2 capitalize text-red-800"
+                >
+                  {stadium.names[0]}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
+  );
 }
 
 export async function getStaticProps(

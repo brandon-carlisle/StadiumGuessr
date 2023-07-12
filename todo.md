@@ -9,8 +9,13 @@ UI:
 - Add round length tabs before on homescreen e.g. 10 / 20 / 40 teams
 
 - Add finished modal for when user has finished game (DONE):
+
   - if user is logged in, add button to take to full match summary (DONE)
   - if user is not logged it, add button to play again or return home (DONE)
+
+- Add custom login page with multiple providers
+
+- Add Head for each page
 
 Backend:
 
@@ -19,11 +24,13 @@ Backend:
 - TRPC add edit endpoint for Stadium
 - TRPC add abilty to take certain amount of Stadium
 
+- NextAuth add more login providers
+
 Game logic:
 
 - When user skips, add skipped team to incorrectTeams (DONE)
 - When user gets answer correct, add to correctTeams (DONE)
-- Stop timer when it reaches zero
+- Stop timer when it reaches zero (DONE)
 
 Admin:
 

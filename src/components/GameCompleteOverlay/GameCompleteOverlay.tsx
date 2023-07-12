@@ -25,8 +25,8 @@ export default function GameCompleteOverlay() {
         score: game.score,
         timeRemaining: game.timeRemaining,
         stadiumsRemaining: game.stadiumsRemaining,
-        correctStadiumIds: game.correctStadiumIds,
-        incorrectStadiumIds: game.incorrectStadiumIds,
+        correctStadiums: game.correctStadiumIds,
+        incorrectStadiums: game.incorrectStadiumIds,
       },
       {
         onSuccess() {
@@ -42,8 +42,8 @@ export default function GameCompleteOverlay() {
         score: game.score,
         timeRemaining: game.timeRemaining,
         stadiumsRemaining: game.stadiumsRemaining,
-        correctStadiumIds: game.correctStadiumIds,
-        incorrectStadiumIds: game.incorrectStadiumIds,
+        correctStadiums: game.correctStadiumIds,
+        incorrectStadiums: game.incorrectStadiumIds,
       },
       {
         onSuccess(data) {
