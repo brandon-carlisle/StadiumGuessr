@@ -7,9 +7,10 @@ UI:
 - Add UI for editing a Stadium in admin panel
 - Add ability to search/filter Stadium in admin panel
 - Add round length tabs before on homescreen e.g. 10 / 20 / 40 teams
-- Add finished modal for when user has finished game:
-  - if user is logged in, add button to take to full match summary
-  - if user is not logged it, add button to play again or return home
+
+- Add finished modal for when user has finished game (DONE):
+  - if user is logged in, add button to take to full match summary (DONE)
+  - if user is not logged it, add button to play again or return home (DONE)
 
 Backend:
 
@@ -20,8 +21,8 @@ Backend:
 
 Game logic:
 
-- When user skips, add skipped team to incorrectTeams
-- When user gets answer correct, add to correctTeams
+- When user skips, add skipped team to incorrectTeams (DONE)
+- When user gets answer correct, add to correctTeams (DONE)
 - Stop timer when it reaches zero
 
 Admin:
