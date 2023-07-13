@@ -18,9 +18,6 @@ export function validateAnswer({ userAnswer, answers }: ValidateAnswerProps): {
   const [sanitizedInput] = sanitize([userAnswer]);
   const sanitizedAnswers = sanitize(answers);
 
-  console.log("guess: ", sanitizedInput);
-  console.log("answers: ", sanitizedAnswers);
-
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (sanitizedAnswers.includes(sanitizedInput!)) {
     return { isValid: true };

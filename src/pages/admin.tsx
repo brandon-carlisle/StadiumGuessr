@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,6 +38,15 @@ export default function AdminPage() {
 
   return (
     <>
+      <Head>
+        <title>Admin / StadiumGuessr</title>
+        <meta
+          name="description"
+          content="A football stadium guessing game - challenge your football knowledge"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <header className="mb-3 flex justify-between p-8">
         <h1 className="text-2xl font-semibold text-primary-content md:text-4xl">
           Admin Panel

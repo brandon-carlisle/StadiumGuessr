@@ -1,6 +1,7 @@
 import useFinishGame from "@/hooks/useFinishGame";
 import useStartGame from "@/hooks/useStartGame";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 import { useAppSelector } from "@/store/hooks";
 
@@ -23,6 +24,15 @@ export default function PlayPage() {
 
   return (
     <>
+      <Head>
+        <title>Play / StadiumGuessr</title>
+        <meta
+          name="description"
+          content="A football stadium guessing game - challenge your football knowledge"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <main className="relative flex h-full flex-col">
         <DynamicMap />
 

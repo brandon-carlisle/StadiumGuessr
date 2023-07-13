@@ -15,7 +15,7 @@ UI:
 
 - Add custom login page with multiple providers
 
-- Add Head for each page
+- Add Head for each page (DONE / PARTIAL: Try to load instantly)
 
 Backend:
 

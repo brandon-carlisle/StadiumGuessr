@@ -1,5 +1,6 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { type GetStaticPropsContext, type InferGetStaticPropsType } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useEffect } from "react";
 import superjson from "superjson";
@@ -12,6 +13,7 @@ import { api } from "@/utils/api";
 import { resetGame } from "@/store/features/game/game-slice";
 import { useAppDispatch } from "@/store/hooks";
 
+import AnswersOverview from "@/components/Stats/AnswersOverview";
 import StatsSummary from "@/components/Stats/StatsSummmary";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
@@ -50,51 +52,32 @@ export default function MatchSummaryPage(
 
   return (
     <>
-      <header className="mb-3 flex justify-between p-8">
-        <h1 className="px-2 text-2xl font-semibold md:text-4xl">
-          Match Summary
-        </h1>
-        <Link href={"/play"} className="btn-primary btn-md btn">
-          Play again
-        </Link>
+      <Head>
+        <title>Summary / StadiumGuessr</title>
+        <meta
+          name="description"
+          content="A football stadium guessing game - challenge your football knowledge"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <header className="mb-3 flex flex-col justify-between gap-5 py-8 px-10">
+        <h1 className="text-2xl font-semibold md:text-4xl">Match Summary</h1>
+        <div className="flex justify-start gap-3">
+          <Link href={"/play"} className="btn-primary btn-neutral btn-md btn">
+            Play again
+          </Link>
+          <Link href={"/"} className="btn-neutral btn-md btn">
+            Home
+          </Link>
+        </div>
       </header>
       <main className="flex flex-col justify-center gap-10 p-10">
         <StatsSummary match={match} />
-
-        <div>
-          <h2 className="text-xl font-semibold md:text-3xl">
-            How you answered
-          </h2>
-
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold">Correct Answers</h3>
-
-            <div className="mt-2 space-y-2">
-              {match.correctStadiums.map((stadium) => (
-                <div
-                  key={stadium.id}
-                  className="rounded-md bg-green-200 px-4 py-2 capitalize text-green-800"
-                >
-                  {stadium.names[0]}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold">Incorrect Answers</h3>
-
-            <div className="mt-2 space-y-2">
-              {match.incorrectStadiums.map((stadium) => (
-                <div
-                  key={stadium.id}
-                  className="rounded-md bg-red-200 px-4 py-2 capitalize text-red-800"
-                >
-                  {stadium.names[0]}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <AnswersOverview
+          correctStadiums={match.correctStadiums}
+          incorrectStadiums={match.incorrectStadiums}
+        />
       </main>
     </>
   );
