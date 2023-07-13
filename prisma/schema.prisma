@@ -1,10 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// TODO: Fix jsonProtocol
 generator client {
     provider = "prisma-client-js"
-    // previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
