@@ -17,6 +17,8 @@ UI:
 
 - Add Head for each page (DONE / PARTIAL: Try to load instantly)
 
+- Add cookie policy (DONE)
+
 Backend:
 
 - TRPC router for Stadium (used to create and delete Stadiums) (DONE)

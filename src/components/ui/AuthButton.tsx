@@ -13,7 +13,7 @@ export default function AuthButton() {
     <>
       {!session ? (
         <button
-          onClick={() => void signIn("discord")}
+          onClick={() => void signIn("google")}
           className="btn-neutral btn-sm btn md:btn-md"
         >
           Sign in

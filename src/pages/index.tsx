@@ -51,9 +51,9 @@ export default function HomePage() {
             </div>
 
             {session && session.user.image ? (
-              <div className="mt-16 flex flex-col items-center gap-2">
+              <div className="mt-16 flex flex-col items-center gap-3">
                 <p>Welcome back,</p>
-                <div>
+                <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src={session.user.image}
                     alt="Discord profile image of signed in user"
@@ -92,17 +92,20 @@ export default function HomePage() {
       </main>
 
       <footer className="fixed bottom-0 left-1/2 flex w-full  -translate-x-1/2 items-center justify-center py-4">
-        <p className="font-mono">
-          Source code{" "}
+        <div className="flex gap-3 font-mono">
           <a
             href="https://github.com/brandon-carlisle/StadiumGuessr"
             className="link-accent link"
             target="_blank"
             rel="noreferrer"
           >
-            here
+            Source code
           </a>
-        </p>
+
+          <Link href={"/policy"} className="link-accent link" target="_blank">
+            Cookie policy
+          </Link>
+        </div>
 
         <button onClick={handleModal} className="btn absolute right-1">
           <svg
