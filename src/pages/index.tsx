@@ -39,14 +39,15 @@ export default function HomePage() {
           <div className="max-w-md">
             <WelcomeHeader />
 
-            <div className="flex flex-col text-center">
-              <Link
-                href={"/play"}
-                className="btn-primary btn-sm btn mb-4 md:btn-md"
-              >
-                {session ? "Play now" : "Play as guest"}
-              </Link>
-
+            <div className="flex w-full flex-col border-opacity-50">
+              <div className="mb-6 flex flex-col text-center">
+                <Link href={"/play"} className="btn-primary btn">
+                  {session ? "Play now" : "Play as guest"}
+                </Link>
+              </div>
+              <div className="divider">
+                {!session ? "Sign in to save your score" : "Sign out"}
+              </div>
               <AuthButton />
             </div>
 

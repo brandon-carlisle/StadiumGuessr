@@ -13,11 +13,12 @@ UI:
   - if user is logged in, add button to take to full match summary (DONE)
   - if user is not logged it, add button to play again or return home (DONE)
 
-- Add custom login page with multiple providers
+- Add custom login page with multiple providers (DONE)
 
 - Add Head for each page (DONE / PARTIAL: Try to load instantly)
 
 - Add cookie policy (DONE)
+- Update cookie policy to include Google provider
 
 Backend:
 
