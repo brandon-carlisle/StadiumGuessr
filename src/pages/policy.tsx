@@ -4,8 +4,6 @@ import formatDate from "@/utils/format-date";
 
 const LAST_UPDATED = new Date(2023, 6, 13);
 
-console.log(LAST_UPDATED);
-
 export default function CookiePolicyPage() {
   return (
     <>
@@ -52,9 +50,9 @@ export default function CookiePolicyPage() {
           <li>
             <strong>Authentication:</strong> We use cookies to facilitate the
             login and authentication process when you access our website using
-            the NextAuth.js framework and the Discord provider. These cookies
-            are necessary for the performance of our services and allow you to
-            access and navigate our website securely.
+            the NextAuth.js framework and the Discord OAuth and Google OAuth
+            providers. These cookies are necessary for the performance of our
+            services and allow you to access and navigate our website securely.
           </li>
           <li>
             <strong>Site Preferences:</strong> We may use cookies to remember

@@ -18,7 +18,7 @@ UI:
 - Add Head for each page (DONE / PARTIAL: Try to load instantly)
 
 - Add cookie policy (DONE)
-- Update cookie policy to include Google provider
+- Update cookie policy to include Google provider (DONE)
 
 Backend:
 
