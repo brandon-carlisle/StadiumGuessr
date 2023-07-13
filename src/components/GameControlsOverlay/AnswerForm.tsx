@@ -1,18 +1,20 @@
 import { type FormEvent, useState } from "react";
 import useSound from "use-sound";
 
-import { validateAnswer } from "@utils/validateAnswer";
+import { validateAnswer } from "@/utils/validate-answer";
 
 import {
-  decrementTeamsRemaining,
-  incrementCurrentTeam,
+  addCorrectStadiumId,
+  decrementStadiumsRemaining,
+  incrementCurrentStadium,
   incrementScore,
-} from "@store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "@store/hooks";
+} from "@/store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function AnswerForm() {
   const dispatch = useAppDispatch();
-  const { currentTeam } = useAppSelector((state) => state.game);
+  const { currentStadium } = useAppSelector((state) => state.game);
+
   const [playCorrectSfx] = useSound("/correctSfx.mp3");
   const [playIncorrectSfx] = useSound("/incorrectSfx.mp3");
 
@@ -24,7 +26,7 @@ export default function AnswerForm() {
 
     const { isValid } = validateAnswer({
       userAnswer: input,
-      answers: [currentTeam.stadium, currentTeam.alternativeStadium],
+      answers: currentStadium.names,
     });
 
     setInput("");
@@ -32,8 +34,9 @@ export default function AnswerForm() {
     if (isValid) {
       playCorrectSfx();
       dispatch(incrementScore(10));
-      dispatch(incrementCurrentTeam());
-      dispatch(decrementTeamsRemaining());
+      dispatch(addCorrectStadiumId(currentStadium.id));
+      dispatch(incrementCurrentStadium());
+      dispatch(decrementStadiumsRemaining());
     } else {
       playIncorrectSfx();
     }

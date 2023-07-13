@@ -1,36 +1,47 @@
-import type { Team } from "@prisma/client";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
-import { shuffleTeams } from "@utils/shuffleTeams";
+import { api } from "@/utils/api";
+import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
 
 import {
   decrementTimeRemaining,
-  setCurrentTeam,
-  setTeams,
-  setTeamsRemaining,
-} from "@store/features/game/game-slice";
-import { useAppDispatch } from "@store/hooks";
+  setCurrentStadium,
+  setStadiums,
+  setStadiumsRemaining,
+} from "@/store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-export default function useStartGame(teams: Team[]) {
+export default function useStartGame() {
   const dispatch = useAppDispatch();
-  const shuffledTeams = useMemo(() => shuffleTeams(teams), [teams]);
+
+  const { data: stadiums, isSuccess } = api.stadium.getAll.useQuery();
+  const { timeRemaining } = useAppSelector((state) => state.game);
 
   useEffect(() => {
-    dispatch(setTeams(shuffledTeams));
-    dispatch(setTeamsRemaining(shuffledTeams.length));
+    if (isSuccess) {
+      const shuffledStadiums = shuffleStadiumArray(stadiums);
 
-    if (shuffledTeams[0]) {
-      dispatch(setCurrentTeam(shuffledTeams[0]));
+      dispatch(setStadiums(shuffledStadiums));
+      dispatch(setStadiumsRemaining(shuffledStadiums.length));
+
+      if (shuffledStadiums[0]) dispatch(setCurrentStadium(shuffledStadiums[0]));
     }
-  }, [dispatch, shuffledTeams]);
+  }, [dispatch, isSuccess, stadiums]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      dispatch(decrementTimeRemaining());
-    }, 1000);
+    let timer: ReturnType<typeof setInterval> | null = null;
+    if (timeRemaining > 0) {
+      timer = setInterval(() => {
+        dispatch(decrementTimeRemaining());
+      }, 1000);
+    }
 
-    return () => clearInterval(timer);
-  }, [dispatch]);
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [dispatch, timeRemaining]);
 
-  return { shuffledTeams };
+  return;
 }

@@ -1,11 +1,13 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { resetGame } from "@store/features/game/game-slice";
-import { useAppDispatch } from "@store/hooks";
+import { resetGame } from "@/store/features/game/game-slice";
+import { useAppDispatch } from "@/store/hooks";
+
+import AuthButton from "@/components/ui/AuthButton";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -37,45 +39,22 @@ export default function HomePage() {
           <div className="max-w-md">
             <WelcomeHeader />
 
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href={"/play"} className="btn-primary btn-sm btn md:btn-md">
-                {session ? "Play now" : "Play as guest"}
-              </Link>
-
-              <Link
-                href={"/leaderboard"}
-                className="btn-accent btn-sm btn md:btn-md"
-              >
-                Leaderboard
-              </Link>
-              <button
-                className="btn-secondary btn-sm btn md:btn-md"
-                onClick={handleModal}
-              >
-                How to play
-              </button>
-
-              {session ? (
-                <button
-                  className="btn-warning btn-sm btn md:btn-md"
-                  onClick={() => void signOut()}
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <button
-                  className="btn-warning btn-sm btn md:btn-md"
-                  onClick={() => void signIn("discord")}
-                >
-                  Sign in
-                </button>
-              )}
+            <div className="flex w-full flex-col border-opacity-50">
+              <div className="mb-6 flex flex-col text-center">
+                <Link href={"/play"} className="btn-primary btn">
+                  {session ? "Play now" : "Play as guest"}
+                </Link>
+              </div>
+              <div className="divider">
+                {!session ? "Sign in to save your score" : "Sign out"}
+              </div>
+              <AuthButton />
             </div>
 
             {session && session.user.image ? (
-              <div className="mt-16 flex flex-col items-center gap-2">
+              <div className="mt-16 flex flex-col items-center gap-3">
                 <p>Welcome back,</p>
-                <div>
+                <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src={session.user.image}
                     alt="Discord profile image of signed in user"
@@ -113,18 +92,38 @@ export default function HomePage() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 py-4">
-        <p className="font-mono">
-          Made by{" "}
+      <footer className="fixed bottom-0 left-1/2 flex w-full  -translate-x-1/2 items-center justify-center py-4">
+        <div className="flex gap-3 font-mono">
           <a
-            href="https://www.carlisle.dev/"
+            href="https://github.com/brandon-carlisle/StadiumGuessr"
             className="link-accent link"
             target="_blank"
             rel="noreferrer"
           >
-            Brandon
+            Source code
           </a>
-        </p>
+
+          <Link href={"/policy"} className="link-accent link" target="_blank">
+            Cookie policy
+          </Link>
+        </div>
+
+        <button onClick={handleModal} className="btn absolute right-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </button>
       </footer>
     </>
   );
@@ -132,12 +131,14 @@ export default function HomePage() {
 
 function WelcomeHeader() {
   return (
-    <header>
-      <h1 className="text-3xl font-bold md:text-5xl">StadiumGuessr</h1>
+    <header className="mb-8">
+      <h1 className="text-3xl font-semibold text-primary-content md:text-6xl">
+        StadiumGuessr
+      </h1>
       <p className="py-6">
         Explore a map and find yourself at a random football stadium. Your
-        challenge is to guess the correct name of the stadium. How many can you
-        identify?
+        challenge is to correctly guess the name of the stadium. How many can
+        you identify?
       </p>
     </header>
   );

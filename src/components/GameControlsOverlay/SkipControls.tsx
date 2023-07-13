@@ -1,21 +1,25 @@
 import {
-  decrementTeamsRemaining,
-  incrementCurrentTeam,
-} from "@store/features/game/game-slice";
-import { useAppDispatch, useAppSelector } from "@store/hooks";
+  addIncorrectStadiumId,
+  decrementStadiumsRemaining,
+  incrementCurrentStadium,
+} from "@/store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function SkipControls() {
   const dispatch = useAppDispatch();
-  const { teamsRemaining } = useAppSelector((state) => state.game);
+  const { stadiumsRemaining, currentStadium } = useAppSelector(
+    (state) => state.game,
+  );
 
   const handleSkip = () => {
-    dispatch(incrementCurrentTeam());
-    dispatch(decrementTeamsRemaining());
+    dispatch(addIncorrectStadiumId(currentStadium.id));
+    dispatch(incrementCurrentStadium());
+    dispatch(decrementStadiumsRemaining());
   };
 
   return (
     <>
-      {teamsRemaining > 1 ? (
+      {stadiumsRemaining > 1 ? (
         <button
           className="btn-primary btn-sm btn md:btn-md"
           onClick={handleSkip}

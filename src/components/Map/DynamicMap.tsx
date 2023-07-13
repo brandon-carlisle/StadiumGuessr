@@ -3,25 +3,21 @@ import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
-import { useAppSelector } from "@store/hooks";
+import { useAppSelector } from "@/store/hooks";
 
-const TEMP_CENTER = [
-  55.41569544345857, -1.7058989440046168,
-] as LatLngExpression;
+const TEMP_CENTER = [0, 0] as LatLngExpression;
 const INTIAL_ZOOM = 17;
 
 function MapSubscriber() {
-  const team = useAppSelector((state) => state.game.currentTeam);
+  const stadium = useAppSelector((state) => state.game.currentStadium);
 
   const map = useMap();
+
   useEffect(() => {
-    if (team) {
-      map.setView(
-        [team?.latitude, team?.longitude] as LatLngExpression,
-        INTIAL_ZOOM,
-      );
+    if (stadium) {
+      map.setView([stadium.latitude, stadium.longitude], INTIAL_ZOOM);
     }
-  }, [map, team]);
+  }, [map, stadium]);
 
   return null;
 }

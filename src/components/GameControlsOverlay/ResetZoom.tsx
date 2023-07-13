@@ -1,5 +1,5 @@
-import { resetZoom } from "@store/features/game/game-slice";
-import { useAppDispatch } from "@store/hooks";
+import { resetZoom } from "@/store/features/game/game-slice";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function ResetZoom() {
   const dispatch = useAppDispatch();
@@ -10,7 +10,7 @@ export default function ResetZoom() {
 
   return (
     <button
-      className="btn-secondary btn-sm btn md:btn-md"
+      className="btn-neutral btn-sm btn md:btn-md"
       onClick={handleResetZoom}
     >
       Reset Zoom

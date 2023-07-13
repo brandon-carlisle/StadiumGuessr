@@ -1,35 +1,39 @@
-import { type Team } from "@prisma/client";
+import type { Stadium } from "@prisma/client";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-const initialTeam: Team = {
+const INITIAL_TEAM: Stadium = {
   id: "",
-  name: "",
-  alternativeName: "",
-  stadium: "",
-  alternativeStadium: "",
+  names: [""],
+  club: "",
   capacity: 0,
   latitude: 0,
   longitude: 0,
 };
 
-interface gameState {
-  teams: Team[];
-  currentTeam: Team;
-  teamsRemaining: number;
+interface GameState {
+  stadiums: Stadium[];
+  currentStadium: Stadium;
+  stadiumsRemaining: number;
 
   score: number;
   timeRemaining: number;
   userHasFinishedGame: boolean;
+
+  correctStadiumIds: string[];
+  incorrectStadiumIds: string[];
 }
 
-const initialState: gameState = {
-  teams: [initialTeam],
-  currentTeam: initialTeam,
-  teamsRemaining: 20,
+const initialState: GameState = {
+  stadiums: [INITIAL_TEAM],
+  currentStadium: INITIAL_TEAM,
+  stadiumsRemaining: 20,
 
   score: 0,
   timeRemaining: 90,
   userHasFinishedGame: false,
+
+  correctStadiumIds: [],
+  incorrectStadiumIds: [],
 };
 
 const gameSlice = createSlice({
@@ -37,32 +41,34 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     /**
-     * Takes in an array of Teams
+     * Takes in an array of Stadium
      * to be set into current game state.
      */
-    setTeams(state, action: PayloadAction<Team[]>) {
-      state.teams = action.payload;
+    setStadiums(state, action: PayloadAction<Stadium[]>) {
+      state.stadiums = action.payload;
     },
 
     /**
-     * Sets current team to the payload.
+     * Sets current stadium to the payload.
      */
-    setCurrentTeam(state, action: PayloadAction<Team>) {
-      state.currentTeam = action.payload;
+    setCurrentStadium(state, action: PayloadAction<Stadium>) {
+      state.currentStadium = action.payload;
     },
 
     /**
-     * Sets current team to the next team unless already at last team.
+     * Sets current stadium to the next stadium unless already at last stadium.
      */
-    incrementCurrentTeam(state) {
-      const nextTeamIndex =
-        state.teams.findIndex((team) => team.id === state.currentTeam.id) + 1;
+    incrementCurrentStadium(state) {
+      const nextStadiumIndex =
+        state.stadiums.findIndex(
+          (stadium) => stadium.id === state.currentStadium.id,
+        ) + 1;
 
-      if (nextTeamIndex === state.teams.length - 1) return;
+      if (nextStadiumIndex === state.stadiums.length - 1) return;
 
-      if (state.teams[nextTeamIndex]) {
+      if (state.stadiums[nextStadiumIndex]) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        state.currentTeam = state.teams[nextTeamIndex]!;
+        state.currentStadium = state.stadiums[nextStadiumIndex]!;
       } else return;
     },
 
@@ -74,17 +80,17 @@ const gameSlice = createSlice({
     },
 
     /**
-     * Sets teams left based on payload.
+     * Sets stadiums left based on payload.
      */
-    setTeamsRemaining(state, action: PayloadAction<number>) {
-      state.teamsRemaining = action.payload;
+    setStadiumsRemaining(state, action: PayloadAction<number>) {
+      state.stadiumsRemaining = action.payload;
     },
 
     /**
-     * Decrements teams left by 1.
+     * Decrements stadiums left by 1.
      */
-    decrementTeamsRemaining(state) {
-      if (state.teamsRemaining > 0) state.teamsRemaining--;
+    decrementStadiumsRemaining(state) {
+      if (state.stadiumsRemaining > 0) state.stadiumsRemaining--;
     },
 
     /**
@@ -95,13 +101,13 @@ const gameSlice = createSlice({
     },
 
     /**
-     * Resets zoom level by recreating currentTeam state.
+     * Resets zoom level by recreating currentStadium state.
      *
      * (This is hacky)
      */
     resetZoom(state) {
-      state.currentTeam = {
-        ...state.currentTeam,
+      state.currentStadium = {
+        ...state.currentStadium,
       };
     },
 
@@ -113,12 +119,26 @@ const gameSlice = createSlice({
     },
 
     /**
+     * Adds a team id to correctStadiumIds based on payload
+     */
+    addCorrectStadiumId(state, action: PayloadAction<string>) {
+      state.correctStadiumIds.push(action.payload);
+    },
+
+    /**
+     * Adds a team id to incorrectStadiumIds based on payload
+     */
+    addIncorrectStadiumId(state, action: PayloadAction<string>) {
+      state.incorrectStadiumIds.push(action.payload);
+    },
+
+    /**
      * Resets game state to inital state
      */
     resetGame(state) {
-      state.teams = initialState.teams;
-      state.currentTeam = initialState.currentTeam;
-      state.teamsRemaining = initialState.teamsRemaining;
+      state.stadiums = initialState.stadiums;
+      state.currentStadium = initialState.currentStadium;
+      state.stadiumsRemaining = initialState.stadiumsRemaining;
       state.score = initialState.score;
       state.timeRemaining = initialState.timeRemaining;
       state.userHasFinishedGame = initialState.userHasFinishedGame;
@@ -127,15 +147,17 @@ const gameSlice = createSlice({
 });
 
 export const {
-  setTeams,
-  setCurrentTeam,
-  incrementCurrentTeam,
+  setStadiums,
+  setCurrentStadium,
+  incrementCurrentStadium,
   incrementScore,
-  setTeamsRemaining,
-  decrementTeamsRemaining,
+  setStadiumsRemaining,
+  decrementStadiumsRemaining,
   decrementTimeRemaining,
   resetZoom,
   setUserHasFinishedGame,
+  addCorrectStadiumId,
+  addIncorrectStadiumId,
   resetGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;
