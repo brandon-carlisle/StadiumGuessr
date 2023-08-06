@@ -20,6 +20,12 @@ UI:
 - Add cookie policy (DONE)
 - Update cookie policy to include Google provider (DONE)
 
+- Add Google login icon
+- Edit policy for Google
+
+- Add "Get Hint" button on each stadium
+  - this could be a hint about the club or stadium
+
 Backend:
 
 - TRPC router for Stadium (used to create and delete Stadiums) (DONE)
