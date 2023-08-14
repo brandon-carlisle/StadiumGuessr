@@ -5,7 +5,7 @@ import {
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-export default function SkipControls() {
+export default function SkipButton() {
   const dispatch = useAppDispatch();
   const { stadiumsRemaining, currentStadium } = useAppSelector(
     (state) => state.game,
@@ -21,14 +21,14 @@ export default function SkipControls() {
     <>
       {stadiumsRemaining > 1 ? (
         <button
-          className="btn-primary btn-sm btn md:btn-md"
+          className="btn-primary btn-sm join-item btn md:btn-md"
           onClick={handleSkip}
         >
           Skip Question
         </button>
       ) : (
         <button
-          className="btn-secondary btn-sm btn md:btn-md"
+          className="btn-secondary btn-sm join-item btn md:btn-md"
           onClick={handleSkip}
         >
           Finish Game

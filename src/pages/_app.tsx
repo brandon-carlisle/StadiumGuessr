@@ -1,6 +1,7 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
+import { Toaster } from "react-hot-toast";
 import { Provider as ReduxProvider } from "react-redux";
 
 import "@/styles/globals.css";
@@ -17,6 +18,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <ReduxProvider store={reduxStore}>
         <Component {...pageProps} />
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            style: {
+              backgroundColor: "rgb(29, 35, 42)",
+              border: "1px solid rgb(186, 33, 145)",
+              color: "rgb(255, 255, 255)",
+              borderRadius: "8px",
+              fontSize: "18px",
+            },
+          }}
+          containerStyle={{ bottom: 100 }}
+        />
       </ReduxProvider>
     </SessionProvider>
   );
