@@ -22,12 +22,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
           position="bottom-center"
           toastOptions={{
             style: {
-              backgroundColor: "rgb(36, 43, 51)",
-              color: "rgb(166, 173, 186)",
+              backgroundColor: "rgb(29, 35, 42)",
+              border: "1px solid rgb(186, 33, 145)",
+              color: "rgb(255, 255, 255)",
               borderRadius: "8px",
               fontSize: "18px",
             },
           }}
+          containerStyle={{ bottom: 100 }}
         />
       </ReduxProvider>
     </SessionProvider>

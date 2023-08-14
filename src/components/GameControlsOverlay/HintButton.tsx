@@ -14,7 +14,9 @@ export default function HintButton() {
 
     const hint = `This stadium belongs to ${capitalized ?? ""}...`;
 
-    toast(hint);
+    toast(hint, {
+      icon: "🤫",
+    });
   };
 
   return (
