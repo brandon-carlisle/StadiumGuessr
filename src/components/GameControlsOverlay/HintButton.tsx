@@ -7,7 +7,14 @@ export default function HintButton() {
 
   // getHint will use current stadium and give random facts
   const getHint = () => {
-    toast(`${currentStadium.club ?? ""}`);
+    const capitalized = currentStadium.club
+      ?.split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    const hint = `This stadium belongs to ${capitalized ?? ""}...`;
+
+    toast(hint);
   };
 
   return (

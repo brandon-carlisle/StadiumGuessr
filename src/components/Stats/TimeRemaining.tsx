@@ -8,6 +8,7 @@ export default function TimeRemaining() {
       <div className="stat-title">⏱️</div>
       <div className="stat-value text-center text-2xl md:text-4xl">
         <span className="countdown">
+          {/* @ts-expect-error Style countdown */}
           <span style={{ "--value": time }}></span>
         </span>
       </div>
