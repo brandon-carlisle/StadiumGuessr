@@ -46,7 +46,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="divider">
-                {!session ? "Sign in to save your score" : "Sign out"}
+                {!session ? "Save your score" : "Sign out"}
               </div>
               <AuthButton />
             </div>
@@ -57,7 +57,7 @@ export default function HomePage() {
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src={session.user.image}
-                    alt="Discord profile image of signed in user"
+                    alt="Profile image of signed in user"
                     width={128}
                     height={128}
                     className="mb-1 h-16 w-16 rounded-full ring"
@@ -104,7 +104,7 @@ export default function HomePage() {
           </a>
 
           <Link href={"/policy"} className="link-accent link" target="_blank">
-            Cookie policy
+            Privacy policy
           </Link>
         </div>
 
