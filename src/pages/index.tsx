@@ -46,7 +46,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="divider">
-                {!session ? "Sign in to save your score" : "Sign out"}
+                {!session ? "Save your score" : "Sign out"}
               </div>
               <AuthButton />
             </div>
