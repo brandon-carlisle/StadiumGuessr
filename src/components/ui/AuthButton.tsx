@@ -23,7 +23,7 @@ export default function AuthButton() {
             <Image
               src={normal}
               alt="google signin icon"
-              className="block w-full"
+              className="block w-[184px]"
             />
           </button>
         </div>
