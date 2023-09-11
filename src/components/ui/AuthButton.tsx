@@ -66,7 +66,6 @@ function GoogleIcon() {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
-      <title>btn_google_dark_normal_ios</title>
       <defs>
         <filter
           x="-50%"
