@@ -23,18 +23,25 @@ function MapSubscriber() {
 }
 
 export default function DynamicMap() {
+  useEffect(() => {
+    console.log("Ready");
+  }, []);
+
   return (
-    <MapContainer
-      center={TEMP_CENTER}
-      zoom={INTIAL_ZOOM}
-      scrollWheelZoom={true}
-      className="h-full"
-    >
-      <MapSubscriber />
-      <TileLayer
-        attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-      />
-    </MapContainer>
+    <>
+      <MapContainer
+        center={TEMP_CENTER}
+        zoom={INTIAL_ZOOM}
+        scrollWheelZoom={true}
+        className="h-screen"
+      >
+        <MapSubscriber />
+        <TileLayer
+          attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          className="TEST"
+        />
+      </MapContainer>
+    </>
   );
 }

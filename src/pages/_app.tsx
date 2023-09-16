@@ -35,9 +35,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
                 color: "rgb(255, 255, 255)",
                 borderRadius: "8px",
                 fontSize: "18px",
+                textAlign: "center",
               },
             }}
-            containerStyle={{ bottom: 100 }}
+            containerStyle={{ bottom: 150 }}
           />
         </div>
       </ReduxProvider>

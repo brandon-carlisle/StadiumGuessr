@@ -132,7 +132,6 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-// TODO: This form can be cleaned up later (mostly the inputs)
 function AdminForm() {
   const {
     register,

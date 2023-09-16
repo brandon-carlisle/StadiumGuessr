@@ -15,9 +15,6 @@ export default function GameCompleteOverlay() {
 
   const { mutate, isSuccess, isLoading } = api.match.create.useMutation();
 
-  // const isLoading = false;
-  // const isSuccess = true;
-
   const handlePlayAgain = () => {
     if (!session) {
       return router.reload();
