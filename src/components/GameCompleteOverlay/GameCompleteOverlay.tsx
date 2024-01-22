@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { api } from "@/utils/api";
@@ -9,17 +8,10 @@ import LoadingButton from "../ui/LoadingButton";
 
 export default function GameCompleteOverlay() {
   const router = useRouter();
-  const { data: session } = useSession();
-
   const { game } = useAppSelector((state) => state);
-
   const { mutate, isSuccess, isLoading } = api.match.create.useMutation();
 
   const handlePlayAgain = () => {
-    if (!session) {
-      return router.reload();
-    }
-
     mutate(
       {
         score: game.score,
@@ -34,6 +26,8 @@ export default function GameCompleteOverlay() {
         },
       },
     );
+
+    router.reload();
   };
 
   const handleViewSummary = () => {
@@ -60,35 +54,21 @@ export default function GameCompleteOverlay() {
           <h2 className="card-title">You finished!</h2>
           <div className="stat-value">{game.score} points 🎮</div>
           <div className="mt-4 flex gap-3">
-            {session ? (
-              <>
-                {isLoading && <LoadingButton />}
+            <>
+              {isLoading && <LoadingButton />}
 
-                {!isLoading && !isSuccess && (
-                  <button
-                    className="btn-primary btn"
-                    onClick={handleViewSummary}
-                  >
-                    View summary
-                  </button>
-                )}
+              {!isLoading && !isSuccess && (
+                <button className="btn-primary btn" onClick={handleViewSummary}>
+                  View summary
+                </button>
+              )}
 
-                {!isLoading && !isSuccess && (
-                  <button className="btn-neutral btn" onClick={handlePlayAgain}>
-                    Play again
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <button
-                  className="btn-primary btn-wide btn"
-                  onClick={handlePlayAgain}
-                >
+              {!isLoading && !isSuccess && (
+                <button className="btn-neutral btn" onClick={handlePlayAgain}>
                   Play again
                 </button>
-              </>
-            )}
+              )}
+            </>
           </div>
         </div>
       </div>

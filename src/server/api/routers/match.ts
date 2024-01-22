@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const matchRouter = createTRPCRouter({
-  create: protectedProcedure
+  create: publicProcedure
     .input(
       z.object({
         score: z.number(),
@@ -20,7 +20,7 @@ export const matchRouter = createTRPCRouter({
           score: input.score,
           timeRemaining: input.timeRemaining,
           stadiumsRemaining: input.stadiumsRemaining,
-          userId: ctx.session.user.id,
+          userId: ctx.session?.user.id || null,
           correctStadiums: {
             connect: input.correctStadiums.map((stadiumId) => ({
               id: stadiumId,
@@ -39,7 +39,7 @@ export const matchRouter = createTRPCRouter({
       };
     }),
 
-  getById: protectedProcedure
+  getById: publicProcedure
     .input(z.object({ matchId: z.string() }))
     .query(async ({ input, ctx }) => {
       const match = await ctx.prisma.match.findUnique({
