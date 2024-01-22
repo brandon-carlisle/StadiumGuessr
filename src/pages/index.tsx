@@ -46,7 +46,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="divider">
-                {!session ? "Save your score" : "Sign out"}
+                {!session ? "Sign in to see previous scores" : "Sign out"}
               </div>
               <AuthButton />
             </div>
@@ -55,14 +55,19 @@ export default function HomePage() {
               <div className="mt-16 flex flex-col items-center gap-3">
                 <p>Welcome back,</p>
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <Image
-                    src={session.user.image}
-                    alt="Profile image of signed in user"
-                    width={128}
-                    height={128}
-                    className="mb-1 h-16 w-16 rounded-full ring"
-                  />
-                  <p>{session.user.name}</p>
+                  <Link
+                    href={`/user/${session.user.id}`}
+                    className="flex flex-col items-center justify-center"
+                  >
+                    <Image
+                      src={session.user.image}
+                      alt="Profile image of signed in user"
+                      width={128}
+                      height={128}
+                      className="mb-1 h-16 w-16 rounded-full ring"
+                    />
+                    <p>{session.user.name}</p>
+                  </Link>
                 </div>
               </div>
             ) : null}
@@ -82,7 +87,10 @@ export default function HomePage() {
                         Use the map to look around and figure out where you are
                       </li>
                       <li>Enter your guess or skip if you do not know</li>
-                      <li>If you want scores to save, you must sign in</li>
+                      <li>
+                        If you want to see your previous scores, you must sign
+                        in
+                      </li>
                     </ol>
                   </div>
                 </div>

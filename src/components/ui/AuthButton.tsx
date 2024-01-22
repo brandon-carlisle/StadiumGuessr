@@ -18,7 +18,7 @@ export default function AuthButton() {
       {!session ? (
         <div className="flex w-full justify-center">
           <button
-            className="flex w-[191px] items-center rounded-sm bg-[#4285F4] pr-2 shadow-md"
+            className="flex w-[191px] items-center rounded-sm bg-[#4285F4] pr-2 shadow-md transition hover:translate-y-[0.05rem] active:translate-y-1"
             onClick={() => void signIn("google")}
           >
             <div className="mr-2">

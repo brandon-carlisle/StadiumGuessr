@@ -1,7 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 
 export const matchRouter = createTRPCRouter({
   create: publicProcedure
@@ -60,4 +64,21 @@ export const matchRouter = createTRPCRouter({
 
       return match;
     }),
+
+  getAllByUserId: protectedProcedure.query(async ({ ctx }) => {
+    const matches = await ctx.prisma.match.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+
+    if (matches.length < 1) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No matches found",
+      });
+    }
+
+    return matches;
+  }),
 });
