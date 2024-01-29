@@ -2,7 +2,7 @@ import Head from "next/head";
 
 import formatDate from "@/utils/format-date";
 
-const LAST_UPDATED = new Date(2023, 8 - 1, 20); // Updated the date
+const LAST_UPDATED = new Date(2024, 1 - 1, 29);
 
 export default function PrivacyPolicyPage() {
   return (
@@ -134,7 +134,8 @@ export default function PrivacyPolicyPage() {
         <h3>9. Contact Us</h3>
         <p>
           If you have any questions about our practices or this Privacy Policy,
-          please contact us <a href="mailto:brandon@carlisle.dev">here</a>.
+          please contact us{" "}
+          <a href="mailto:contact@brandoncarlisle.co.uk">here</a>.
         </p>
       </article>
     </>
