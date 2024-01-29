@@ -31,7 +31,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
             toastOptions={{
               style: {
                 backgroundColor: "rgb(29, 35, 42)",
-                border: "1px solid rgb(186, 33, 145)",
                 color: "rgb(255, 255, 255)",
                 borderRadius: "8px",
                 fontSize: "18px",
