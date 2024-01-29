@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
@@ -26,6 +27,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <ReduxProvider store={reduxStore}>
         <div className={`${roboto.variable} font-sans`}>
           <Component {...pageProps} />
+          <Analytics />
           <Toaster
             position="bottom-center"
             toastOptions={{
