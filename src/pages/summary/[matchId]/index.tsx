@@ -62,9 +62,7 @@ export default function MatchSummaryPage(
       </Head>
 
       <header className="mb-3 flex flex-col justify-between gap-5 py-8 px-10">
-        <h1 className="text-2xl font-semibold text-primary-content md:text-4xl">
-          Match Summary
-        </h1>
+        <h1 className="text-2xl font-semibold md:text-4xl">Match Summary</h1>
         <div className="flex justify-start gap-3">
           <Link href={"/play"} className="btn-primary btn-md btn">
             Play

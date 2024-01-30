@@ -32,7 +32,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             position="bottom-center"
             toastOptions={{
               style: {
-                backgroundColor: "rgb(29, 35, 42)",
+                backgroundColor: "rgb(23, 18, 18)",
                 color: "rgb(255, 255, 255)",
                 borderRadius: "8px",
                 fontSize: "18px",

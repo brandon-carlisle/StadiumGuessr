@@ -34,7 +34,7 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="hero min-h-screen bg-base-200">
+      <main className="hero min-h-screen">
         <div className="hero-content text-center">
           <div className="max-w-md">
             <WelcomeHeader />
@@ -104,14 +104,14 @@ export default function HomePage() {
         <div className="flex gap-3 font-mono">
           <a
             href="https://github.com/brandon-carlisle/StadiumGuessr"
-            className="link-accent link"
+            className="link"
             target="_blank"
             rel="noreferrer"
           >
             Source code
           </a>
 
-          <Link href={"/policy"} className="link-accent link" target="_blank">
+          <Link href={"/policy"} className="link" target="_blank">
             Privacy policy
           </Link>
         </div>
@@ -140,7 +140,7 @@ export default function HomePage() {
 function WelcomeHeader() {
   return (
     <header className="mb-8">
-      <h1 className="text-3xl font-semibold text-primary-content md:text-6xl">
+      <h1 className="text-3xl font-semibold text-primary md:text-6xl">
         StadiumGuessr
       </h1>
       <p className="py-6">

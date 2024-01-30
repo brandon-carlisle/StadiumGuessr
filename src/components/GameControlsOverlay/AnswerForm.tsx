@@ -49,7 +49,7 @@ export default function AnswerForm() {
     >
       <input
         type="text"
-        className="input-primary input text-center md:input-lg md:w-full"
+        className="input text-center md:input-lg md:w-full"
         id="answer-input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
