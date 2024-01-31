@@ -48,9 +48,7 @@ export default function AdminPage() {
       </Head>
 
       <header className="mb-3 flex justify-between p-8">
-        <h1 className="text-2xl font-semibold text-primary-content md:text-4xl">
-          Admin Panel
-        </h1>
+        <h1 className="text-2xl font-semibold md:text-4xl">Admin Panel</h1>
         <Link href={"/"} className="btn-md btn">
           Go home
         </Link>
@@ -58,9 +56,10 @@ export default function AdminPage() {
       <main className="px-8">
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <section>
-            <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
-              View all stadiums
-            </h2>
+            <h2 className="mb-2 text-xl font-semibold">View all stadiums</h2>
+            <p className="mb-5 font-semibold">
+              {stadiums?.length} stadiums found
+            </p>
 
             {isLoading && <LoadingSpinner />}
 
@@ -112,9 +111,7 @@ export default function AdminPage() {
           </section>
 
           <section>
-            <h2 className="mb-5 text-xl font-semibold text-primary-content/90">
-              Add stadium
-            </h2>
+            <h2 className="mb-5 text-xl font-semibold">Add stadium</h2>
             <AdminForm />
           </section>
         </div>

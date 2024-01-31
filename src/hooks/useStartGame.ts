@@ -14,7 +14,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 export default function useStartGame() {
   const dispatch = useAppDispatch();
 
-  const { data: stadiums, isSuccess } = api.stadium.getAll.useQuery();
+  const { data: stadiums, isSuccess } = api.stadium.getByAmount.useQuery({
+    amount: 20,
+  });
+
   const { timeRemaining } = useAppSelector((state) => state.game);
 
   useEffect(() => {
