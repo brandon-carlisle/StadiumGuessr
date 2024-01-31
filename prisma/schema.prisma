@@ -76,7 +76,7 @@ model Stadium {
     capacity  Int
     latitude  Float
     longitude Float
-    club      String?
+    club      String
 
     correctGuesses   Match[] @relation("CorrectGuess")
     incorrectGuesses Match[] @relation("IncorrectGuess")

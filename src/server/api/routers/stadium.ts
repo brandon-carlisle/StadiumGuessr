@@ -57,4 +57,21 @@ export const stadiumRouter = createTRPCRouter({
 
     return stadiums;
   }),
+
+  getByAmount: publicProcedure
+    .input(z.object({ amount: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const stadiums = await ctx.prisma.stadium.findMany({
+        take: input.amount,
+      });
+
+      if (stadiums.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Could not find any stadiums",
+        });
+      }
+
+      return stadiums;
+    }),
 });
