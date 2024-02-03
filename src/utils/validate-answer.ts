@@ -7,12 +7,12 @@ function sanitize(inputs: string[]) {
   );
 }
 
-interface ValidateAnswerProps {
+interface ValidateAnswerInputs {
   userAnswer: string;
   answers: string[];
 }
 
-export function validateAnswer({ userAnswer, answers }: ValidateAnswerProps): {
+export function validateAnswer({ userAnswer, answers }: ValidateAnswerInputs): {
   isValid: boolean;
 } {
   const [sanitizedInput] = sanitize([userAnswer]);

@@ -99,40 +99,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
-
-      <footer className="fixed bottom-0 left-1/2 flex w-full  -translate-x-1/2 items-center justify-center py-4">
-        <div className="flex gap-3 font-mono">
-          <a
-            href="https://github.com/brandon-carlisle/StadiumGuessr"
-            className="link"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Source code
-          </a>
-
-          <Link href={"/policy"} className="link" target="_blank">
-            Privacy policy
-          </Link>
-        </div>
-
-        <button onClick={handleModal} className="btn absolute right-1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.5"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </button>
-      </footer>
     </>
   );
 }

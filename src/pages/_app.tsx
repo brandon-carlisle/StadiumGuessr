@@ -35,7 +35,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
                 backgroundColor: "rgb(23, 18, 18)",
                 color: "rgb(255, 255, 255)",
                 borderRadius: "8px",
-                fontSize: "18px",
+                fontSize: "16px",
                 textAlign: "center",
               },
             }}
