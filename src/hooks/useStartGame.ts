@@ -16,8 +16,6 @@ export default function useStartGame() {
 
   const { data: stadiums, isSuccess } = api.stadium.getRandom.useQuery();
 
-  console.log("length: ", stadiums?.length);
-
   const { timeRemaining } = useAppSelector((state) => state.game);
 
   useEffect(() => {
