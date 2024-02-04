@@ -7,6 +7,8 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 
+import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
+
 export const stadiumRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
@@ -58,20 +60,28 @@ export const stadiumRouter = createTRPCRouter({
     return stadiums;
   }),
 
-  getByAmount: publicProcedure
-    .input(z.object({ amount: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const stadiums = await ctx.prisma.stadium.findMany({
-        take: input.amount,
+  getRandom: publicProcedure.query(async ({ ctx }) => {
+    const stadiums = await ctx.prisma.stadium.findMany();
+
+    // How many stadiums per match
+    const GAME_ROUND_LENGTH = 20;
+
+    if (stadiums.length === 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Could not find any stadiums",
       });
+    }
 
-      if (stadiums.length === 0) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Could not find any stadiums",
-        });
-      }
+    if (stadiums.length < GAME_ROUND_LENGTH) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Could not find enough stadiums",
+      });
+    }
 
-      return stadiums;
-    }),
+    const shuffled = shuffleStadiumArray(stadiums);
+
+    return shuffled.slice(0, GAME_ROUND_LENGTH);
+  }),
 });

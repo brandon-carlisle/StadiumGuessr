@@ -26,10 +26,18 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>StadiumGuessr</title>
+        <title>StadiumGuessr - Football Stadium Guessing Game</title>
         <meta
           name="description"
-          content="A football stadium guessing game - challenge your football knowledge"
+          content="StadiumGuessr is a fun and challenging football stadium guessing game. Test your football knowledge and see how many stadiums you can identify. Play now!"
+        />
+        <meta
+          property="og:title"
+          content="StadiumGuessr - Football Stadium Guessing Game"
+        />
+        <meta
+          property="og:description"
+          content="StadiumGuessr is a fun and challenging football stadium guessing game. Test your football knowledge and see how many stadiums you can identify. Play now!"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
