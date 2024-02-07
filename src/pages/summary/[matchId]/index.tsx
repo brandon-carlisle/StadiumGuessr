@@ -1,5 +1,6 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { type GetStaticPropsContext, type InferGetStaticPropsType } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -21,6 +22,7 @@ export default function MatchSummaryPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const dispatch = useAppDispatch();
+  const { data: session } = useSession();
 
   // Reset game state whenever user goes to homepage
   useEffect(() => {
@@ -70,6 +72,15 @@ export default function MatchSummaryPage(
           <Link href={"/"} className="btn-neutral btn-md btn">
             Home
           </Link>
+
+          {session?.user && (
+            <Link
+              href={`/user/${session.user.id}`}
+              className="btn-neutral btn-md btn"
+            >
+              Matches
+            </Link>
+          )}
         </div>
       </header>
       <main className="flex flex-col justify-center gap-10 p-10">
