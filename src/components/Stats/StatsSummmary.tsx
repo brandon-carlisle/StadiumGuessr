@@ -1,5 +1,7 @@
 import type { Match } from "@prisma/client";
 
+import formatDate from "@/utils/format-date";
+
 interface Props {
   match: Match;
 }
@@ -20,6 +22,11 @@ export default function StatsSummary({ match }: Props) {
       <div className="stat">
         <div className="stat-title">Stadiums Remaining</div>
         <div className="stat-value">{match.stadiumsRemaining}</div>
+      </div>
+
+      <div className="stat">
+        <div className="stat-title">Date Played</div>
+        <div className="stat-value">{formatDate(match.date)}</div>
       </div>
     </div>
   );
