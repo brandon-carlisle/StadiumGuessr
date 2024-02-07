@@ -24,8 +24,6 @@ export default function UserPage({
 
   if (!session || session.user.id !== userId) return <Unauthorised />;
 
-  console.log(matches);
-
   return (
     <>
       <Head>
@@ -53,21 +51,22 @@ export default function UserPage({
         <section>
           {isLoading && <LoadingSpinner />}
 
-          <div className="flex h-[70vh] flex-col gap-3 overflow-y-auto">
+          <ul className="flex flex-col gap-3 overflow-y-auto">
             {!matches || !matches.length ? (
               <p>No matches found...</p>
             ) : (
               matches.map((match) => (
-                <Link
-                  key={match.id}
-                  href={`/summary/${match.id}`}
-                  className="transition hover:translate-y-[0.05rem] active:translate-y-1"
-                >
-                  <StatsSummary match={match} />
-                </Link>
+                <li key={match.id}>
+                  <Link
+                    href={`/summary/${match.id}`}
+                    className="inline-block transition hover:translate-y-[0.05rem] active:translate-y-1"
+                  >
+                    <StatsSummary match={match} />
+                  </Link>
+                </li>
               ))
             )}
-          </div>
+          </ul>
         </section>
       </main>
     </>
