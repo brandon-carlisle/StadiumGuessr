@@ -47,22 +47,17 @@ export default function UserPage({
         </div>
       </header>
 
-      <main className="px-8">
+      <main className="px-8 pb-8">
         <section>
           {isLoading && <LoadingSpinner />}
 
-          <ul className="flex flex-col gap-3 overflow-y-auto">
+          <ul className="grid grid-cols-2 place-items-center gap-5 md:grid-cols-1">
             {!matches || !matches.length ? (
               <p>No matches found...</p>
             ) : (
               matches.map((match) => (
                 <li key={match.id}>
-                  <Link
-                    href={`/summary/${match.id}`}
-                    className="inline-block transition hover:translate-y-[0.05rem] active:translate-y-1"
-                  >
-                    <StatsSummary match={match} />
-                  </Link>
+                  <StatsSummary match={match} href={`/summary/${match.id}`} />
                 </li>
               ))
             )}
