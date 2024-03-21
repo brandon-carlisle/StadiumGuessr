@@ -3,6 +3,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { Roboto } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { Provider as ReduxProvider } from "react-redux";
 
@@ -27,7 +28,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <ReduxProvider store={reduxStore}>
         <div className={`${roboto.variable} font-sans`}>
           <Component {...pageProps} />
-          <Analytics />
+          <Script
+            src="https://beamanalytics.b-cdn.net/beam.min.js"
+            data-token="6f2db98d-6358-4902-ba02-428b8b9fb04f"
+            async
+          />
           <Toaster
             position="bottom-center"
             toastOptions={{
