@@ -4,6 +4,10 @@ on: [push, pull_request]
 
 env:
   DATABASE_URL: "https://fake.com"
+  NEXTAUTH_SECRET: "https://fake.com"
+  NEXTAUTH_URL: "https://fake.com"
+  GOOGLE_CLIENT_ID: "https://fake.com"
+  GOOGLE_CLIENT_SECRET: "https://fake.com"
 
 jobs:
   build:
