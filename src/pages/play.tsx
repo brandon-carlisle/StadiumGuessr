@@ -33,7 +33,7 @@ export default function PlayPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="relative flex h-full flex-col">
+      <main className="h-dvh relative flex flex-col">
         <DynamicMap />
 
         {!userHasFinishedGame ? (
