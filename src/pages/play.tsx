@@ -9,6 +9,7 @@ import GameCompleteOverlay from "@/components/GameCompleteOverlay/GameCompleteOv
 import GameControlsOverlay from "@/components/GameControlsOverlay/GameControlsOverlay";
 import GameStatsOverlay from "@/components/Stats/GameStatsOverlay";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import ToggleSound from "@/components/ui/ToggleSound";
 
 // Leaflet needs the window object, so this needs to have dynamic
 const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
@@ -34,6 +35,9 @@ export default function PlayPage() {
       </Head>
 
       <main className="h-dvh relative flex flex-col">
+        <div className="absolute top-0 right-0 z-[10000] -translate-x-5 translate-y-5">
+          <ToggleSound />
+        </div>
         <DynamicMap />
 
         {!userHasFinishedGame ? (

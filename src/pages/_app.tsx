@@ -10,6 +10,7 @@ import "@/styles/globals.css";
 
 import { api } from "@/utils/api";
 
+import { SoundProvider } from "@/store/sound-context";
 import { reduxStore } from "@/store/store";
 
 const roboto = Roboto({
@@ -24,29 +25,31 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <ReduxProvider store={reduxStore}>
-        <div className={`${roboto.variable} font-sans`}>
-          <Component {...pageProps} />
-          <Script
-            src="https://beamanalytics.b-cdn.net/beam.min.js"
-            data-token="6f2db98d-6358-4902-ba02-428b8b9fb04f"
-            async
-          />
-          <Toaster
-            position="bottom-center"
-            toastOptions={{
-              style: {
-                backgroundColor: "rgb(23, 18, 18)",
-                color: "rgb(255, 255, 255)",
-                borderRadius: "8px",
-                fontSize: "16px",
-                textAlign: "center",
-              },
-            }}
-            containerStyle={{ bottom: 150 }}
-          />
-        </div>
-      </ReduxProvider>
+      <SoundProvider>
+        <ReduxProvider store={reduxStore}>
+          <div className={`${roboto.variable} font-sans`}>
+            <Component {...pageProps} />
+            <Script
+              src="https://beamanalytics.b-cdn.net/beam.min.js"
+              data-token="6f2db98d-6358-4902-ba02-428b8b9fb04f"
+              async
+            />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                style: {
+                  backgroundColor: "rgb(23, 18, 18)",
+                  color: "rgb(255, 255, 255)",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  textAlign: "center",
+                },
+              }}
+              containerStyle={{ bottom: 150 }}
+            />
+          </div>
+        </ReduxProvider>
+      </SoundProvider>
     </SessionProvider>
   );
 };

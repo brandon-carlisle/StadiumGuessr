@@ -22,6 +22,7 @@
     "@trpc/server": "^10.34.0",
     "daisyui": "^3.1.11",
     "leaflet": "^1.9.3",
+    "lucide-react": "^0.367.0",
     "next": "^13.4.7",
     "next-auth": "^4.22.1",
     "next-superjson-plugin": "^0.5.8",

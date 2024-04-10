@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useContext, useState } from "react";
 import useSound from "use-sound";
 
 import { validateAnswer } from "@/utils/validate-answer";
@@ -10,17 +10,21 @@ import {
   incrementScore,
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-
-const useSoundConfig = {
-  volume: 0.5,
-};
+import { SoundContext } from "@/store/sound-context";
 
 export default function AnswerForm() {
   const dispatch = useAppDispatch();
   const { currentStadium } = useAppSelector((state) => state.game);
+  const { soundEnabled } = useContext(SoundContext);
 
-  const [playCorrectSfx] = useSound("/correctSfx.mp3", useSoundConfig);
-  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3", useSoundConfig);
+  const [playCorrectSfx] = useSound("/correctSfx.mp3", {
+    volume: 0.2,
+    soundEnabled,
+  });
+  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3", {
+    volume: 0.2,
+    soundEnabled,
+  });
 
   const [input, setInput] = useState("");
 
