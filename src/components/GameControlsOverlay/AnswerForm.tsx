@@ -11,12 +11,16 @@ import {
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
+const useSoundConfig = {
+  volume: 0.5,
+};
+
 export default function AnswerForm() {
   const dispatch = useAppDispatch();
   const { currentStadium } = useAppSelector((state) => state.game);
 
-  const [playCorrectSfx] = useSound("/correctSfx.mp3");
-  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3");
+  const [playCorrectSfx] = useSound("/correctSfx.mp3", useSoundConfig);
+  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3", useSoundConfig);
 
   const [input, setInput] = useState("");
 
