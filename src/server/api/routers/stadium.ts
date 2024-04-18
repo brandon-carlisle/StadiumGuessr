@@ -17,7 +17,8 @@ export const stadiumRouter = createTRPCRouter({
         capacity: z.number(),
         latitude: z.number(),
         longitude: z.number(),
-        club: z.string(),
+        club: z.string().min(1),
+        league: z.string().min(1),
       }),
     )
     .mutation(async ({ input, ctx }) => {

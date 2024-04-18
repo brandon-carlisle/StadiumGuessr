@@ -126,6 +126,7 @@ const schema = z.object({
   latitude: z.string().min(1),
   longitude: z.string().min(1),
   club: z.string().min(1),
+  league: z.string().min(1),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -154,6 +155,7 @@ function AdminForm() {
       club: data.club,
       latitude: Number.parseFloat(data.latitude),
       longitude: Number.parseFloat(data.longitude),
+      league: data.league,
     });
   };
 
@@ -242,6 +244,23 @@ function AdminForm() {
           />
           {errors.longitude?.message && (
             <p className="mt-2 text-error">{errors.longitude?.message}</p>
+          )}
+        </div>
+
+        <div className="form-control w-full">
+          <label className="label" htmlFor="longitude">
+            <span className="label-text">League</span>
+          </label>
+          <input
+            id="league"
+            type="text"
+            placeholder="Premier League"
+            className="input-bordered input w-full placeholder:font-thin"
+            {...register("league")}
+          />
+
+          {errors.league?.message && (
+            <p className="mt-2 text-error">{errors.league?.message}</p>
           )}
         </div>
 

@@ -77,6 +77,7 @@ model Stadium {
     latitude  Float
     longitude Float
     club      String
+    league    String @default("")
 
     correctGuesses   Match[] @relation("CorrectGuess")
     incorrectGuesses Match[] @relation("IncorrectGuess")
