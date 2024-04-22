@@ -8,6 +8,7 @@ const INITIAL_TEAM: Stadium = {
   capacity: 0,
   latitude: 0,
   longitude: 0,
+  league: "",
 };
 
 interface GameState {
