@@ -126,8 +126,9 @@ const schema = z.object({
   latitude: z.string().min(1),
   longitude: z.string().min(1),
   club: z.string().min(1),
-  league: z.string().min(1),
+  league: z.enum(["EPL"]),
 });
+
 type FormData = z.infer<typeof schema>;
 
 function AdminForm() {
@@ -251,13 +252,24 @@ function AdminForm() {
           <label className="label" htmlFor="longitude">
             <span className="label-text">League</span>
           </label>
-          <input
+          {/* <input
             id="league"
             type="text"
             placeholder="Premier League"
             className="input-bordered input w-full placeholder:font-thin"
             {...register("league")}
-          />
+          /> */}
+
+          <select
+            className="select w-full select-bordered"
+            {...register("league")}
+            id="league"
+          >
+            <option disabled selected>
+              Choose league
+            </option>
+            <option value="EPL">EPL</option>
+          </select>
 
           {errors.league?.message && (
             <p className="mt-2 text-error">{errors.league?.message}</p>
