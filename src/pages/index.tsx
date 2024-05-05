@@ -48,9 +48,13 @@ export default function HomePage() {
             <WelcomeHeader />
 
             <div className="flex w-full flex-col border-opacity-50">
-              <div className="mb-6 flex flex-col text-center">
+              <div className="mb-6 flex flex-col text-center gap-2">
                 <Link href={"/play"} className="btn-primary btn">
-                  {session ? "Play now" : "Play as guest"}
+                  Normal mode (random)
+                </Link>
+
+                <Link href={"/play?league=EPL"} className="btn-secondary btn">
+                  Premier League only
                 </Link>
               </div>
               <div className="divider">
@@ -147,7 +151,7 @@ export default function HomePage() {
 
 function WelcomeHeader() {
   return (
-    <header className="mb-8">
+    <header>
       <h1 className="text-3xl font-semibold text-primary md:text-6xl">
         StadiumGuessr
       </h1>

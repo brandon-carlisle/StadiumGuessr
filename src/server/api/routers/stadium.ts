@@ -8,6 +8,7 @@ import {
 } from "@/server/api/trpc";
 
 import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
+import { LeagueOptionSchema } from "@/utils/types";
 
 export const stadiumRouter = createTRPCRouter({
   create: protectedProcedure
@@ -18,7 +19,7 @@ export const stadiumRouter = createTRPCRouter({
         latitude: z.number(),
         longitude: z.number(),
         club: z.string().min(1),
-        league: z.string().min(1),
+        league: z.enum(["EPL"]),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -61,13 +62,30 @@ export const stadiumRouter = createTRPCRouter({
     return stadiums;
   }),
 
-  getByLeague: publicProcedure
+  getByLeagueOrRandom: publicProcedure
     .input(
       z.object({
-        league: z.string(),
+        league: LeagueOptionSchema,
       }),
     )
     .query(async ({ ctx, input }) => {
+      // Default to random until other leagues supported
+      // This will be:
+      // if (!input.league) {
+      if (input.league !== "EPL") {
+        const stadiums = await ctx.prisma.stadium.findMany();
+
+        if (stadiums.length === 0)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Could not find any stadiums",
+          });
+        // How many stadiums per match
+        const GAME_ROUND_LENGTH = 20;
+        const shuffled = shuffleStadiumArray(stadiums);
+        return shuffled.slice(0, GAME_ROUND_LENGTH);
+      }
+
       const stadiums = await ctx.prisma.stadium.findMany({
         where: {
           league: input.league,

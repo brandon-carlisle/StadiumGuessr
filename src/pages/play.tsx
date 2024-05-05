@@ -2,6 +2,9 @@ import useFinishGame from "@/hooks/useFinishGame";
 import useStartGame from "@/hooks/useStartGame";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { useRouter } from "next/router";
+
+import { LeagueOptionSchema } from "@/utils/types";
 
 import { useAppSelector } from "@/store/hooks";
 
@@ -19,8 +22,17 @@ const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
 
 export default function PlayPage() {
   const { userHasFinishedGame } = useAppSelector((state) => state.game);
+  const { query } = useRouter();
+  const { league } = query;
 
-  useStartGame();
+  const { success, data } = LeagueOptionSchema.safeParse(league);
+
+  useStartGame({
+    league: success ? data : null,
+  });
+
+  // Refactor this to return game playing state etc
+  // and handle game ending here
   useFinishGame();
 
   return (

@@ -72,7 +72,7 @@ model User {
 
 enum League {
     EPL
-    LALIGA
+    LA_LIGA
 }
 
 model Stadium {
