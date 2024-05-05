@@ -70,6 +70,11 @@ model User {
     role          UserRole  @default(USER)
 }
 
+enum League {
+    EPL
+    LALIGA
+}
+
 model Stadium {
     id        String   @id @default(cuid())
     names     String[]
@@ -77,7 +82,7 @@ model Stadium {
     latitude  Float
     longitude Float
     club      String
-    league    String @default("")
+    league    League?
 
     correctGuesses   Match[] @relation("CorrectGuess")
     incorrectGuesses Match[] @relation("IncorrectGuess")

@@ -61,6 +61,28 @@ export const stadiumRouter = createTRPCRouter({
     return stadiums;
   }),
 
+  getByLeague: publicProcedure
+    .input(
+      z.object({
+        league: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const stadiums = await ctx.prisma.stadium.findMany({
+        where: {
+          league: input.league,
+        },
+      });
+
+      if (stadiums.length === 0)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Could not find any stadiums",
+        });
+
+      return stadiums;
+    }),
+
   getRandom: publicProcedure.query(async ({ ctx }) => {
     const stadiums = await ctx.prisma.stadium.findMany();
 
