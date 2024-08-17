@@ -17,11 +17,11 @@ export default function AnswerForm() {
   const { currentStadium } = useAppSelector((state) => state.game);
   const { soundEnabled } = useContext(SoundContext);
 
-  const [playCorrectSfx] = useSound("/correctSfx.mp3", {
+  const [playCorrectSfx] = useSound("/correctfx.mp3", {
     volume: 0.2,
     soundEnabled,
   });
-  const [playIncorrectSfx] = useSound("/incorrectSfx.mp3", {
+  const [playIncorrectSfx] = useSound("/incorrectfx.mp3", {
     volume: 0.2,
     soundEnabled,
   });
