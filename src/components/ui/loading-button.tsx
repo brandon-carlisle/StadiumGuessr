@@ -1,4 +1,4 @@
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "./spinner";
 
 export default function LoadingButton() {
   return (

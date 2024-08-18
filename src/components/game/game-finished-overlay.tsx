@@ -4,9 +4,9 @@ import { api } from "@/utils/api";
 
 import { useAppSelector } from "@/store/hooks";
 
-import LoadingButton from "../ui/LoadingButton";
+import LoadingButton from "../ui/loading-button";
 
-export default function GameCompleteOverlay() {
+export default function GameFinishedOverlay() {
   const router = useRouter();
   const { game } = useAppSelector((state) => state);
   const { mutate, isSuccess, isLoading } = api.match.create.useMutation();

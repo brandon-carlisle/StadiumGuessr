@@ -1,15 +1,12 @@
-import useGame from "@/hooks/useGame";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { LeagueOptionSchema } from "@/utils/types";
 
-import GameCompleteOverlay from "@/components/GameCompleteOverlay/GameCompleteOverlay";
-import GameControlsOverlay from "@/components/GameControlsOverlay/GameControlsOverlay";
-import GameStatsOverlay from "@/components/Stats/GameStatsOverlay";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import ToggleSound from "@/components/ui/ToggleSound";
+import Game from "@/components/game/game";
+import LoadingSpinner from "@/components/ui/spinner";
+import ToggleSound from "@/components/ui/toggle-sound";
 
 // Leaflet needs the window object, so this needs to have dynamic
 const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
@@ -19,21 +16,8 @@ const DynamicMap = dynamic(() => import("../components/Map/DynamicMap"), {
 
 export default function PlayPage() {
   const { query } = useRouter();
-  const { league } = query;
-
-  const { success, data } = LeagueOptionSchema.safeParse(league);
-
-  // useStartGame({
-  //   league: success ? data : null,
-  // });
-
-  // // Refactor this to return game playing state etc
-  // // and handle game ending here
-  // useFinishGame();
-
-  const { userHasFinishedGame } = useGame({
-    league: success ? data : null,
-  });
+  const { success, data } = LeagueOptionSchema.safeParse(query.league);
+  const league = success ? data : null;
 
   return (
     <>
@@ -52,14 +36,7 @@ export default function PlayPage() {
         </div>
         <DynamicMap />
 
-        {!userHasFinishedGame ? (
-          <>
-            <GameControlsOverlay />
-            <GameStatsOverlay />
-          </>
-        ) : (
-          <GameCompleteOverlay />
-        )}
+        <Game league={league} />
       </main>
     </>
   );

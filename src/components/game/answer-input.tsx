@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { SoundContext } from "@/store/sound-context";
 
-export default function AnswerForm() {
+export default function AnswerInput() {
   const dispatch = useAppDispatch();
   const { currentStadium } = useAppSelector((state) => state.game);
   const { soundEnabled } = useContext(SoundContext);

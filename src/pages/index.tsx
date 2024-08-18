@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { resetGame } from "@/store/features/game/game-slice";
 import { useAppDispatch } from "@/store/hooks";
 
-import AuthButton from "@/components/ui/AuthButton";
+import AuthButton from "@/components/ui/auth-button";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);

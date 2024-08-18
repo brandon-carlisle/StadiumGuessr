@@ -1,6 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "./spinner";
 
 export default function AuthButton() {
   const { data: session, status } = useSession();

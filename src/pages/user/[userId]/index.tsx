@@ -6,8 +6,8 @@ import Link from "next/link";
 import { api } from "@/utils/api";
 
 import StatsSummary from "@/components/Stats/StatsSummmary";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import Unauthorised from "@/components/ui/Unauthorised";
+import LoadingSpinner from "@/components/ui/spinner";
+import Unauthorised from "@/components/ui/unauthorised";
 
 export default function UserPage({
   userId,

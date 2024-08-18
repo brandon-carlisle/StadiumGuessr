@@ -16,7 +16,7 @@ import { useAppDispatch } from "@/store/hooks";
 
 import AnswersOverview from "@/components/Stats/AnswersOverview";
 import StatsSummary from "@/components/Stats/StatsSummmary";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/spinner";
 
 export default function MatchSummaryPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
