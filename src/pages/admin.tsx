@@ -7,8 +7,8 @@ import { z } from "zod";
 
 import { api } from "@/utils/api";
 
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import Unauthorised from "@/components/ui/Unauthorised";
+import LoadingSpinner from "@/components/ui/spinner";
+import Unauthorised from "@/components/ui/unauthorised";
 
 export default function AdminPage() {
   const { data: session, status: sessionStatus } = useSession();
