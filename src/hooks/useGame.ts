@@ -9,10 +9,11 @@ import {
   setCurrentStadium,
   setStadiums,
   setStadiumsRemaining,
+  setUserHasFinishedGame,
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-export default function useStartGame({ league }: { league: LeagueOption }) {
+export default function useGame({ league }: { league: LeagueOption }) {
   const dispatch = useAppDispatch();
 
   const { data: stadiums, isSuccess } =
@@ -20,7 +21,8 @@ export default function useStartGame({ league }: { league: LeagueOption }) {
       league,
     });
 
-  const { timeRemaining } = useAppSelector((state) => state.game);
+  const { timeRemaining, stadiumsRemaining, userHasFinishedGame } =
+    useAppSelector((state) => state.game);
 
   useEffect(() => {
     if (isSuccess) {
@@ -48,5 +50,13 @@ export default function useStartGame({ league }: { league: LeagueOption }) {
     };
   }, [dispatch, timeRemaining]);
 
-  return;
+  useEffect(() => {
+    if (timeRemaining === 0 || stadiumsRemaining === 0) {
+      dispatch(setUserHasFinishedGame(true));
+    }
+  }, [dispatch, stadiumsRemaining, timeRemaining]);
+
+  return {
+    userHasFinishedGame,
+  };
 }

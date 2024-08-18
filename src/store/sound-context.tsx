@@ -17,7 +17,6 @@ interface Props {
 
 export function SoundProvider({ children }: Props) {
   const [soundEnabled, setSoundEnabled] = useState(true);
-  console.log("SoundContextEnabled: ", soundEnabled);
 
   return (
     <SoundContext.Provider value={{ soundEnabled, setSoundEnabled }}>
