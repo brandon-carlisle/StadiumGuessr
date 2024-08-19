@@ -22,7 +22,7 @@ function MapSubscriber() {
   return null;
 }
 
-export default function DynamicMap() {
+export default function LeafletMap() {
   useEffect(() => {
     console.log("Ready");
   }, []);

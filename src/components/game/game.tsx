@@ -6,7 +6,11 @@ import GameControls from "./game-controls";
 import GameFinishedOverlay from "./game-finished-overlay";
 import GameInfo from "./game-info";
 
-export default function Game({ league }: { league: LeagueOption }) {
+interface Props {
+  league: LeagueOption;
+}
+
+export default function Game({ league }: Props) {
   const { userHasFinishedGame } = useGame({
     league,
   });

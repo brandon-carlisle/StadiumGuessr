@@ -14,8 +14,8 @@ import { api } from "@/utils/api";
 import { resetGame } from "@/store/features/game/game-slice";
 import { useAppDispatch } from "@/store/hooks";
 
-import AnswersOverview from "@/components/Stats/AnswersOverview";
-import StatsSummary from "@/components/Stats/StatsSummmary";
+import AnswersOverview from "@/components/answers-overview";
+import MatchSummary from "@/components/match-summary";
 import LoadingSpinner from "@/components/ui/spinner";
 
 export default function MatchSummaryPage(
@@ -84,7 +84,7 @@ export default function MatchSummaryPage(
         </div>
       </header>
       <main className="flex flex-col justify-center gap-10 p-10">
-        <StatsSummary match={match} />
+        <MatchSummary match={match} />
         <AnswersOverview
           correctStadiums={match.correctStadiums}
           incorrectStadiums={match.incorrectStadiums}

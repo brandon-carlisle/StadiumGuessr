@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { api } from "@/utils/api";
 
-import StatsSummary from "@/components/Stats/StatsSummmary";
+import MatchSummary from "@/components/match-summary";
 import LoadingSpinner from "@/components/ui/spinner";
 import Unauthorised from "@/components/ui/unauthorised";
 
@@ -57,7 +57,7 @@ export default function UserPage({
             ) : (
               matches.map((match) => (
                 <li key={match.id}>
-                  <StatsSummary match={match} href={`/summary/${match.id}`} />
+                  <MatchSummary match={match} href={`/summary/${match.id}`} />
                 </li>
               ))
             )}

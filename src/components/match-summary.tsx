@@ -6,7 +6,7 @@ interface Props {
   href?: string;
 }
 
-export default function StatsSummary({ match, href }: Props) {
+export default function MatchSummary({ match, href }: Props) {
   const currentDate = new Date();
 
   return (

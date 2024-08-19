@@ -18,11 +18,11 @@ export default function AnswerInput() {
   const { soundEnabled } = useContext(SoundContext);
 
   const [playCorrectSfx] = useSound("/correctfx.mp3", {
-    volume: 0.2,
+    volume: 0.4,
     soundEnabled,
   });
   const [playIncorrectSfx] = useSound("/incorrectfx.mp3", {
-    volume: 0.2,
+    volume: 0.4,
     soundEnabled,
   });
 
