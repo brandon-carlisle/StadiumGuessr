@@ -16,10 +16,23 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 export default function useGame({ league }: { league: LeagueOption }) {
   const dispatch = useAppDispatch();
 
-  const { data: stadiums, isSuccess } =
-    api.stadium.getByLeagueOrRandom.useQuery({
-      league,
+  // Query for EPL teams
+  const { data: eplStadiums, isSuccess: isEplSuccess } =
+    api.stadium.getLocalEPLTeams.useQuery(undefined, {
+      enabled: league === "EPL",
     });
+
+  // Query for other leagues or random
+  const { data: otherStadiums, isSuccess: isOtherSuccess } =
+    api.stadium.getByLeagueOrRandom.useQuery(
+      { league },
+      {
+        enabled: league !== "EPL",
+      },
+    );
+
+  const stadiums = league === "EPL" ? eplStadiums : otherStadiums;
+  const isSuccess = league === "EPL" ? isEplSuccess : isOtherSuccess;
 
   const { timeRemaining, stadiumsRemaining, userHasFinishedGame } =
     useAppSelector((state) => state.game);

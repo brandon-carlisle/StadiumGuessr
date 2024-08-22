@@ -6,6 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { EPL_STADIUMS } from "@/server/stadiums";
 
 import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
 import { LeagueOptionSchema } from "@/utils/types";
@@ -100,6 +101,10 @@ export const stadiumRouter = createTRPCRouter({
 
       return stadiums;
     }),
+
+  getLocalEPLTeams: publicProcedure.query(() => {
+    return EPL_STADIUMS;
+  }),
 
   getRandom: publicProcedure.query(async ({ ctx }) => {
     const stadiums = await ctx.prisma.stadium.findMany();

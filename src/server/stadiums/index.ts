@@ -12,7 +12,7 @@ interface Locaction {
 
 type League = "EPL";
 
-const EPL_STADIUMS: Stadium[] = [
+export const EPL_STADIUMS: Stadium[] = [
   {
     club: "Arsenal",
     names: [
