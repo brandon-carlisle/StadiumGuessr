@@ -1,0 +1,148 @@
+import type { StadiumLocal } from ".";
+
+export const EFL_CHAMPIONSHIP_STADIUMS: StadiumLocal[] = [
+  {
+    club: "Blackburn Rovers",
+    names: ["ewood park"],
+    locaction: { lat: 53.728611, lng: -2.489167 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Bristol City",
+    names: ["ashton gate stadium", "ashton gate"],
+    locaction: { lat: 51.44, lng: -2.620833 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Burnley",
+    names: ["turf moor"],
+    locaction: { lat: 53.789167, lng: -2.230278 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Cardiff City",
+    names: ["cardiff city stadium"],
+    locaction: { lat: 51.472778, lng: -3.203056 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Coventry City",
+    names: ["coventry building society arena", "cbs arena"],
+    locaction: { lat: 52.448611, lng: -1.495556 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Derby County",
+    names: ["pride park stadium"],
+    locaction: { lat: 52.915, lng: -1.447222 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Hull City",
+    names: ["mkm stadium"],
+    locaction: { lat: 53.746111, lng: -0.3675 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Leeds United",
+    names: ["elland road"],
+    locaction: { lat: 53.7775, lng: -1.572222 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Luton Town",
+    names: ["kenilworth road"],
+    locaction: { lat: 51.884722, lng: -0.431111 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Middlesbrough",
+    names: ["riverside stadium"],
+    locaction: { lat: 54.578056, lng: -1.216944 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Millwall",
+    names: ["the den"],
+    locaction: { lat: 51.485, lng: -0.050278 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Norwich City",
+    names: ["carrow road"],
+    locaction: { lat: 52.622222, lng: 1.309167 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Oxford United",
+    names: ["kassam stadium"],
+    locaction: { lat: 51.714722, lng: -1.207222 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Plymouth Argyle",
+    names: ["home park"],
+    locaction: { lat: 50.388056, lng: -4.150833 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Portsmouth",
+    names: ["fratton park"],
+    locaction: { lat: 50.796389, lng: -1.063056 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Preston North End",
+    names: ["deepdale"],
+    locaction: { lat: 53.772222, lng: -2.688333 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Queens Park Rangers",
+    names: ["loftus road"],
+    locaction: { lat: 51.509167, lng: -0.232222 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Sheffield United",
+    names: ["bramall lane"],
+    locaction: { lat: 53.370278, lng: -1.470833 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Sheffield Wednesday",
+    names: ["hillsborough stadium"],
+    locaction: { lat: 53.411389, lng: -1.5 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Stoke City",
+    names: ["bet365 stadium"],
+    locaction: { lat: 52.988333, lng: -2.175556 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Sunderland",
+    names: ["stadium of light"],
+    locaction: { lat: 54.914444, lng: -1.388333 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Swansea City",
+    names: ["swansea.com stadium"],
+    locaction: { lat: 51.642222, lng: -3.934722 },
+    league: "EFL Championship",
+  },
+  {
+    club: "Watford",
+    names: ["vicarage road"],
+    locaction: { lat: 51.6498, lng: -0.4015 },
+    league: "EFL Championship",
+  },
+  {
+    club: "West Bromwich Albion",
+    names: ["the hawthorns"],
+    locaction: { lat: 52.509167, lng: -1.963889 },
+    league: "EFL Championship",
+  },
+];
