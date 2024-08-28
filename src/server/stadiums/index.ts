@@ -1,11 +1,13 @@
-import { EFL_CHAMPIONSHIP_STADIUMS } from "./efl-championship";
-import { EPL_STADIUMS } from "./epl";
+import { EFL_CHAMPIONSHIP } from "./efl-championship";
+import { EPL } from "./epl";
+
+type LeagueNameOpts = "Premier League" | "EFL Championship";
+type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP"
 
 export interface StadiumLocal {
   club: string;
   names: string[];
   locaction: Locaction;
-  league: League;
 }
 
 interface Locaction {
@@ -13,6 +15,12 @@ interface Locaction {
   lng: number;
 }
 
-type League = "EPL" | "EFL Championship";
+export interface League {
+  code: LeagueCodeOpts;
+  leagueName: LeagueNameOpts;
+  teams: StadiumLocal[];
+}
 
-export const STADIUMS = [...EPL_STADIUMS, ...EFL_CHAMPIONSHIP_STADIUMS];
+export const allLeagues: League[] = [EPL, EFL_CHAMPIONSHIP]
+
+//export const STADIUMS = [...EPL_STADIUMS, ...E];
