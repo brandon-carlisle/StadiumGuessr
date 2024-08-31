@@ -22,5 +22,3 @@ export interface League {
 }
 
 export const allLeagues: League[] = [EPL, EFL_CHAMPIONSHIP]
-
-//export const STADIUMS = [...EPL_STADIUMS, ...E];
