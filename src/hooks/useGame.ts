@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import { api } from "@/utils/api";
 import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
-import type { LeagueOption } from "@/utils/types";
 
 import {
   decrementTimeRemaining,
@@ -13,18 +12,21 @@ import {
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-export default function useGame({ league }: { league: LeagueOption }) {
+
+type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP"
+
+export default function useGame({ league }: { league: LeagueCodeOpts }) {
   const dispatch = useAppDispatch();
 
-  // Query for EPL teams
+  // Query for specfifc league
   const { data: eplStadiums, isSuccess: isEplSuccess } =
-    api.stadium.getLocalEPLTeams.useQuery(undefined, {
+    api.localStadium.getByLeague.useQuery({ leagueCode: league }, {
       enabled: league === "EPL",
     });
 
   // Query for other leagues or random
   const { data: otherStadiums, isSuccess: isOtherSuccess } =
-    api.stadium.getByLeagueOrRandom.useQuery(
+    api.localStadium.getByLeague.useQuery(
       { league },
       {
         enabled: league !== "EPL",

@@ -1,16 +1,14 @@
-//import { TRPCError } from "@trpc/server";
-
 import {
   createTRPCRouter,
   publicProcedure,
 } from "@/server/api/trpc";
+import { LeagueCodeOptsSchema, allLeagues } from "@/server/stadiums";
 
 //import { shuffle } from "@/utils/shuffle-stadiums";
 import { z } from "zod";
-
 //const GAME_ROUND_LENGTH = 20
 
-export const stadiumRouter = createTRPCRouter({
+export const localStadiumRouter = createTRPCRouter({
   //getAllLeagues: publicProcedure.query(() => {
   //  const stadiums = [...STADIUMS]
   //
@@ -26,10 +24,12 @@ export const stadiumRouter = createTRPCRouter({
   getByLeague: publicProcedure
     .input(
       z.object({
-        leagueCode: z.string(),
+        leagueCode: LeagueCodeOptsSchema
       }),
     )
     .query(({ input }) => {
       console.log(input.leagueCode)
+
+      return allLeagues.find((val) => val.code === input.leagueCode)
     }),
 });

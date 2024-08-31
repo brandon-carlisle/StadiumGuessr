@@ -2,6 +2,7 @@ import { createTRPCRouter } from "@/server/api/trpc";
 
 import { matchRouter } from "./routers/match";
 import { stadiumRouter } from "./routers/stadium";
+import { localStadiumRouter } from "./routers/local-stadium";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { stadiumRouter } from "./routers/stadium";
  */
 export const appRouter = createTRPCRouter({
   stadium: stadiumRouter,
+  localStadium: localStadiumRouter,
   match: matchRouter,
 });
 
