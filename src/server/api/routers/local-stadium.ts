@@ -1,10 +1,11 @@
-//import { shuffle } from "@/utils/shuffle-stadiums";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { LeagueCodeOptsSchema, allLeagues } from "@/server/stadiums";
 
-//const GAME_ROUND_LENGTH = 20
+import { shuffle } from "@/utils/shuffle-stadiums";
+
+const GAME_ROUND_LENGTH = 20;
 
 export const localStadiumRouter = createTRPCRouter({
   get: publicProcedure
@@ -15,14 +16,13 @@ export const localStadiumRouter = createTRPCRouter({
     )
     .query(({ input }) => {
       if (!input.leagueCode) {
+        // This is RANDOM mode
         // We need to return 20 random teams in this case
-        return;
+        const teams = allLeagues.map((league) => league.teams).flat();
+        const shuffled = shuffle(teams);
+        return shuffled.splice(0, GAME_ROUND_LENGTH);
       }
 
-      function getLeagueByCode(leagueCode: string) {
-        return allLeagues.find((val) => val.code === leagueCode);
-      }
-
-      return getLeagueByCode(input.leagueCode);
+      return allLeagues.find((league) => league.code === input.leagueCode);
     }),
 });
