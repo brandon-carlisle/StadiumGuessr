@@ -23,6 +23,7 @@ export const localStadiumRouter = createTRPCRouter({
         return shuffled.splice(0, GAME_ROUND_LENGTH);
       }
 
-      return allLeagues.find((league) => league.code === input.leagueCode);
+      return allLeagues.find((league) => league.code === input.leagueCode)
+        ?.teams;
     }),
 });

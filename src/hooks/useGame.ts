@@ -16,7 +16,7 @@ type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP" | null;
 
 export default function useGame({ league }: { league: LeagueCodeOpts }) {
   const dispatch = useAppDispatch();
-  const { data: stadiums } = api.localStadium.get.useQuery({
+  const { data: teams } = api.localStadium.get.useQuery({
     leagueCode: league,
   });
 
@@ -24,8 +24,8 @@ export default function useGame({ league }: { league: LeagueCodeOpts }) {
     useAppSelector((state) => state.game);
 
   useEffect(() => {
-    if (stadiums) {
-      const shuffledStadiums = shuffle(stadiums.teams);
+    if (teams) {
+      const shuffledStadiums = shuffle(teams);
 
       dispatch(setStadiums(shuffledStadiums));
       dispatch(setStadiumsRemaining(shuffledStadiums.length));
@@ -34,7 +34,7 @@ export default function useGame({ league }: { league: LeagueCodeOpts }) {
         dispatch(setCurrentStadium(shuffledStadiums[0]));
       }
     }
-  }, [dispatch, stadiums]);
+  }, [dispatch, teams]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | null = null;
