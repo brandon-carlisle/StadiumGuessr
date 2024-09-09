@@ -14,8 +14,15 @@ export const localStadiumRouter = createTRPCRouter({
       }),
     )
     .query(({ input }) => {
-      console.log(input.leagueCode);
+      if (!input.leagueCode) {
+        // We need to return 20 random teams in this case
+        return;
+      }
 
-      return allLeagues.find((val) => val.code === input.leagueCode);
+      function getLeagueByCode(leagueCode: string) {
+        return allLeagues.find((val) => val.code === leagueCode);
+      }
+
+      return getLeagueByCode(input.leagueCode);
     }),
 });

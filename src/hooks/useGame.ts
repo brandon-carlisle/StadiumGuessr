@@ -30,9 +30,11 @@ export default function useGame({ league }: { league: LeagueCodeOpts }) {
       dispatch(setStadiums(shuffledStadiums));
       dispatch(setStadiumsRemaining(shuffledStadiums.length));
 
-      if (shuffledStadiums[0]) dispatch(setCurrentStadium(shuffledStadiums[0]));
+      if (shuffledStadiums[0]) {
+        dispatch(setCurrentStadium(shuffledStadiums[0]));
+      }
     }
-  }, [dispatch, isSuccess, stadiums]);
+  }, [dispatch, stadiums]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | null = null;
