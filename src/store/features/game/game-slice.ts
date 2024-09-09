@@ -1,9 +1,9 @@
-import type { Stadium } from "@prisma/client";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { type StadiumLocal } from "@/server/stadiums";
 
 const INITIAL_TEAM: StadiumLocal = {
+  code: "",
   names: [""],
   club: "",
   locaction: {

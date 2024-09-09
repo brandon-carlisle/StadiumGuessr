@@ -1,4 +1,4 @@
-import type { League, StadiumLocal } from "./";
+import type { League, StadiumLocal } from "@/types/types";
 
 const eplTeams: StadiumLocal[] = [
   {

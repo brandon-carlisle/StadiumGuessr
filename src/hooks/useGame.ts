@@ -1,3 +1,4 @@
+import { type LeagueCodeOpts } from "@/types/types";
 import { useEffect } from "react";
 
 import { api } from "@/utils/api";
@@ -12,21 +13,23 @@ import {
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP" | null;
-
-export default function useGame({ league }: { league: LeagueCodeOpts }) {
+export default function useGame({
+  leagueCode,
+}: {
+  leagueCode: LeagueCodeOpts;
+}) {
   const dispatch = useAppDispatch();
-  const { data: teams } = api.localStadium.get.useQuery({
-    leagueCode: league,
+
+  const { data: league } = api.localStadium.getLeague.useQuery({
+    leagueCode,
   });
 
   const { timeRemaining, stadiumsRemaining, userHasFinishedGame } =
     useAppSelector((state) => state.game);
 
   useEffect(() => {
-    if (teams) {
-      const shuffledStadiums = shuffle(teams);
-
+    if (league) {
+      const shuffledStadiums = shuffle(league.teams);
       dispatch(setStadiums(shuffledStadiums));
       dispatch(setStadiumsRemaining(shuffledStadiums.length));
 
@@ -34,7 +37,7 @@ export default function useGame({ league }: { league: LeagueCodeOpts }) {
         dispatch(setCurrentStadium(shuffledStadiums[0]));
       }
     }
-  }, [dispatch, teams]);
+  }, [dispatch, league]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | null = null;
