@@ -1,19 +1,20 @@
 import type { Stadium } from "@prisma/client";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-const INITIAL_TEAM: Stadium = {
-  id: "",
+import { type StadiumLocal } from "@/server/stadiums";
+
+const INITIAL_TEAM: StadiumLocal = {
   names: [""],
   club: "",
-  capacity: 0,
-  latitude: 0,
-  longitude: 0,
-  league: null,
+  locaction: {
+    lng: 0,
+    lat: 0,
+  },
 };
 
 interface GameState {
-  stadiums: Stadium[];
-  currentStadium: Stadium;
+  stadiums: StadiumLocal[];
+  currentStadium: StadiumLocal;
   stadiumsRemaining: number;
 
   score: number;
@@ -41,11 +42,11 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    setStadiums(state, action: PayloadAction<Stadium[]>) {
+    setStadiums(state, action: PayloadAction<StadiumLocal[]>) {
       state.stadiums = action.payload;
     },
 
-    setCurrentStadium(state, action: PayloadAction<Stadium>) {
+    setCurrentStadium(state, action: PayloadAction<StadiumLocal>) {
       state.currentStadium = action.payload;
     },
 

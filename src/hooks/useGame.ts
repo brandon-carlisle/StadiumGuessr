@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { api } from "@/utils/api";
-import { shuffleStadiumArray } from "@/utils/shuffle-stadiums";
+import { shuffle } from "@/utils/shuffle-stadiums";
 
 import {
   decrementTimeRemaining,
@@ -12,36 +12,20 @@ import {
 } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-
-type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP"
+type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP" | null;
 
 export default function useGame({ league }: { league: LeagueCodeOpts }) {
   const dispatch = useAppDispatch();
-
-  // Query for specfifc league
-  const { data: eplStadiums, isSuccess: isEplSuccess } =
-    api.localStadium.getByLeague.useQuery({ leagueCode: league }, {
-      enabled: league === "EPL",
-    });
-
-  // Query for other leagues or random
-  const { data: otherStadiums, isSuccess: isOtherSuccess } =
-    api.localStadium.getByLeague.useQuery(
-      { league },
-      {
-        enabled: league !== "EPL",
-      },
-    );
-
-  const stadiums = league === "EPL" ? eplStadiums : otherStadiums;
-  const isSuccess = league === "EPL" ? isEplSuccess : isOtherSuccess;
+  const { data: stadiums } = api.localStadium.get.useQuery({
+    leagueCode: league,
+  });
 
   const { timeRemaining, stadiumsRemaining, userHasFinishedGame } =
     useAppSelector((state) => state.game);
 
   useEffect(() => {
-    if (isSuccess) {
-      const shuffledStadiums = shuffleStadiumArray(stadiums);
+    if (stadiums) {
+      const shuffledStadiums = shuffle(stadiums.teams);
 
       dispatch(setStadiums(shuffledStadiums));
       dispatch(setStadiumsRemaining(shuffledStadiums.length));
