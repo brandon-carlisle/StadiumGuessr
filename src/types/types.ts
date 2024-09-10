@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type LeagueNameOpts = "Premier League" | "EFL Championship";
 export type LeagueCodeOpts = "EPL" | "EFL_CHAMPIONSHIP";
 
@@ -19,3 +21,9 @@ export interface League {
   leagueName: LeagueNameOpts;
   teams: StadiumLocal[];
 }
+
+// Need to keep this matched with LeagueCodeOpts
+export const LeagueCodeOptsSchema = z.union([
+  z.literal("EPL"),
+  z.literal("EFL_CHAMPIONSHIP"),
+]);

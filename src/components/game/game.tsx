@@ -1,18 +1,17 @@
 import useGame from "@/hooks/useGame";
-
-import type { LeagueOption } from "@/utils/types";
+import { type LeagueCodeOpts } from "@/types/types";
 
 import GameControls from "./game-controls";
 import GameFinishedOverlay from "./game-finished-overlay";
 import GameInfo from "./game-info";
 
 interface Props {
-  league: LeagueOption;
+  leagueCode: LeagueCodeOpts;
 }
 
-export default function Game({ league }: Props) {
+export default function Game({ leagueCode }: Props) {
   const { userHasFinishedGame } = useGame({
-    league,
+    leagueCode,
   });
 
   return (

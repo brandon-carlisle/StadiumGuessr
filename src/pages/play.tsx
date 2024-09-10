@@ -1,9 +1,7 @@
+import { type LeagueCodeOpts, LeagueCodeOptsSchema } from "@/types/types";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
-
-import type { LeagueOption } from "@/utils/types";
-import { LeagueOptionSchema } from "@/utils/types";
 
 import Game from "@/components/game/game";
 import LoadingSpinner from "@/components/ui/spinner";
@@ -17,8 +15,10 @@ const LeafletMap = dynamic(() => import("../components/game/leaflet-map"), {
 
 export default function PlayPage() {
   const { query } = useRouter();
-  const { success, data } = LeagueOptionSchema.safeParse(query.league);
-  const league = success ? data : null;
+  const { success, data } = LeagueCodeOptsSchema.safeParse(query.league);
+  if (!success || !data) {
+    return <div>Select league component here // invalid league code</div>;
+  }
 
   return (
     <>
@@ -31,16 +31,16 @@ export default function PlayPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MainGameView league={league} />
+      <MainGameView leagueCode={data} />
     </>
   );
 }
 
 interface MainGameViewProps {
-  league: LeagueOption;
+  leagueCode: LeagueCodeOpts;
 }
 
-function MainGameView({ league }: MainGameViewProps) {
+function MainGameView({ leagueCode }: MainGameViewProps) {
   return (
     <main className="h-dvh relative flex flex-col">
       <div className="absolute top-0 right-0 z-[10000] -translate-x-5 translate-y-5">
@@ -49,7 +49,7 @@ function MainGameView({ league }: MainGameViewProps) {
 
       <LeafletMap />
 
-      <Game league={league} />
+      <Game leagueCode={leagueCode} />
     </main>
   );
 }
