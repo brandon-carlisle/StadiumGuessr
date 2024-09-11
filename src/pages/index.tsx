@@ -8,6 +8,7 @@ import { resetGame } from "@/store/features/game/game-slice";
 import { useAppDispatch } from "@/store/hooks";
 
 import AuthButton from "@/components/ui/auth-button";
+import GameModeSelect from "@/components/game-mode-select";
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -49,13 +50,7 @@ export default function HomePage() {
 
             <div className="flex w-full flex-col border-opacity-50">
               <div className="mb-6 flex flex-col text-center gap-2">
-                <Link href={"/play"} className="btn-primary btn">
-                  Normal mode (random)
-                </Link>
-
-                <Link href={"/play?league=EPL"} className="btn-secondary btn">
-                  Premier League only
-                </Link>
+                <GameModeSelect />
               </div>
               <div className="divider">
                 {!session ? "Sign in to see previous scores" : "Sign out"}

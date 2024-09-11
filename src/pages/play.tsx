@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Game from "@/components/game/game";
 import LoadingSpinner from "@/components/ui/spinner";
 import ToggleSound from "@/components/ui/toggle-sound";
+import GameModeSelect from "@/components/game-mode-select";
 
 // Leaflet needs the window object, so this needs to have dynamic
 const LeafletMap = dynamic(() => import("../components/game/leaflet-map"), {
@@ -17,7 +18,11 @@ export default function PlayPage() {
   const { query } = useRouter();
   const { success, data } = LeagueCodeOptsSchema.safeParse(query.league);
   if (!success || !data) {
-    return <div>Select league component here // invalid league code</div>;
+    return (
+      <div>
+        <GameModeSelect />
+      </div>
+    );
   }
 
   return (
