@@ -1,5 +1,6 @@
-import type { StadiumLocal } from "@/server/stadiums";
 import type { Stadium } from "@prisma/client";
+
+import type { StadiumLocal } from "@/server/stadiums";
 
 export function shuffleStadiumArray(arr: Stadium[]) {
   return arr
@@ -7,7 +8,6 @@ export function shuffleStadiumArray(arr: Stadium[]) {
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 }
-
 
 export function shuffle(arr: StadiumLocal[]) {
   return arr

@@ -70,7 +70,7 @@ export const matchRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
-      orderBy: {date: "desc"}
+      orderBy: { date: "desc" },
     });
 
     if (matches.length < 1) {

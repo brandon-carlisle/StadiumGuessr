@@ -1,8 +1,8 @@
 import { createTRPCRouter } from "@/server/api/trpc";
 
+import { localStadiumRouter } from "./routers/local-stadium";
 import { matchRouter } from "./routers/match";
 import { stadiumRouter } from "./routers/stadium";
-import { localStadiumRouter } from "./routers/local-stadium";
 
 /**
  * This is the primary router for your server.
