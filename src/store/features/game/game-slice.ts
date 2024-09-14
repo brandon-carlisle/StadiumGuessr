@@ -1,6 +1,5 @@
+import { type StadiumLocal } from "@/types/types";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-import { type StadiumLocal } from "@/server/stadiums";
 
 const INITIAL_TEAM: StadiumLocal = {
   code: "",
@@ -53,7 +52,7 @@ const gameSlice = createSlice({
     incrementCurrentStadium(state) {
       const nextStadiumIndex =
         state.stadiums.findIndex(
-          (stadium) => stadium.id === state.currentStadium.id,
+          (stadium) => stadium.code === state.currentStadium.code,
         ) + 1;
 
       if (nextStadiumIndex === state.stadiums.length - 1) return;
