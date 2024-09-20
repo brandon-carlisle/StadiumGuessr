@@ -2,7 +2,7 @@ import { LeagueCodeOptsSchema } from "@/types/types";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { allLeagues } from "@/server/stadiums";
+import { allLeagues } from "@/data/stadiums";
 
 export const localStadiumRouter = createTRPCRouter({
   getLeague: publicProcedure
