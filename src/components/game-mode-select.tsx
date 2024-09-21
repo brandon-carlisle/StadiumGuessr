@@ -1,17 +1,6 @@
-// TODO: Use LeagueCodeOpts here
 import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
-
-const opts = [
-  {
-    name: "Premier League",
-    code: "EPL",
-  },
-  {
-    name: "Championship",
-    code: "EFL_CHAMPIONSHIP",
-  },
-];
+import { allLeagues } from "@/data/stadiums";
 
 export default function GameModeSelect() {
   const [selected, setSelected] = useState("");
@@ -29,7 +18,6 @@ export default function GameModeSelect() {
   }
   return (
     <div className="card bg-base-100 shadow-xl w-full">
-      <p>Select league</p>
       <form onSubmit={(event) => handleSubmit(event)}>
         <select
           className="select select-accent w-full max-w-xs"
@@ -39,14 +27,14 @@ export default function GameModeSelect() {
           <option disabled value="">
             Which league?
           </option>
-          {opts.map((op) => (
-            <option key={op.code} value={op.code}>
-              {op.name}
+          {allLeagues.map((league) => (
+            <option key={league.code} value={league.code}>
+              {league.leagueName}
             </option>
           ))}
         </select>
 
-        <div>
+        <div className="mt-2">
           <button className="btn btn-primary" type="submit">
             Let&apos;s play!
           </button>
