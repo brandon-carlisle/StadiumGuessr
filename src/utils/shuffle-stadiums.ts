@@ -1,6 +1,5 @@
+import type { StadiumLocal } from "@/types/types";
 import type { Stadium } from "@prisma/client";
-
-import type { StadiumLocal } from "@/server/stadiums";
 
 export function shuffleStadiumArray(arr: Stadium[]) {
   return arr

@@ -1,6 +1,5 @@
 import { createTRPCRouter } from "@/server/api/trpc";
 
-import { localStadiumRouter } from "./routers/local-stadium";
 import { matchRouter } from "./routers/match";
 import { stadiumRouter } from "./routers/stadium";
 
@@ -11,7 +10,6 @@ import { stadiumRouter } from "./routers/stadium";
  */
 export const appRouter = createTRPCRouter({
   stadium: stadiumRouter,
-  localStadium: localStadiumRouter,
   match: matchRouter,
 });
 

@@ -15,7 +15,7 @@ function MapSubscriber() {
 
   useEffect(() => {
     if (stadium) {
-      map.setView([stadium.latitude, stadium.longitude], INTIAL_ZOOM);
+      map.setView([stadium.locaction.lat, stadium.locaction.lng], INTIAL_ZOOM);
     }
   }, [map, stadium]);
 

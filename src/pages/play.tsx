@@ -16,7 +16,8 @@ const LeafletMap = dynamic(() => import("../components/game/leaflet-map"), {
 
 export default function PlayPage() {
   const { query } = useRouter();
-  const { success, data } = LeagueCodeOptsSchema.safeParse(query.league);
+  const { success, data } = LeagueCodeOptsSchema.safeParse(query.mode);
+
   if (!success || !data) {
     return (
       <div>

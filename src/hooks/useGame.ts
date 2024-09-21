@@ -20,7 +20,7 @@ export default function useGame({
 }) {
   const dispatch = useAppDispatch();
 
-  const { data: league } = api.localStadium.getLeague.useQuery({
+  const { data: league } = api.stadium.getLeague.useQuery({
     leagueCode,
   });
 
