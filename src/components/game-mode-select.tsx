@@ -1,15 +1,18 @@
 import { useRouter } from "next/router";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useRef } from "react";
 import { allLeagues } from "@/data/stadiums";
 
 export default function GameModeSelect() {
   const [selected, setSelected] = useState("");
   const router = useRouter();
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selected) {
-      console.log("could not push, state: ", selected);
+      if (selectRef.current !== null) {
+        selectRef.current.focus();
+      }
       return;
     }
 
@@ -17,12 +20,13 @@ export default function GameModeSelect() {
     void router.push(`/play?mode=${selected}`);
   }
   return (
-    <div className="card bg-base-100 shadow-xl w-full">
+    <div className="card bg-base-100 w-full">
       <form onSubmit={(event) => handleSubmit(event)}>
         <select
           className="select select-accent w-full max-w-xs"
           onChange={(e) => setSelected(e.target.value)}
           value={selected}
+          ref={selectRef}
         >
           <option disabled value="">
             Which league?

@@ -46,7 +46,9 @@ export default function HomePage() {
       <main className="hero min-h-screen">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <WelcomeHeader />
+            <div className="mb-3">
+              <WelcomeHeader />
+            </div>
 
             <div className="flex w-full flex-col border-opacity-50">
               <div className="mb-6 flex flex-col text-center gap-2">
