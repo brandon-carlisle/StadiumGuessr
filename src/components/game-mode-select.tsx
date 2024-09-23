@@ -16,14 +16,13 @@ export default function GameModeSelect() {
       return;
     }
 
-    console.log("trying to push to: ", selected);
     void router.push(`/play?mode=${selected}`);
   }
   return (
     <div className="card bg-base-100 w-full">
       <form onSubmit={(event) => handleSubmit(event)}>
         <select
-          className="select select-accent w-full max-w-xs"
+          className="select select-accent w-full"
           onChange={(e) => setSelected(e.target.value)}
           value={selected}
           ref={selectRef}
@@ -39,7 +38,7 @@ export default function GameModeSelect() {
         </select>
 
         <div className="mt-2">
-          <button className="btn btn-primary" type="submit">
+          <button className="btn btn-primary btn-wide" type="submit">
             Let&apos;s play!
           </button>
         </div>

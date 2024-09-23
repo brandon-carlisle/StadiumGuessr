@@ -30,7 +30,7 @@ export default function AuthButton() {
       ) : (
         <button
           onClick={() => void signOut()}
-          className="btn-neutral btn w-full"
+          className="btn w-full btn-neutral"
         >
           <span className="h-5 w-5">
             <SignOutIcon />

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Game from "@/components/game/game";
 import LoadingSpinner from "@/components/ui/spinner";
 import ToggleSound from "@/components/ui/toggle-sound";
-import GameModeSelect from "@/components/game-mode-select";
+import toast from "react-hot-toast";
 
 // Leaflet needs the window object, so this needs to have dynamic
 const LeafletMap = dynamic(() => import("../components/game/leaflet-map"), {
@@ -15,15 +15,14 @@ const LeafletMap = dynamic(() => import("../components/game/leaflet-map"), {
 });
 
 export default function PlayPage() {
-  const { query } = useRouter();
-  const { success, data } = LeagueCodeOptsSchema.safeParse(query.mode);
+  const router = useRouter();
+  const { success, data } = LeagueCodeOptsSchema.safeParse(router.query.mode);
 
+  // TODO: This causes an error
+  // https://nextjs.org/docs/messages/no-router-instance
   if (!success || !data) {
-    return (
-      <div>
-        <GameModeSelect />
-      </div>
-    );
+    toast("Please select a league before playing :)");
+    return router.push("/");
   }
 
   return (
