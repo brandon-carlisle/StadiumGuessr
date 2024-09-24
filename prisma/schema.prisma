@@ -103,3 +103,13 @@ model Match {
 
   @@index([userId])
 }
+
+model LocalMatch {
+  id                String   @id @default(cuid())
+  date              DateTime @default(now())
+  score             Int
+  timeRemaining     Int
+  stadiumsRemaining Int
+  initialStadiumIds String[]
+  correctAnswerIds  String[]
+}
