@@ -7,6 +7,14 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 
+//id                String   @id @default(cuid())
+//date              DateTime @default(now())
+//score             Int
+//timeRemaining     Int
+//stadiumsRemaining Int
+//initialStadiumIds String[]
+//correctAnswerIds  String[]
+
 export const matchRouter = createTRPCRouter({
   create: publicProcedure
     .input(
@@ -14,32 +22,32 @@ export const matchRouter = createTRPCRouter({
         score: z.number(),
         timeRemaining: z.number(),
         stadiumsRemaining: z.number(),
-        correctStadiums: z.array(z.string()), // Array of stadium IDs for correct guesses
-        incorrectStadiums: z.array(z.string()), // Array of stadium IDs for incorrect guesses
+        initialStadiumIds: z.array(z.string()), // Array of stadium IDs for correct guesses
+        correctAnswerIds: z.array(z.string()), // Array of stadium IDs for incorrect guesses
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const match = await ctx.prisma.match.create({
-        data: {
-          score: input.score,
-          timeRemaining: input.timeRemaining,
-          stadiumsRemaining: input.stadiumsRemaining,
-          userId: ctx.session?.user.id || null,
-          correctStadiums: {
-            connect: input.correctStadiums.map((stadiumId) => ({
-              id: stadiumId,
-            })),
-          },
-          incorrectStadiums: {
-            connect: input.incorrectStadiums.map((stadiumId) => ({
-              id: stadiumId,
-            })),
-          },
-        },
-      });
+    .mutation(({}) => {
+      //const match = await ctx.prisma.match.create({
+      //  data: {
+      //    score: input.score,
+      //    timeRemaining: input.timeRemaining,
+      //    stadiumsRemaining: input.stadiumsRemaining,
+      //    userId: ctx.session?.user.id || null,
+      //    correctStadiums: {
+      //      connect: input.correctStadiums.map((stadiumId) => ({
+      //        id: stadiumId,
+      //      })),
+      //    },
+      //    incorrectStadiums: {
+      //      connect: input.incorrectStadiums.map((stadiumId) => ({
+      //        id: stadiumId,
+      //      })),
+      //    },
+      //  },
+      //});
 
       return {
-        matchId: match.id,
+        test: "test",
       };
     }),
 
