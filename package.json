@@ -13,7 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.1.1",
     "@next-auth/prisma-adapter": "^1.0.5",
-    "@prisma/client": "^5.8.1",
+    "@prisma/client": "^5.20.0",
     "@reduxjs/toolkit": "^1.9.2",
     "@t3-oss/env-nextjs": "^0.6.0",
     "@trpc/client": "^10.34.0",
@@ -52,7 +52,7 @@
     "postcss": "^8.4.14",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.13",
-    "prisma": "^5.8.1",
+    "prisma": "^5.20.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.1.6"
   },

@@ -1,84 +1,59 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "@/server/api/trpc";
-
-//id                String   @id @default(cuid())
-//date              DateTime @default(now())
-//score             Int
-//timeRemaining     Int
-//stadiumsRemaining Int
-//initialStadiumIds String[]
-//correctAnswerIds  String[]
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const matchRouter = createTRPCRouter({
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         score: z.number(),
-        timeRemaining: z.number(),
-        stadiumsRemaining: z.number(),
-        initialStadiumIds: z.array(z.string()), // Array of stadium IDs for correct guesses
-        correctAnswerIds: z.array(z.string()), // Array of stadium IDs for incorrect guesses
+        leagueCode: z.string(),
+        answers: z.array(z.string()),
       }),
     )
-    .mutation(({}) => {
-      //const match = await ctx.prisma.match.create({
-      //  data: {
-      //    score: input.score,
-      //    timeRemaining: input.timeRemaining,
-      //    stadiumsRemaining: input.stadiumsRemaining,
-      //    userId: ctx.session?.user.id || null,
-      //    correctStadiums: {
-      //      connect: input.correctStadiums.map((stadiumId) => ({
-      //        id: stadiumId,
-      //      })),
-      //    },
-      //    incorrectStadiums: {
-      //      connect: input.incorrectStadiums.map((stadiumId) => ({
-      //        id: stadiumId,
-      //      })),
-      //    },
-      //  },
-      //});
+    .mutation(async ({ ctx, input }) => {
+      const match = await ctx.prisma.localMatch.create({
+        data: {
+          userId: ctx.session.user.id,
+          score: input.score,
+          leagueCode: input.leagueCode,
+          answers: input.answers,
+        },
+      });
 
       return {
-        test: "test",
+        matchId: match.id,
       };
     }),
 
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ matchId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const match = await ctx.prisma.match.findUnique({
+      const match = await ctx.prisma.localMatch.findUnique({
         where: {
           id: input.matchId,
-        },
-        include: {
-          correctStadiums: true,
-          incorrectStadiums: true,
+          userId: ctx.session.user.id,
         },
       });
 
       if (!match)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "No match found with that ID",
+          message: "No match found",
         });
 
-      return match;
+      return {
+        match: match,
+      };
     }),
 
   getAllByUserId: protectedProcedure.query(async ({ ctx }) => {
-    const matches = await ctx.prisma.match.findMany({
+    const matches = await ctx.prisma.localMatch.findMany({
       where: {
         userId: ctx.session.user.id,
       },
-      orderBy: { date: "desc" },
+      orderBy: { playedAt: "desc" },
     });
 
     if (matches.length < 1) {
@@ -88,6 +63,8 @@ export const matchRouter = createTRPCRouter({
       });
     }
 
-    return matches;
+    return {
+      matches: matches,
+    };
   }),
 });

@@ -59,15 +59,16 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   matches       Match[]
-  role          UserRole  @default(USER)
+  role          UserRole     @default(USER)
+  localMatches  LocalMatch[]
 }
 
 enum League {
@@ -105,11 +106,13 @@ model Match {
 }
 
 model LocalMatch {
-  id                String   @id @default(cuid())
-  date              DateTime @default(now())
-  score             Int
-  timeRemaining     Int
-  stadiumsRemaining Int
-  initialStadiumIds String[]
-  correctAnswerIds  String[]
+  id         String   @id @default(cuid())
+  playedAt   DateTime @default(now())
+  score      Int
+  leagueCode String
+  answers    String[]
+  playedBy   User     @relation(fields: [userId], references: [id])
+  userId     String
+
+  @@index([userId])
 }
