@@ -1,40 +1,27 @@
 import { type StadiumLocal } from "@/types/types";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-const INITIAL_TEAM: StadiumLocal = {
-  code: "",
-  names: [""],
-  club: "",
-  locaction: {
-    lng: 0,
-    lat: 0,
-  },
-};
-
 interface GameState {
-  stadiums: StadiumLocal[];
-  currentStadium: StadiumLocal;
-  stadiumsRemaining: number;
-
+  // this is our initial stadiums when the game first starts
+  stadiums: StadiumLocal[] | null;
+  currentStadium: StadiumLocal | null;
+  stadiumsRemaining: number | null;
   score: number;
   timeRemaining: number;
   userHasFinishedGame: boolean;
-
-  correctStadiumIds: string[];
-  incorrectStadiumIds: string[];
+  answers: string[];
+  skipped: string[];
 }
 
 const initialState: GameState = {
-  stadiums: [INITIAL_TEAM],
-  currentStadium: INITIAL_TEAM,
-  stadiumsRemaining: 20,
-
+  stadiums: null,
+  currentStadium: null,
+  stadiumsRemaining: null,
   score: 0,
   timeRemaining: 90,
   userHasFinishedGame: false,
-
-  correctStadiumIds: [],
-  incorrectStadiumIds: [],
+  answers: [],
+  skipped: [],
 };
 
 const gameSlice = createSlice({
@@ -50,9 +37,14 @@ const gameSlice = createSlice({
     },
 
     incrementCurrentStadium(state) {
+      if (!state.stadiums?.length) {
+        console.error("Error incrementing current stadium");
+        return;
+      }
+
       const nextStadiumIndex =
         state.stadiums.findIndex(
-          (stadium) => stadium.code === state.currentStadium.code,
+          (stadium) => stadium.code === state.currentStadium?.code,
         ) + 1;
 
       if (nextStadiumIndex === state.stadiums.length - 1) return;
@@ -60,7 +52,7 @@ const gameSlice = createSlice({
       if (state.stadiums[nextStadiumIndex]) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.currentStadium = state.stadiums[nextStadiumIndex]!;
-      } else return;
+      }
     },
 
     incrementScore(state, action: PayloadAction<number>) {
@@ -72,7 +64,14 @@ const gameSlice = createSlice({
     },
 
     decrementStadiumsRemaining(state) {
-      if (state.stadiumsRemaining > 0) state.stadiumsRemaining--;
+      if (!state.stadiumsRemaining) {
+        console.error("Could not decrement stadiums");
+        return;
+      }
+
+      if (state.stadiumsRemaining > 0) {
+        state.stadiumsRemaining--;
+      }
     },
 
     decrementTimeRemaining(state) {
@@ -89,12 +88,12 @@ const gameSlice = createSlice({
       state.userHasFinishedGame = action.payload;
     },
 
-    addCorrectStadiumId(state, action: PayloadAction<string>) {
-      state.correctStadiumIds.push(action.payload);
+    addAnswer(state, action: PayloadAction<string>) {
+      state.answers.push(action.payload);
     },
 
-    addIncorrectStadiumId(state, action: PayloadAction<string>) {
-      state.incorrectStadiumIds.push(action.payload);
+    addSkip(state, action: PayloadAction<string>) {
+      state.skipped.push(action.payload);
     },
 
     resetGame(state) {
@@ -118,8 +117,8 @@ export const {
   decrementTimeRemaining,
   resetZoom,
   setUserHasFinishedGame,
-  addCorrectStadiumId,
-  addIncorrectStadiumId,
+  addAnswer,
+  addSkip,
   resetGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;
