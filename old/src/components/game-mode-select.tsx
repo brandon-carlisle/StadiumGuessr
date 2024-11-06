@@ -16,7 +16,7 @@ export default function GameModeSelect() {
       return;
     }
 
-    void router.push(`/play?mode=${selected}`);
+    void router.push(`/play/${selected}`);
   }
   return (
     <div className="card bg-base-100 w-full">
