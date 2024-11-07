@@ -1,35 +1,38 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import {
+  createRootRouteWithContext,
+  useMatches,
+  Outlet,
+} from "@tanstack/react-router";
+import { ReactNode, useEffect } from "react";
 
-export const Route = createRootRoute({
+const TITLE = "StadiumGuessr";
+
+interface RootRouteContext {}
+
+export const Route = createRootRouteWithContext<RootRouteContext>()({
+  meta: () => [
+    {
+      title: TITLE,
+    },
+  ],
   component: RootComponent,
 });
 
+function Meta({ children }: { children: ReactNode }) {
+  const matches = useMatches();
+  const meta = matches.at(-1)?.meta?.find((meta) => meta.title);
+
+  useEffect(() => {
+    document.title = [meta?.title, TITLE].filter(Boolean).join(" · ");
+  }, [meta]);
+
+  return children;
+}
+
 function RootComponent() {
   return (
-    <>
-      <div className="p-2 flex gap-2 text-lg">
-        <Link
-          to="/"
-          activeProps={{
-            className: "font-bold",
-          }}
-          activeOptions={{ exact: true }}
-        >
-          Home
-        </Link>{" "}
-        <Link
-          to="/about"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          About
-        </Link>
-      </div>
-      <hr />
+    <Meta>
       <Outlet />
-      <TanStackRouterDevtools position="bottom-right" />
-    </>
+    </Meta>
   );
 }
