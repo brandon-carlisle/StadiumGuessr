@@ -93,6 +93,7 @@ export default function HomePage() {
                     <h3 className="mb-4 text-lg font-bold">How to play</h3>
                     <ol className="flex list-decimal flex-col gap-3 px-4 text-left">
                       <li>
+                        {" "}
                         Use the map to look around and figure out where you are
                       </li>
                       <li>Enter your guess or skip if you do not know</li>
