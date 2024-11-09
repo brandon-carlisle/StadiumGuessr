@@ -4,6 +4,8 @@ import { routeTree } from "./routeTree.gen";
 
 import "./index.css";
 
+// Test signed commit comment
+
 // Set up a Router instance
 const router = createRouter({
   routeTree,
