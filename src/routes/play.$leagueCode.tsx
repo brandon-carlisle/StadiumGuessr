@@ -1,4 +1,11 @@
+import {
+  IconBulb,
+  IconVolume,
+  IconVolume2,
+  IconZoomIn,
+} from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
+import { BaseHTMLAttributes, ButtonHTMLAttributes, useState } from "react";
 
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
@@ -11,14 +18,17 @@ export const Route = createFileRoute("/play/$leagueCode")({
 });
 
 function RouteComponent() {
+  const [isMuted, setIsMuted] = useState(true);
+  const [answer, setAnswer] = useState("");
+
   return (
     <div className="min-h-screen flex flex-col p-4 bg-background text-foreground">
       <div className="flex-grow flex flex-col md:flex-row gap-4 mb-4">
-        <Card className="flex-grow md:w-2/3 bg-muted flex items-center justify-center">
+        <div className="flex-grow md:w-2/3 bg-muted flex items-center justify-center border rounded-lg">
           <p className="text-2xl text-muted-foreground">
             Interactive Map Placeholder
           </p>
-        </Card>
+        </div>
 
         <div className="md:w-1/3 space-y-4">
           <Card className="p-4">
@@ -39,22 +49,18 @@ function RouteComponent() {
 
           <div className="grid grid-cols-2 gap-2">
             <Button onClick={() => console.log("Hint requested")}>
-              <Lightbulb className="mr-2 h-4 w-4" />
+              <IconBulb className="mr-2 h-4 w-4" />
               Hint
             </Button>
             <Button onClick={() => console.log("Reset zoom")}>
-              <ZoomIn className="mr-2 h-4 w-4" />
+              <IconZoomIn className="mr-2 h-4 w-4" />
               Reset Zoom
             </Button>
-            <Button
-              onClick={() => setIsMuted(!isMuted)}
-              variant="outline"
-              className="col-span-2"
-            >
+            <Button onClick={() => setIsMuted(!isMuted)} className="col-span-2">
               {isMuted ? (
-                <VolumeX className="mr-2 h-4 w-4" />
+                <IconVolume className="mr-2 h-4 w-4" />
               ) : (
-                <Volume2 className="mr-2 h-4 w-4" />
+                <IconVolume2 className="mr-2 h-4 w-4" />
               )}
               {isMuted ? "Unmute" : "Mute"} Audio
             </Button>
@@ -62,30 +68,37 @@ function RouteComponent() {
         </div>
       </div>
 
-      <Card className="p-4">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("Submitted answer:", answer);
-            setAnswer("");
-          }}
-        >
-          <div className="flex space-x-2">
-            <Input
-              type="text"
-              placeholder="Enter your answer"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              className="flex-grow"
-            />
-            <Button type="submit">Submit</Button>
-          </div>
-        </form>
-      </Card>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log("Submitted answer:", answer);
+          setAnswer("");
+        }}
+      >
+        <div className="flex space-x-2">
+          <input
+            type="text"
+            placeholder="Enter your answer"
+            value={""}
+            onChange={(e) => setAnswer(e.target.value)}
+            className="input input-bordered input-primary flex-grow"
+            autoFocus
+          />
+          <Button type="submit">Submit</Button>
+        </div>
+      </form>
     </div>
   );
 }
 
-function Card({ children }) {
-  return <div className="card">{children}</div>;
+interface CardProps extends BaseHTMLAttributes<HTMLDivElement> {}
+
+function Card(props: CardProps) {
+  return <div className="card bg-base-200">{props.children}</div>;
+}
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+
+function Button(props: ButtonProps) {
+  return <button className="btn">{props.children}</button>;
 }

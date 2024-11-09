@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@tabler/icons-react':
+        specifier: ^3.21.0
+        version: 3.21.0(react@18.3.1)
       '@tanstack/react-router':
         specifier: ^1.79.0
         version: 1.79.0(@tanstack/router-generator@1.79.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -634,6 +637,14 @@ packages:
     resolution: {integrity: sha512-LTw1Dfd0mBIEqUVCxbvTE/LLo+9ZxVC9k99v1v4ahg9Aak6FpqOfNu5kRkeTAn0wphoC4JU7No1/rL+bBCEwhg==}
     cpu: [x64]
     os: [win32]
+
+  '@tabler/icons-react@3.21.0':
+    resolution: {integrity: sha512-Qq0GnZzzccbv/zuMyXAUUPlogNAqx9KsF8cr/ev3bxs+GMObqNEjXv1eZl9GFzxyQTS435siJNU8A1BaIYhX8g==}
+    peerDependencies:
+      react: '>= 16'
+
+  '@tabler/icons@3.21.0':
+    resolution: {integrity: sha512-5+GkkmWCr1wgMor5cOF1/YYflTQdc15y10FUikJ3HW8hDiFjfbuoAHJi17FT1vwsr1sA78rkJMn+fDoOOjnnPA==}
 
   '@tanstack/eslint-plugin-router@1.79.0':
     resolution: {integrity: sha512-bdkiaaRg954aG6WaBycmB3kVfJRv+981RvjBcZeh0Y9GzEOH7yD7RFtDnp58+tgqhuyeQXJVPWJHo0uBHdovew==}
@@ -2400,6 +2411,13 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.24.4':
     optional: true
+
+  '@tabler/icons-react@3.21.0(react@18.3.1)':
+    dependencies:
+      '@tabler/icons': 3.21.0
+      react: 18.3.1
+
+  '@tabler/icons@3.21.0': {}
 
   '@tanstack/eslint-plugin-router@1.79.0(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3)':
     dependencies:
