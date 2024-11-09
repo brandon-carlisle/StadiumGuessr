@@ -1,3 +1,4 @@
+import { allLeagues } from "@/data/leagues";
 import {
   IconBulb,
   IconVolume,
@@ -7,12 +8,22 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { BaseHTMLAttributes, ButtonHTMLAttributes, useState } from "react";
 
+function getLeagueTitle(code: string) {
+  const league = allLeagues.find((league) => league.code === code);
+
+  if (!league) {
+    return "Not found";
+  }
+
+  return league.leagueName;
+}
+
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
   loader: ({ params }) => console.log(params.leagueCode),
   meta: ({ params }) => [
     {
-      title: `Playing ${params.leagueCode}`,
+      title: `Playing ${getLeagueTitle(params.leagueCode)}`,
     },
   ],
 });
