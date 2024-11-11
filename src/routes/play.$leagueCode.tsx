@@ -1,4 +1,4 @@
-import LeafletMap from "@/components/map";
+import VisGlMap from "@/components/map";
 import { allLeagues } from "@/data/leagues";
 import {
   IconBulb,
@@ -37,8 +37,8 @@ function RouteComponent() {
     <div className="min-h-screen flex flex-col p-4 bg-background text-foreground">
       <div className="flex-grow flex flex-col md:flex-row gap-4 mb-4">
         <div className="flex-grow md:w-2/3 bg-muted flex items-center justify-center border rounded-lg">
-          <div className="container">
-            <LeafletMap />
+          <div className="container h-full w-full">
+            <VisGlMap />
           </div>
         </div>
 
