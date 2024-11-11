@@ -1,15 +1,45 @@
 import { Map } from "@vis.gl/react-maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { useState } from "react";
 
-export default function VisGlMap() {
+const init = {
+  code: "MUN",
+  club: "Manchester United",
+  names: ["old trafford", "the theatre of dreams"],
+  locaction: { lat: 53.463056, lng: -2.291389 },
+};
+
+export default function MapView() {
+  const [viewState, _setViewState] = useState({
+    longitude: init.locaction.lng,
+    latitude: init.locaction.lat,
+    zoom: 3.5,
+  });
+
   return (
     <Map
-      initialViewState={{
-        longitude: 51.556667,
-        latitude: -0.106111,
-        zoom: 2,
+      {...viewState}
+      mapStyle={{
+        version: 8,
+        sources: {
+          satellite: {
+            type: "raster",
+            tiles: [
+              "https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=aCjBxYJ6VdBGNN98Jj5T",
+            ],
+            tileSize: 256,
+          },
+        },
+        layers: [
+          {
+            id: "satellite",
+            type: "raster",
+            source: "satellite",
+            minzoom: 0,
+            maxzoom: 4,
+          },
+        ],
       }}
-      mapStyle="https://demotiles.maplibre.org/style.json"
     ></Map>
   );
 }
