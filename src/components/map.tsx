@@ -9,12 +9,19 @@ const init = {
   locaction: { lat: 53.463056, lng: -2.291389 },
 };
 
+const demoMapStyle = "https://demotiles.maplibre.org/style.json";
+const DEMO = true;
+
 export default function MapView() {
   const [viewState, _setViewState] = useState({
     longitude: init.locaction.lng,
     latitude: init.locaction.lat,
     zoom: 3.5,
   });
+
+  if (DEMO === true) {
+    return <Map {...viewState} mapStyle={demoMapStyle}></Map>;
+  }
 
   return (
     <Map
@@ -25,7 +32,7 @@ export default function MapView() {
           satellite: {
             type: "raster",
             tiles: [
-              "https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=aCjBxYJ6VdBGNN98Jj5T",
+              `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_API_KEY}`,
             ],
             tileSize: 256,
           },
