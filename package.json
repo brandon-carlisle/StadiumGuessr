@@ -32,9 +32,11 @@
     "@tanstack/react-router": "^1.79.0",
     "@tanstack/router-devtools": "^1.79.0",
     "@vis.gl/react-maplibre": "1.0.0-alpha.4",
+    "clsx": "^2.1.1",
     "maplibre-gl": "^4.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.5",
     "zod": "^3.23.8"
   }
 }

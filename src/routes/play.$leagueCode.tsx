@@ -1,5 +1,7 @@
+import { GameInfo } from "@/components/game-info";
 import MapView from "@/components/map";
 import { allLeagues } from "@/data/leagues";
+import { cn } from "@/lib/utils";
 import {
   IconBulb,
   IconVolume,
@@ -7,7 +9,7 @@ import {
   IconZoomIn,
 } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
-import { BaseHTMLAttributes, ButtonHTMLAttributes, useState } from "react";
+import { ButtonHTMLAttributes, useState } from "react";
 
 function getLeagueTitle(code: string) {
   const league = allLeagues.find((league) => league.code === code);
@@ -19,9 +21,22 @@ function getLeagueTitle(code: string) {
   return league.leagueName;
 }
 
+function getLeagueTeams(code: string) {
+  const league = allLeagues.find((league) => league.code === code)
+
+  if (!league) {
+    throw new Error("No league found")
+  }
+
+  return {
+    leagueName: league.leagueName,
+    teams: league.teams
+  }
+}
+
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
-  loader: ({ params }) => console.log(params.leagueCode),
+  loader: ({ params }) => getLeagueTeams(params.leagueCode),
   meta: ({ params }) => [
     {
       title: `Playing ${getLeagueTitle(params.leagueCode)}`,
@@ -30,6 +45,9 @@ export const Route = createFileRoute("/play/$leagueCode")({
 });
 
 function RouteComponent() {
+  const league = Route.useLoaderData()
+  console.log(league)
+
   const [isMuted, setIsMuted] = useState(true);
   const [answer, setAnswer] = useState("");
 
@@ -43,21 +61,7 @@ function RouteComponent() {
         </div>
 
         <div className="md:w-1/3 space-y-4">
-          <Card className="p-4">
-            <h2 className="text-xl font-bold mb-2">Game Info</h2>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold">Score:</span>
-              <span className="text-2xl">1250</span>
-            </div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold">Time Remaining:</span>
-              <span className="text-2xl">2:30</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold">Questions Remaining:</span>
-              <span className="text-2xl">5</span>
-            </div>
-          </Card>
+          <GameInfo />
 
           <div className="grid grid-cols-2 gap-2">
             <Button onClick={() => console.log("Hint requested")}>
@@ -96,21 +100,16 @@ function RouteComponent() {
             className="input input-bordered input-primary flex-grow"
             autoFocus
           />
-          <Button type="submit">Submit</Button>
+          <Button className="btn-primary" type="submit">Guess</Button>
         </div>
       </form>
     </div>
   );
 }
 
-interface CardProps extends BaseHTMLAttributes<HTMLDivElement> {}
 
-function Card(props: CardProps) {
-  return <div className="card bg-base-200">{props.children}</div>;
-}
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { }
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
-
-function Button(props: ButtonProps) {
-  return <button className="btn">{props.children}</button>;
+function Button(props: ButtonProps, className: string) {
+  return <button className={cn("btn", className)}>{props.children}</button>;
 }
