@@ -1,6 +1,7 @@
 import { GameInfo } from "@/components/game-info";
 import MapView from "@/components/map";
 import { allLeagues } from "@/data/leagues";
+import useGame from "@/hooks/useGame";
 import { cn } from "@/lib/utils";
 import {
   IconBulb,
@@ -11,42 +12,41 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { ButtonHTMLAttributes, useState } from "react";
 
-function getLeagueTitle(code: string) {
+// TODO: Need dynamic page title
+//
+// function getLeagueTitle(code: string) {
+//   const league = allLeagues.find((league) => league.code === code);
+//
+//   if (!league) {
+//     return "Not found";
+//   }
+//
+//   return league.leagueName;
+// }
+
+function getLeague(code: string) {
   const league = allLeagues.find((league) => league.code === code);
 
   if (!league) {
-    return "Not found";
+    throw new Error("No league found");
   }
 
-  return league.leagueName;
-}
-
-function getLeagueTeams(code: string) {
-  const league = allLeagues.find((league) => league.code === code)
-
-  if (!league) {
-    throw new Error("No league found")
-  }
-
-  return {
-    leagueName: league.leagueName,
-    teams: league.teams
-  }
+  return league;
 }
 
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
-  loader: ({ params }) => getLeagueTeams(params.leagueCode),
-  meta: ({ params }) => [
-    {
-      title: `Playing ${getLeagueTitle(params.leagueCode)}`,
+  loader: ({ params }) => getLeague(params.leagueCode),
+  staticData: {
+    meta: {
+      title: "Playing now",
     },
-  ],
+  },
 });
 
 function RouteComponent() {
-  const league = Route.useLoaderData()
-  console.log(league)
+  const league = Route.useLoaderData();
+  useGame(league);
 
   const [isMuted, setIsMuted] = useState(true);
   const [answer, setAnswer] = useState("");
@@ -100,15 +100,16 @@ function RouteComponent() {
             className="input input-bordered input-primary flex-grow"
             autoFocus
           />
-          <Button className="btn-primary" type="submit">Guess</Button>
+          <Button className="btn-primary" type="submit">
+            Guess
+          </Button>
         </div>
       </form>
     </div>
   );
 }
 
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { }
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 function Button(props: ButtonProps, className: string) {
   return <button className={cn("btn", className)}>{props.children}</button>;

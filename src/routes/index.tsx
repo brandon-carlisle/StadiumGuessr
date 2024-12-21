@@ -3,6 +3,11 @@ import { useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
+  staticData: {
+    meta: {
+      title: "Home",
+    },
+  },
 });
 
 function RouteComponent() {

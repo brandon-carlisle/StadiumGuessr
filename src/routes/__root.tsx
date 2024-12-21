@@ -1,38 +1,48 @@
+import { store } from "@/store/store";
 import {
   createRootRouteWithContext,
   useMatches,
   Outlet,
 } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
+import { Provider } from "react-redux";
 
-const TITLE = "StadiumGuessr";
+const BASE_TITLE = "StadiumGuessr";
 
 interface RootRouteContext {}
 
 export const Route = createRootRouteWithContext<RootRouteContext>()({
-  meta: () => [
-    {
-      title: TITLE,
-    },
-  ],
   component: RootComponent,
+  staticData: {
+    meta: {
+      title: BASE_TITLE,
+    },
+  },
 });
 
 function Meta({ children }: { children: ReactNode }) {
   const matches = useMatches();
-  const meta = matches.at(-1)?.meta?.find((meta) => meta.title);
+  let titles = [];
+
+  for (let i = 0; i < matches.length; i++) {
+    titles.push(matches[i].staticData.meta.title);
+  }
 
   useEffect(() => {
-    document.title = [meta?.title, TITLE].filter(Boolean).join(" · ");
-  }, [meta]);
+    document.title = titles.join(" · ");
+  }, [titles]);
 
   return children;
 }
 
 function RootComponent() {
   return (
-    <Meta>
-      <Outlet />
-    </Meta>
+    <>
+      <Provider store={store}>
+        <Meta>
+          <Outlet />
+        </Meta>
+      </Provider>
+    </>
   );
 }

@@ -4,8 +4,6 @@ import { routeTree } from "./routeTree.gen";
 
 import "./index.css";
 
-// Test signed commit comment v2
-
 // Set up a Router instance
 const router = createRouter({
   routeTree,
@@ -16,6 +14,12 @@ const router = createRouter({
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
+  }
+
+  interface StaticDataRouteOption {
+    meta: {
+      title: string;
+    };
   }
 }
 
