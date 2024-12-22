@@ -1,8 +1,9 @@
 import { GameInfo } from "@/components/game-info";
 import MapView from "@/components/map";
 import { allLeagues } from "@/data/leagues";
+import { LeagueCode } from "@/data/leagues/types";
 import useGame from "@/hooks/useGame";
-import { cn } from "@/lib/utils";
+import { cn, isLeagueCode } from "@/lib/utils";
 import {
   IconBulb,
   IconVolume,
@@ -13,18 +14,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ButtonHTMLAttributes, useState } from "react";
 
 // TODO: Need dynamic page title
-//
-// function getLeagueTitle(code: string) {
-//   const league = allLeagues.find((league) => league.code === code);
-//
-//   if (!league) {
-//     return "Not found";
-//   }
-//
-//   return league.leagueName;
-// }
 
-function getLeague(code: string) {
+function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
 
   if (!league) {
@@ -36,6 +27,15 @@ function getLeague(code: string) {
 
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
+  params: {
+    parse: (rawParams) => {
+      if (!isLeagueCode(rawParams.leagueCode)) {
+        throw new Error("Invalid league code in params");
+      }
+
+      return { leagueCode: rawParams.leagueCode };
+    },
+  },
   loader: ({ params }) => getLeague(params.leagueCode),
   staticData: {
     meta: {
@@ -109,8 +109,13 @@ function RouteComponent() {
   );
 }
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
-
-function Button(props: ButtonProps, className: string) {
-  return <button className={cn("btn", className)}>{props.children}</button>;
+function Button(
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
+  className: string,
+) {
+  return (
+    <button className={cn("btn", className)} type="button">
+      {props.children}
+    </button>
+  );
 }

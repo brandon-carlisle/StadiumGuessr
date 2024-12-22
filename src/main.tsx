@@ -1,3 +1,12 @@
+import { scan } from "react-scan"; // import this BEFORE react
+
+if (typeof window !== "undefined") {
+  scan({
+    enabled: false,
+    log: true, // logs render info to console (default: false)
+  });
+}
+
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
@@ -23,6 +32,7 @@ declare module "@tanstack/react-router" {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootElement = document.getElementById("app")!;
 
 if (!rootElement.innerHTML) {

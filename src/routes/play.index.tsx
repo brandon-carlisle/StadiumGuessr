@@ -2,6 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/play/")({
   component: RouteComponent,
+  staticData: {
+    meta: {
+      title: "Select a league",
+    },
+  },
 });
 
 function RouteComponent() {

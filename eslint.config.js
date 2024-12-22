@@ -1,19 +1,26 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import pluginRouter from "@tanstack/eslint-plugin-router";
+// @ts-check
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended.config({
-    rules: {
-      "@typescript-eslint/consistent-type-imports": "error",
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import pluginRouter from "@tanstack/eslint-plugin-router";
+import react from "@eslint-react/eslint-plugin";
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  tseslint.configs.strict,
+  tseslint.configs.stylistic,
+  ...pluginRouter.configs["flat/recommended"],
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    extends: [react.configs["recommended"]],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        projectService: true,
+      },
     },
-  }),
-  pluginReact.configs.flat.recommended,
-  pluginRouter.configs["flat/recommended"],
-];
+    rules: {
+      // Put rules you want to override here
+    },
+  },
+);

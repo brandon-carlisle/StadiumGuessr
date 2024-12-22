@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function useGame(league: League) {
   const dispatch = useAppDispatch();
+
   const { status, timeRemaining, teamsRemaining } = useAppSelector(
     (state) => state.game,
   );

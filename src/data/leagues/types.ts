@@ -1,7 +1,10 @@
 import { z } from "zod";
 
+export const leagueCodes = ["EPL", "EFL"] as const;
+export type LeagueCodeOpts = typeof leagueCodes;
+export type LeagueCode = LeagueCodeOpts[number];
+
 export type LeagueNameOpts = "Premier League" | "EFL Championship";
-export type LeagueCodeOpts = "EPL" | "EFL";
 
 export interface Team {
   // https://liaison.reuters.com/tools/sports-team-codes
@@ -17,7 +20,7 @@ interface Locaction {
 }
 
 export interface League {
-  code: LeagueCodeOpts;
+  code: LeagueCode;
   leagueName: LeagueNameOpts;
   teams: Team[];
 }
