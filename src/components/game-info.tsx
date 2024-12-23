@@ -1,9 +1,9 @@
+import useTimer from "@/hooks/useTimer";
 import { useAppSelector } from "@/store/hooks";
 
 export function GameInfo() {
   const score = useAppSelector((state) => state.game.score);
   const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
-  const timeRemaining = useAppSelector((state) => state.game.timeRemaining);
 
   return (
     <div className="card card-normal border bg-primary">
@@ -26,11 +26,16 @@ export function GameInfo() {
           <div className="pb-4">
             <div className="uppercase text-xs font-semibold">Time</div>
             <div className="stat-value text-5xl text-primary-content">
-              {timeRemaining}
+              <TimeDisplay />
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+function TimeDisplay() {
+  const { timeRemaining } = useTimer();
+  return <>{timeRemaining}</>;
 }

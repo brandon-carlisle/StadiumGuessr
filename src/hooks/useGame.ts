@@ -1,22 +1,23 @@
 import { useEffect } from "react";
-
 import { gameActions } from "@/store/features/game/game-slice";
 import { shuffle } from "@/lib/utils";
 import { type League } from "@/data/leagues/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-
-// TODO: FIX RE-RENDERS!
+import useTimer from "./useTimer";
 
 export default function useGame(league: League) {
   const dispatch = useAppDispatch();
 
-  const { status, timeRemaining, teamsRemaining } = useAppSelector(
-    (state) => state.game,
-  );
+  const { status, teamsRemaining } = useAppSelector((state) => state.game);
+  const { timeRemaining, startTimer, stopTimer, resetTimer } = useTimer();
 
   useEffect(() => {
     if (status === "IDLE") {
       const shuffled = shuffle(league.teams);
+
+      resetTimer();
+      startTimer();
+
       dispatch(
         gameActions.initialise({
           league,
@@ -27,29 +28,12 @@ export default function useGame(league: League) {
         }),
       );
     }
-  }, [dispatch, league, status]);
+  }, [dispatch, league, status, startTimer]);
 
   useEffect(() => {
-    let timer: ReturnType<typeof setInterval> | null = null;
-    if (status === "PLAYING" && timeRemaining > 0) {
-      timer = setInterval(() => {
-        dispatch(gameActions.decrementTimeRemaining());
-      }, 1000);
-    }
-
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
-  }, [dispatch, status, timeRemaining]);
-
-  useEffect(() => {
-    if (
-      (timeRemaining === 0 || teamsRemaining === 0) &&
-      status !== "COMPLETE"
-    ) {
+    if ((timeRemaining === 0 || teamsRemaining === 0) && status === "PLAYING") {
       dispatch(gameActions.setGameStatus("COMPLETE"));
+      stopTimer(); // Stop the timer when the game ends
     }
-  }, [dispatch, timeRemaining, teamsRemaining, status]);
+  }, [dispatch, timeRemaining, teamsRemaining, status, stop]);
 }

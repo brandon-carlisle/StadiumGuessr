@@ -1,27 +1,44 @@
-import { Map } from "@vis.gl/react-maplibre";
+import { useAppSelector } from "@/store/hooks";
+import { Map, ViewState } from "@vis.gl/react-maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useState } from "react";
+import { memo } from "react";
 
-const init = {
-  code: "MUN",
-  club: "Manchester United",
-  names: ["old trafford", "the theatre of dreams"],
-  locaction: { lat: 53.463056, lng: -2.291389 },
-};
-
+// const init = {
+//   code: "MUN",
+//   club: "Manchester United",
+//   names: ["old trafford", "the theatre of dreams"],
+//   locaction: { lat: 53.463056, lng: -2.291389 },
+// };
+//
 const demoMapStyle = "https://demotiles.maplibre.org/style.json";
 const DEMO = true;
 
-export default function MapView() {
-  const [viewState, _setViewState] = useState({
-    longitude: init.locaction.lng,
-    latitude: init.locaction.lat,
-    zoom: 3.5,
-  });
+const MapView = memo(function MapView() {
+  const locaction = useAppSelector((state) => state.game.currentTeam.locaction);
 
+  // const [viewState] = useState({
+  //   longitude: init.locaction.lng,
+  //   latitude: init.locaction.lat,
+  //   zoom: 3.5,
+  // });
+  //
   if (DEMO === true) {
-    return <Map {...viewState} mapStyle={demoMapStyle}></Map>;
+    return <Map {...locaction} mapStyle={demoMapStyle}></Map>;
   }
+
+  const viewState: ViewState = {
+    latitude: locaction.lat,
+    longitude: locaction.lng,
+    zoom: 3.5,
+    bearing: 0,
+    pitch: 1,
+    padding: {
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+    },
+  };
 
   return (
     <Map
@@ -49,7 +66,9 @@ export default function MapView() {
       }}
     ></Map>
   );
-}
+});
+
+export default MapView;
 
 // import { type LatLngExpression } from "leaflet";
 // import "leaflet/dist/leaflet.css";

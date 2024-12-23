@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 
 const BASE_TITLE = "StadiumGuessr";
 
-interface RootRouteContext {}
+type RootRouteContext = object;
 
 export const Route = createRootRouteWithContext<RootRouteContext>()({
   component: RootComponent,
@@ -22,7 +22,7 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
 
 function Meta({ children }: { children: ReactNode }) {
   const matches = useMatches();
-  let titles = [];
+  const titles: string[] = [];
 
   for (let i = 0; i < matches.length; i++) {
     titles.push(matches[i].staticData.meta.title);

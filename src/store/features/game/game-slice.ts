@@ -9,7 +9,7 @@ interface GameState {
   teams: Team[];
   currentTeam: Team;
   score: number;
-  timeRemaining: number;
+  finalTimeRemaining: number;
   teamsRemaining: number;
   status: GameStatus;
   correctTeamCodes: string[];
@@ -21,7 +21,7 @@ const initialState: GameState = {
   teams: EPL.teams,
   currentTeam: EPL.teams[0],
   score: 0,
-  timeRemaining: 90,
+  finalTimeRemaining: 90,
   teamsRemaining: EPL.teams.length,
   status: "IDLE",
   correctTeamCodes: [""],
@@ -84,8 +84,8 @@ const gameSlice = createSlice({
       }
     },
 
-    decrementTimeRemaining(state) {
-      state.timeRemaining--;
+    setFinalTimeRemaining(state, action: PayloadAction<number>) {
+      state.finalTimeRemaining = action.payload;
     },
 
     setGameStatus(state, action: PayloadAction<GameStatus>) {
@@ -100,9 +100,7 @@ const gameSlice = createSlice({
       state.incorrectTeamCodes.push(action.payload);
     },
 
-    resetGame(state) {
-      state = initialState;
-    },
+    resetGame: () => initialState,
   },
 });
 

@@ -13,8 +13,6 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { ButtonHTMLAttributes, useState } from "react";
 
-// TODO: Need dynamic page title
-
 function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
 
