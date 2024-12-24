@@ -4,7 +4,7 @@ import {
   useMatches,
   Outlet,
 } from "@tanstack/react-router";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, StrictMode, useEffect } from "react";
 import { Provider } from "react-redux";
 
 const BASE_TITLE = "StadiumGuessr";
@@ -24,8 +24,8 @@ function Meta({ children }: { children: ReactNode }) {
   const matches = useMatches();
   const titles: string[] = [];
 
-  for (let i = 0; i < matches.length; i++) {
-    titles.push(matches[i].staticData.meta.title);
+  for (const match of matches) {
+    titles.push(match.staticData.meta.title);
   }
 
   useEffect(() => {
@@ -37,12 +37,12 @@ function Meta({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   return (
-    <>
+    <StrictMode>
       <Provider store={store}>
         <Meta>
           <Outlet />
         </Meta>
       </Provider>
-    </>
+    </StrictMode>
   );
 }
