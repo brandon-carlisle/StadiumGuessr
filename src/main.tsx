@@ -3,7 +3,7 @@ import { scan } from "react-scan"; // import this BEFORE react
 if (typeof window !== "undefined") {
   scan({
     enabled: true,
-    log: true, // logs render info to console (default: false)
+    log: false, // logs render info to console (default: false)
   });
 }
 
@@ -17,6 +17,7 @@ import "./index.css";
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
+  defaultPendingMinMs: 0,
 });
 
 // Register things for typesafety

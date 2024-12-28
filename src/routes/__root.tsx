@@ -22,6 +22,7 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
 
 function Meta({ children }: { children: ReactNode }) {
   const matches = useMatches();
+
   const titles: string[] = [];
 
   for (const match of matches) {

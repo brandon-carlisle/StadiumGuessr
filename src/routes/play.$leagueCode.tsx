@@ -46,6 +46,8 @@ function RouteComponent() {
   const league = Route.useLoaderData();
   useGame(league);
 
+  console.info("Rendering");
+
   const [isMuted, setIsMuted] = useState(true);
   const [answer, setAnswer] = useState("");
 
