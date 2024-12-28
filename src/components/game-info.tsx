@@ -37,6 +37,7 @@ export function GameInfo() {
   );
 }
 
+// FIX: "Cannot update a component (`Timer`) while rendering a different component (`Timer`)"
 function Timer() {
   const { timeRemaining, startTimer, stopTimer, resetTimer } = useTimer();
 

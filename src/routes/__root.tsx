@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/store/hooks";
 import { store } from "@/store/store";
 import {
   createRootRouteWithContext,
@@ -37,13 +38,35 @@ function Meta({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  const isDevMode = import.meta.env.VITE_DEV_MODE;
+  console.log("SG_DEV_MODE: ", isDevMode);
+
   return (
     <StrictMode>
       <Provider store={store}>
         <Meta>
-          <Outlet />
+          {isDevMode ? (
+            <StatusIndicator>
+              <Outlet />
+            </StatusIndicator>
+          ) : (
+            <Outlet />
+          )}
         </Meta>
       </Provider>
     </StrictMode>
+  );
+}
+
+function StatusIndicator({ children }: { children: ReactNode }) {
+  const status = useAppSelector((state) => state.game.status);
+
+  return (
+    <div className="indicator w-full">
+      <span className="indicator-item indicator-center badge badge-secondary mt-5">
+        {status}
+      </span>
+      <div className="w-full">{children}</div>
+    </div>
   );
 }

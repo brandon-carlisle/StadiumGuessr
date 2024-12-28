@@ -1,5 +1,8 @@
+import { LeagueCode } from "@/data/leagues/types";
+import { gameActions } from "@/store/features/game/game-slice";
+import { useAppDispatch } from "@/store/hooks";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
@@ -11,6 +14,12 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
+  const dispatch = useAppDispatch();
+  // Reset the game state if we ever hit the home page
+  useEffect(() => {
+    dispatch(gameActions.resetGame());
+  }, []);
+
   return (
     <>
       <Hero />
@@ -19,7 +28,13 @@ function RouteComponent() {
   );
 }
 
-const selectOptions = [
+interface SelectOption {
+  name: string;
+  code: LeagueCode;
+  default: boolean;
+}
+
+const selectOptions: SelectOption[] = [
   { name: "Premier League", code: "EPL", default: true },
   { name: "Championship", code: "EFL", default: false },
 ];
@@ -49,7 +64,7 @@ function Hero() {
           <div className="join w-full block">
             <select
               className="select select-bordered w-full max-w-xs join-item"
-              onChange={(e) => setOption(e.target.value)}
+              onChange={(e) => setOption(e.target.value as LeagueCode)}
             >
               <option disabled>Which league?</option>
               {selectOptions.map((opt) => (
@@ -86,6 +101,7 @@ function Footer() {
             href="https://github.com/brandon-carlisle/stadiumGuessr/"
             target="_blank"
             className="link"
+            rel="noreferrer noopener"
           >
             here
           </a>
