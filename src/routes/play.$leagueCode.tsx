@@ -1,17 +1,13 @@
 import { GameInfo } from "@/components/game-info";
 import MapView from "@/components/map";
+import { AudioToggle } from "@/components/audio-toggle";
 import { allLeagues } from "@/data/leagues";
 import { LeagueCode } from "@/data/leagues/types";
 import useGame from "@/hooks/useGame";
 import { cn, isLeagueCode } from "@/lib/utils";
-import {
-  IconBulb,
-  IconVolume,
-  IconVolume2,
-  IconZoomIn,
-} from "@tabler/icons-react";
+import { IconBulb, IconZoomIn } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ButtonHTMLAttributes, useState } from "react";
+import { ButtonHTMLAttributes } from "react";
 
 function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
@@ -46,9 +42,6 @@ function RouteComponent() {
   const league = Route.useLoaderData();
   useGame(league);
 
-  const [isMuted, setIsMuted] = useState(true);
-  const [answer, setAnswer] = useState("");
-
   return (
     <div className="min-h-screen flex flex-col p-4 bg-background text-foreground">
       <div className="flex-grow flex flex-col md:flex-row gap-4 mb-4">
@@ -70,31 +63,18 @@ function RouteComponent() {
               <IconZoomIn className="mr-2 h-4 w-4" />
               Reset Zoom
             </Button>
-            <Button onClick={() => setIsMuted(!isMuted)} className="col-span-2">
-              {isMuted ? (
-                <IconVolume className="mr-2 h-4 w-4" />
-              ) : (
-                <IconVolume2 className="mr-2 h-4 w-4" />
-              )}
-              {isMuted ? "Unmute" : "Mute"} Audio
-            </Button>
+            <div className="col-span-2">
+              <AudioToggle />
+            </div>
           </div>
         </div>
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log("Submitted answer:", answer);
-          setAnswer("");
-        }}
-      >
+      <form>
         <div className="flex space-x-2">
           <input
             type="text"
             placeholder="Enter your answer"
-            value={""}
-            onChange={(e) => setAnswer(e.target.value)}
             className="input input-bordered input-primary flex-grow"
             autoFocus
           />

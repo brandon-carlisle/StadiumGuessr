@@ -1,3 +1,4 @@
+import { AudioProvider } from "@/components/audio-provider";
 import { useAppSelector } from "@/store/hooks";
 import { store } from "@/store/store";
 import {
@@ -39,21 +40,22 @@ function Meta({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const isDevMode = import.meta.env.VITE_DEV_MODE === "TRUE";
-  console.log("SG_DEV_MODE: ", isDevMode);
 
   return (
     <StrictMode>
-      <Provider store={store}>
-        <Meta>
-          {isDevMode ? (
-            <StatusIndicator>
+      <AudioProvider>
+        <Provider store={store}>
+          <Meta>
+            {isDevMode ? (
+              <StatusIndicator>
+                <Outlet />
+              </StatusIndicator>
+            ) : (
               <Outlet />
-            </StatusIndicator>
-          ) : (
-            <Outlet />
-          )}
-        </Meta>
-      </Provider>
+            )}
+          </Meta>
+        </Provider>
+      </AudioProvider>
     </StrictMode>
   );
 }
