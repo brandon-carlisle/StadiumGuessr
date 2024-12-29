@@ -38,7 +38,7 @@ function Meta({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const isDevMode = import.meta.env.VITE_DEV_MODE;
+  const isDevMode = import.meta.env.VITE_DEV_MODE === "TRUE";
   console.log("SG_DEV_MODE: ", isDevMode);
 
   return (

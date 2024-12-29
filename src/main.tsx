@@ -2,7 +2,7 @@ import { scan } from "react-scan"; // import this BEFORE react
 
 if (typeof window !== "undefined") {
   scan({
-    enabled: true,
+    enabled: import.meta.env.VITE_DEV_MODE === "TRUE",
     log: false, // logs render info to console (default: false)
   });
 }

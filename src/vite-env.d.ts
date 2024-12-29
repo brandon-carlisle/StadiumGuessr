@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_MAPTILER_API_KEY: string;
-  readonly VITE_DEV_MODE: boolean;
+  readonly VITE_DEV_MODE: string;
   // more env variables...
 }
 
