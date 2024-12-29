@@ -16,7 +16,9 @@ export default function useTimer() {
     }
 
     return () => {
-      if (timer) clearInterval(timer);
+      if (timer) {
+        clearInterval(timer);
+      }
     };
   }, [isRunning, dispatch, timeRemaining]);
 

@@ -6,7 +6,7 @@ interface TimerState {
 }
 
 const initialState: TimerState = {
-  timeRemaining: 5,
+  timeRemaining: 500,
   isRunning: false,
 };
 

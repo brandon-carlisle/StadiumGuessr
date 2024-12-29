@@ -8,6 +8,7 @@ import { cn, isLeagueCode } from "@/lib/utils";
 import { IconBulb, IconZoomIn } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ButtonHTMLAttributes } from "react";
+import { GuessInput } from "@/components/guess-input";
 
 function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/play/$leagueCode")({
 
 function RouteComponent() {
   const league = Route.useLoaderData();
-  useGame(league);
+  const { currentTeam } = useGame(league);
 
   return (
     <div className="min-h-screen flex flex-col p-4 bg-background text-foreground">
@@ -66,23 +67,16 @@ function RouteComponent() {
             <div className="col-span-2">
               <AudioToggle />
             </div>
+            <div className="">
+              <pre className="text-sm">
+                {JSON.stringify(currentTeam, null, 2)}
+              </pre>
+            </div>
           </div>
         </div>
       </div>
 
-      <form>
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            placeholder="Enter your answer"
-            className="input input-bordered input-primary flex-grow"
-            autoFocus
-          />
-          <Button className="btn-primary" type="submit">
-            Guess
-          </Button>
-        </div>
-      </form>
+      <GuessInput />
     </div>
   );
 }

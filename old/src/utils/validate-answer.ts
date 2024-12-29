@@ -2,7 +2,7 @@ function sanitize(inputs: string[]) {
   return inputs.map((item) =>
     item
       .replaceAll(" ", "")
-      .replaceAll(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+      .replaceAll(/[.,\\/#!$%\\^&\\*;:{}=\-_`~()]/g, "")
       .toLowerCase(),
   );
 }

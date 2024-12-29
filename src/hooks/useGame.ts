@@ -8,6 +8,7 @@ export default function useGame(league: League) {
   const dispatch = useAppDispatch();
 
   const status = useAppSelector((state) => state.game.status);
+  const currentTeam = useAppSelector((state) => state.game.currentTeam);
 
   function startGame(league: League) {
     const shuffled = shuffle(league.teams);
@@ -28,4 +29,6 @@ export default function useGame(league: League) {
       startGame(league);
     }
   }, [status, startGame]);
+
+  return { currentTeam };
 }
