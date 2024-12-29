@@ -38,15 +38,18 @@ export function GameInfo() {
 }
 
 // FIX: "Cannot update a component (`Timer`) while rendering a different component (`Timer`)"
+
 function Timer() {
   const { timeRemaining, startTimer, stopTimer, resetTimer } = useTimer();
 
   const dispatch = useAppDispatch();
 
-  if (timeRemaining === 0) {
-    stopTimer();
-    dispatch(gameActions.setGameStatus("COMPLETE"));
-  }
+  useEffect(() => {
+    if (timeRemaining === 0) {
+      stopTimer();
+      dispatch(gameActions.setGameStatus("COMPLETE"));
+    }
+  }, [timeRemaining, stopTimer, dispatch]);
 
   useEffect(() => {
     startTimer();
@@ -54,7 +57,7 @@ function Timer() {
     return () => {
       resetTimer();
     };
-  }, []);
+  }, [startTimer, resetTimer]);
 
   return <>{timeRemaining}</>;
 }
