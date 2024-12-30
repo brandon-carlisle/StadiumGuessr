@@ -12,8 +12,8 @@ interface GameState {
   finalTimeRemaining: number;
   teamsRemaining: number;
   status: GameStatus;
-  correctTeamCodes: string[];
-  incorrectTeamCodes: string[];
+  correctTeamCodes: string[] | null;
+  incorrectTeamCodes: string[] | null;
 }
 
 const initialState: GameState = {
@@ -24,14 +24,18 @@ const initialState: GameState = {
   finalTimeRemaining: 90,
   teamsRemaining: EPL.teams.length,
   status: "IDLE",
-  correctTeamCodes: [""],
-  incorrectTeamCodes: [""],
+  correctTeamCodes: null,
+  incorrectTeamCodes: null,
 };
 
 type InitGame = Pick<
   GameState,
   "league" | "teams" | "teamsRemaining" | "currentTeam" | "status"
 >;
+
+// interface CorrectGuess {
+//
+// }
 
 const gameSlice = createSlice({
   name: "game",
@@ -57,21 +61,25 @@ const gameSlice = createSlice({
       state.currentTeam = action.payload;
     },
 
-    incrementCurrentTeam(state) {
+    setCurrentTeamToNext(state) {
       const nextTeamIndex =
         state.league.teams.findIndex(
           (team) => team.code === state.currentTeam.code,
         ) + 1;
 
-      if (nextTeamIndex === state.league.teams.length - 1) return;
+      if (nextTeamIndex === state.league.teams.length - 1) {
+        return;
+      }
 
       if (state.league.teams[nextTeamIndex]) {
         state.currentTeam = state.league.teams[nextTeamIndex];
-      } else return;
+      }
+
+      return;
     },
 
-    incrementScore(state, action: PayloadAction<number>) {
-      state.score += action.payload;
+    incrementScore(state) {
+      state.score += 10;
     },
 
     setTeamsRemaining(state, action: PayloadAction<number>) {
@@ -93,11 +101,28 @@ const gameSlice = createSlice({
     },
 
     addCorrectTeamCode(state, action: PayloadAction<string>) {
+      if (!state.correctTeamCodes) {
+        state.correctTeamCodes = [];
+      }
+
       state.correctTeamCodes.push(action.payload);
     },
 
     addIncorrectTeamCode(state, action: PayloadAction<string>) {
+      if (!state.incorrectTeamCodes) {
+        state.incorrectTeamCodes = [];
+      }
+
       state.incorrectTeamCodes.push(action.payload);
+    },
+
+    registerCorrectGuess(state) {
+      if (!state.correctTeamCodes) {
+        state.correctTeamCodes = [];
+      }
+
+      state.correctTeamCodes.push(state.currentTeam.code);
+      state.score += 10;
     },
 
     resetGame: () => initialState,

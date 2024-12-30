@@ -1,10 +1,11 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import correctFx from "@/assets/correct_fx.mp3";
 import incorrectFx from "@/assets/incorrect_fx.mp3";
 import useSound from "use-sound";
 import { useContext } from "react";
 import { AudioContext } from "./audio-provider";
+import { gameActions } from "@/store/features/game/game-slice";
 
 interface FormElements extends HTMLFormControlsCollection {
   guessInput: HTMLInputElement;
@@ -17,6 +18,7 @@ export function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
   const audioCtx = useContext(AudioContext);
   const volume = audioCtx.audioEnabled ? 0.7 : 0;
+  const dispatch = useAppDispatch();
 
   const [playCorrectFx] = useSound(correctFx, { volume });
   const [playIncorrectFx] = useSound(incorrectFx, { volume });
@@ -30,8 +32,22 @@ export function GuessInput() {
     }
 
     if (isGuessCorrect(guess, currentTeam.stadiumNames)) {
+      // Register correct answer
+      dispatch(gameActions.registerCorrectGuess());
+
+      // Play sound
       playCorrectFx();
+
+      // Clear input
+      event.currentTarget.reset();
+
+      // Move onto next team OR end game
+      //
     } else {
+      // Clear input
+      event.currentTarget.reset();
+
+      // Play sound
       playIncorrectFx();
     }
   }

@@ -1,11 +1,25 @@
 import useTimer from "@/hooks/useTimer";
 import { gameActions } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function GameInfo() {
   const score = useAppSelector((state) => state.game.score);
   const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
+
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    if (score > 0) {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setAnimate(true);
+      const timer = setTimeout(() => {
+        setAnimate(false);
+      }, 600); // reset animate class after 600ms
+
+      return () => clearTimeout(timer);
+    }
+  }, [score]);
 
   return (
     <div className="card card-normal border bg-primary">
@@ -13,7 +27,9 @@ export function GameInfo() {
         <div className="flex justify-evenly md:flex-col gap-3">
           <div className="border-b-2 border-primary-content/10 pb-4">
             <div className="uppercase text-xs font-semibold">Score</div>
-            <div className="stat-value text-5xl text-primary-content">
+            <div
+              className={`stat-value text-5xl text-primary-content ${animate ? "motion-preset-confetti" : ""}`}
+            >
               {score}
             </div>
           </div>
@@ -36,8 +52,6 @@ export function GameInfo() {
     </div>
   );
 }
-
-// FIX: "Cannot update a component (`Timer`) while rendering a different component (`Timer`)"
 
 function Timer() {
   const { timeRemaining, startTimer, stopTimer, resetTimer } = useTimer();
