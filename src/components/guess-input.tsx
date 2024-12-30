@@ -1,31 +1,38 @@
 import { useAppSelector } from "@/store/hooks";
 
+import correctFx from "@/assets/correct_fx.mp3";
+import incorrectFx from "@/assets/incorrect_fx.mp3";
+import useSound from "use-sound";
+import { useContext } from "react";
+import { AudioContext } from "./audio-provider";
+
 interface FormElements extends HTMLFormControlsCollection {
   guessInput: HTMLInputElement;
 }
 interface UserGuessFormElement extends HTMLFormElement {
-  // now we can override the elements type to be an HTMLFormControlsCollection
-  // of our own design...
   readonly elements: FormElements;
 }
 
 export function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
+  const audioCtx = useContext(AudioContext);
+  const volume = audioCtx.audioEnabled ? 0.7 : 0;
+
+  const [playCorrectFx] = useSound(correctFx, { volume });
+  const [playIncorrectFx] = useSound(incorrectFx, { volume });
 
   function handleGuess(event: React.FormEvent<UserGuessFormElement>) {
     event.preventDefault();
     const guess = event.currentTarget.elements.guessInput.value;
-    console.log("Guess: ", guess);
 
     if (!guess) {
-      alert("guess");
       return;
     }
 
     if (isGuessCorrect(guess, currentTeam.stadiumNames)) {
-      alert("correct");
+      playCorrectFx();
     } else {
-      alert("incorrect");
+      playIncorrectFx();
     }
   }
 

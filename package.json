@@ -43,6 +43,7 @@
     "react-redux": "^9.2.0",
     "react-scan": "^0.0.52",
     "tailwind-merge": "^2.5.5",
+    "use-sound": "^4.0.3",
     "zod": "^3.23.8"
   },
   "packageManager": "pnpm@8.7.5+sha512.588f1665bf3d522ab9c768ddcf83dc40c1bda2f4e75dc0c2129a047243d8213db30fcffe744855a333e54fb6eedd6901804d2e4c046d83220a005b7e2295b671"
