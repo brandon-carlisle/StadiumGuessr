@@ -55,7 +55,6 @@ export function GameInfo() {
 
 function Timer() {
   const { timeRemaining, startTimer, stopTimer, resetTimer } = useTimer();
-
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -67,9 +66,8 @@ function Timer() {
 
   useEffect(() => {
     startTimer();
-
     return () => {
-      resetTimer();
+      resetTimer(); // Call directly instead of returning
     };
   }, [startTimer, resetTimer]);
 

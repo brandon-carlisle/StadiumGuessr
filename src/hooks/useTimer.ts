@@ -2,6 +2,8 @@ import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { timerActions } from "@/store/features//timer/timer-slice";
 
+// TODO: Make sure when status === complete we stop the timer
+
 export default function useTimer() {
   const dispatch = useAppDispatch();
   const { timeRemaining, isRunning } = useAppSelector((state) => state.timer);
@@ -16,11 +18,9 @@ export default function useTimer() {
     }
 
     return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
+      if (timer) clearInterval(timer);
     };
-  }, [isRunning, dispatch, timeRemaining]);
+  }, [isRunning, timeRemaining, dispatch]);
 
   const startTimer = useCallback(
     () => dispatch(timerActions.start()),
@@ -31,6 +31,7 @@ export default function useTimer() {
     () => dispatch(timerActions.stop()),
     [dispatch],
   );
+
   const resetTimer = useCallback(
     () => dispatch(timerActions.reset()),
     [dispatch],

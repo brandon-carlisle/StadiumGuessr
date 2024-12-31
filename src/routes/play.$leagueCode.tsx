@@ -4,11 +4,12 @@ import { AudioToggle } from "@/components/audio-toggle";
 import { allLeagues } from "@/data/leagues";
 import { LeagueCode } from "@/data/leagues/types";
 import useGame from "@/hooks/useGame";
-import { cn, isLeagueCode } from "@/lib/utils";
+import { isLeagueCode } from "@/lib/utils";
 import { IconBulb, IconZoomIn } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ButtonHTMLAttributes } from "react";
 import { GuessInput } from "@/components/guess-input";
+import { useAppDispatch } from "@/store/hooks";
+import { gameActions } from "@/store/features/game/game-slice";
 
 function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
@@ -56,14 +57,22 @@ function RouteComponent() {
           <GameInfo />
 
           <div className="grid grid-cols-2 gap-2">
-            <Button onClick={() => console.log("Hint requested")}>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => console.log("Hint requested")}
+            >
               <IconBulb className="mr-2 h-4 w-4" />
               Hint
-            </Button>
-            <Button onClick={() => console.log("Reset zoom")}>
+            </button>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => console.log("Reset zoom")}
+            >
               <IconZoomIn className="mr-2 h-4 w-4" />
               Reset Zoom
-            </Button>
+            </button>
             <div className="col-span-2">
               <AudioToggle />
             </div>
@@ -76,18 +85,25 @@ function RouteComponent() {
         </div>
       </div>
 
-      <GuessInput />
+      <div className="flex gap-1">
+        <GuessInput />
+        <SkipButton />
+      </div>
     </div>
   );
 }
 
-function Button(
-  props: ButtonHTMLAttributes<HTMLButtonElement>,
-  className: string,
-) {
+function SkipButton() {
+  const dispatch = useAppDispatch();
+
+  function handleSkip() {
+    dispatch(gameActions.registerSkippedGuess());
+    dispatch(gameActions.setCurrentTeamToNext());
+  }
+
   return (
-    <button className={cn("btn", className)} type="button">
-      {props.children}
+    <button type="button" className="btn btn-accent" onClick={handleSkip}>
+      Skip (-5pts)
     </button>
   );
 }

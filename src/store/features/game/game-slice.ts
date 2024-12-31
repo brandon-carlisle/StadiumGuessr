@@ -63,19 +63,16 @@ const gameSlice = createSlice({
 
     setCurrentTeamToNext(state) {
       const nextTeamIndex =
-        state.league.teams.findIndex(
-          (team) => team.code === state.currentTeam.code,
-        ) + 1;
+        state.teams.findIndex((team) => team.code === state.currentTeam.code) +
+        1;
 
-      if (nextTeamIndex === state.league.teams.length - 1) {
+      const lastIdx = state.teams.length - 1;
+
+      if (nextTeamIndex > lastIdx) {
         return;
       }
 
-      if (state.league.teams[nextTeamIndex]) {
-        state.currentTeam = state.league.teams[nextTeamIndex];
-      }
-
-      return;
+      state.currentTeam = state.teams[nextTeamIndex];
     },
 
     incrementScore(state) {
@@ -100,14 +97,6 @@ const gameSlice = createSlice({
       state.status = action.payload;
     },
 
-    addCorrectTeamCode(state, action: PayloadAction<string>) {
-      if (!state.correctTeamCodes) {
-        state.correctTeamCodes = [];
-      }
-
-      state.correctTeamCodes.push(action.payload);
-    },
-
     addIncorrectTeamCode(state, action: PayloadAction<string>) {
       if (!state.incorrectTeamCodes) {
         state.incorrectTeamCodes = [];
@@ -121,8 +110,29 @@ const gameSlice = createSlice({
         state.correctTeamCodes = [];
       }
 
+      if (state.teamsRemaining === 0) {
+        return;
+      }
+
       state.correctTeamCodes.push(state.currentTeam.code);
       state.score += 10;
+      state.teamsRemaining--;
+    },
+
+    registerSkippedGuess(state) {
+      if (!state.incorrectTeamCodes) {
+        state.incorrectTeamCodes = [];
+      }
+
+      if (state.teamsRemaining === 0) {
+        return;
+      }
+
+      state.incorrectTeamCodes.push(state.currentTeam.code);
+      if (state.score > 0) {
+        state.score -= 5;
+      }
+      state.teamsRemaining--;
     },
 
     resetGame: () => initialState,

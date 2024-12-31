@@ -16,10 +16,12 @@ interface UserGuessFormElement extends HTMLFormElement {
 
 export function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
+  const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
   const audioCtx = useContext(AudioContext);
   const volume = audioCtx.audioEnabled ? 0.7 : 0;
   const dispatch = useAppDispatch();
 
+  // TODO: Use R2 urls in prod
   const [playCorrectFx] = useSound(correctFx, { volume });
   const [playIncorrectFx] = useSound(incorrectFx, { volume });
 
@@ -27,7 +29,8 @@ export function GuessInput() {
     event.preventDefault();
     const guess = event.currentTarget.elements.guessInput.value;
 
-    if (!guess) {
+    if (teamsRemaining === 0) {
+      event.currentTarget.reset();
       return;
     }
 
@@ -42,6 +45,7 @@ export function GuessInput() {
       event.currentTarget.reset();
 
       // Move onto next team OR end game
+      dispatch(gameActions.setCurrentTeamToNext());
       //
     } else {
       // Clear input
@@ -53,7 +57,7 @@ export function GuessInput() {
   }
 
   return (
-    <form onSubmit={handleGuess} className="flex space-x-2">
+    <form onSubmit={handleGuess} className="flex gap-2 grow">
       <input
         type="text"
         placeholder="Enter your answer"

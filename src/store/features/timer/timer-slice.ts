@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface TimerState {
   timeRemaining: number;
@@ -6,7 +6,7 @@ interface TimerState {
 }
 
 const initialState: TimerState = {
-  timeRemaining: 500,
+  timeRemaining: 60,
   isRunning: false,
 };
 
@@ -14,6 +14,10 @@ const timerSlice = createSlice({
   name: "timer",
   initialState,
   reducers: {
+    setTimeRemaining(state, action: PayloadAction<number>) {
+      state.timeRemaining = action.payload;
+    },
+
     start(state) {
       state.isRunning = true;
     },
