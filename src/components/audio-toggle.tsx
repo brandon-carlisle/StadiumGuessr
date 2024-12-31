@@ -3,15 +3,15 @@ import { useContext } from "react";
 import { AudioContext } from "./audio-provider";
 
 export function AudioToggle() {
-  const { audioEnabled, setAudioEnabled } = useContext(AudioContext);
+  const { volume, setVolume } = useContext(AudioContext);
 
   const toggleAudio = () => {
-    setAudioEnabled((prevAudioEnabled) => !prevAudioEnabled);
+    setVolume((prevVol) => (prevVol > 0 ? 0 : 0.6));
   };
 
   return (
     <button onClick={toggleAudio} className="btn" type="button">
-      {audioEnabled ? <IconVolume /> : <IconVolume3 />}
+      {volume ? <IconVolume /> : <IconVolume3 />}
     </button>
   );
 }

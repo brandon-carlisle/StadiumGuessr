@@ -9,7 +9,6 @@ interface GameState {
   teams: Team[];
   currentTeam: Team;
   score: number;
-  finalTimeRemaining: number;
   teamsRemaining: number;
   status: GameStatus;
   correctTeamCodes: string[] | null;
@@ -21,7 +20,6 @@ const initialState: GameState = {
   teams: EPL.teams,
   currentTeam: EPL.teams[0],
   score: 0,
-  finalTimeRemaining: 90,
   teamsRemaining: EPL.teams.length,
   status: "IDLE",
   correctTeamCodes: null,
@@ -33,10 +31,6 @@ type InitGame = Pick<
   "league" | "teams" | "teamsRemaining" | "currentTeam" | "status"
 >;
 
-// interface CorrectGuess {
-//
-// }
-
 const gameSlice = createSlice({
   name: "game",
   initialState,
@@ -47,18 +41,6 @@ const gameSlice = createSlice({
       state.teamsRemaining = action.payload.teamsRemaining;
       state.currentTeam = action.payload.currentTeam;
       state.status = action.payload.status;
-    },
-
-    setLeague(state, action: PayloadAction<League>) {
-      state.league = action.payload;
-    },
-
-    setTeams(state, action: PayloadAction<Team[]>) {
-      state.teams = action.payload;
-    },
-
-    setCurrentTeam(state, action: PayloadAction<Team>) {
-      state.currentTeam = action.payload;
     },
 
     setCurrentTeamToNext(state) {
@@ -81,16 +63,6 @@ const gameSlice = createSlice({
 
     setTeamsRemaining(state, action: PayloadAction<number>) {
       state.teamsRemaining = action.payload;
-    },
-
-    decrementTeamsRemaining(state) {
-      if (state.teamsRemaining > 0) {
-        state.teamsRemaining--;
-      }
-    },
-
-    setFinalTimeRemaining(state, action: PayloadAction<number>) {
-      state.finalTimeRemaining = action.payload;
     },
 
     setGameStatus(state, action: PayloadAction<GameStatus>) {

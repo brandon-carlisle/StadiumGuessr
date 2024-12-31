@@ -2,13 +2,13 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { createContext, useMemo, useState } from "react";
 
 interface AudioContextType {
-  audioEnabled: boolean;
-  setAudioEnabled: Dispatch<SetStateAction<boolean>>;
+  volume: number;
+  setVolume: Dispatch<SetStateAction<number>>;
 }
 
 export const AudioContext = createContext<AudioContextType>({
-  audioEnabled: true,
-  setAudioEnabled: () => true,
+  volume: 0.6,
+  setVolume: () => null,
 });
 
 interface Props {
@@ -16,11 +16,11 @@ interface Props {
 }
 
 export function AudioProvider({ children }: Props) {
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [volume, setVolume] = useState(0.6); // Only manage volume
 
   const contextValue = useMemo(
-    () => ({ audioEnabled, setAudioEnabled }),
-    [audioEnabled, setAudioEnabled],
+    () => ({ volume, setVolume }), // Provide volume and setVolume
+    [volume, setVolume],
   );
 
   return (

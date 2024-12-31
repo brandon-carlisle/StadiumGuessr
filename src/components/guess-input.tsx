@@ -18,12 +18,11 @@ export function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
   const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
   const audioCtx = useContext(AudioContext);
-  const volume = audioCtx.audioEnabled ? 0.7 : 0;
   const dispatch = useAppDispatch();
 
   // TODO: Use R2 urls in prod
-  const [playCorrectFx] = useSound(correctFx, { volume });
-  const [playIncorrectFx] = useSound(incorrectFx, { volume });
+  const [playCorrectFx] = useSound(correctFx, { volume: audioCtx.volume });
+  const [playIncorrectFx] = useSound(incorrectFx, { volume: audioCtx.volume });
 
   function handleGuess(event: React.FormEvent<UserGuessFormElement>) {
     event.preventDefault();

@@ -10,6 +10,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GuessInput } from "@/components/guess-input";
 import { useAppDispatch } from "@/store/hooks";
 import { gameActions } from "@/store/features/game/game-slice";
+import useSound from "use-sound";
+import skippedFx from "@/assets/skipped_fx.mp3";
+import { useContext } from "react";
+import { AudioContext } from "@/components/audio-provider";
 
 function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
@@ -76,11 +80,9 @@ function RouteComponent() {
             <div className="col-span-2">
               <AudioToggle />
             </div>
-            <div className="">
-              <pre className="text-sm">
-                {JSON.stringify(currentTeam, null, 2)}
-              </pre>
-            </div>
+            <pre className="text-sm overflow-y-scroll w-72 h-52">
+              {JSON.stringify(currentTeam, null, 2)}
+            </pre>
           </div>
         </div>
       </div>
@@ -94,9 +96,13 @@ function RouteComponent() {
 }
 
 function SkipButton() {
+  const audioCtx = useContext(AudioContext);
+
   const dispatch = useAppDispatch();
+  const [playSkippedFx] = useSound(skippedFx, { volume: audioCtx.volume });
 
   function handleSkip() {
+    playSkippedFx();
     dispatch(gameActions.registerSkippedGuess());
     dispatch(gameActions.setCurrentTeamToNext());
   }
