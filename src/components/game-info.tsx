@@ -1,8 +1,6 @@
-import useTimer from "@/hooks/useTimer";
-import { gameActions } from "@/store/features/game/game-slice";
-import { timerActions } from "@/store/features/timer/timer-slice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
+import { Timer } from "./timer";
 
 export function GameInfo() {
   const score = useAppSelector((state) => state.game.score);
@@ -52,25 +50,4 @@ export function GameInfo() {
       </div>
     </div>
   );
-}
-
-function Timer() {
-  const { timeRemaining } = useTimer();
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (timeRemaining === 0) {
-      dispatch(timerActions.stop());
-      dispatch(gameActions.setGameStatus("COMPLETE"));
-    }
-  }, [timeRemaining, dispatch]);
-
-  useEffect(() => {
-    dispatch(timerActions.start());
-    return () => {
-      dispatch(timerActions.reset());
-    };
-  }, [dispatch]);
-
-  return <>{timeRemaining}</>;
 }
