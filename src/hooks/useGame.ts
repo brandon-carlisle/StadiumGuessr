@@ -14,9 +14,10 @@ export default function useGame(league: League) {
 
   function startGame(league: League) {
     const shuffled = shuffle(league.teams);
-    const baseGuessTimePerTeam = 5; // seconds per team
+    const baseGuessTimePerTeam = 0.5; // seconds per team
     const calculatedInitialTime = baseGuessTimePerTeam * league.teams.length;
 
+    // dispatch(timerActions.reset());
     dispatch(timerActions.setTimeRemaining(calculatedInitialTime));
 
     dispatch(

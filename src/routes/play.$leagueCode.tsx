@@ -8,7 +8,7 @@ import { isLeagueCode } from "@/lib/utils";
 import { IconBulb, IconZoomIn } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { GuessInput } from "@/components/guess-input";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { gameActions } from "@/store/features/game/game-slice";
 import useSound from "use-sound";
 import skippedFx from "@/assets/skipped_fx.mp3";
@@ -97,11 +97,16 @@ function RouteComponent() {
 
 function SkipButton() {
   const audioCtx = useContext(AudioContext);
+  const status = useAppSelector((state) => state.game.status);
 
   const dispatch = useAppDispatch();
   const [playSkippedFx] = useSound(skippedFx, { volume: audioCtx.volume });
 
   function handleSkip() {
+    if (status !== "PLAYING") {
+      return;
+    }
+
     playSkippedFx();
     dispatch(gameActions.registerSkippedGuess());
     dispatch(gameActions.setCurrentTeamToNext());

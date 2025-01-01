@@ -22,6 +22,7 @@ export default function useTimer() {
     };
   }, [isRunning, timeRemaining, dispatch]);
 
+  // TODO: Probably dont need these, just use action directly
   const startTimer = useCallback(
     () => dispatch(timerActions.start()),
     [dispatch],

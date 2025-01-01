@@ -16,7 +16,7 @@ interface UserGuessFormElement extends HTMLFormElement {
 
 export function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
-  const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
+  const { teamsRemaining, status } = useAppSelector((state) => state.game);
   const audioCtx = useContext(AudioContext);
   const dispatch = useAppDispatch();
 
@@ -26,6 +26,12 @@ export function GuessInput() {
 
   function handleGuess(event: React.FormEvent<UserGuessFormElement>) {
     event.preventDefault();
+
+    if (status !== "PLAYING") {
+      event.currentTarget.reset();
+      return;
+    }
+
     const guess = event.currentTarget.elements.guessInput.value;
 
     if (teamsRemaining === 0) {
