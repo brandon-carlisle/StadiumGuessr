@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { Timer } from "./timer";
 
 export function GameInfo() {
-  const score = useAppSelector((state) => state.game.score);
-  const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
+  const { score, league, teamsRemaining } = useAppSelector(
+    (state) => state.game,
+  );
 
   const [animate, setAnimate] = useState(false);
 
@@ -43,7 +44,7 @@ export function GameInfo() {
           <div className="pb-4">
             <div className="uppercase text-xs font-semibold">Time</div>
             <div className="stat-value text-5xl text-primary-content">
-              <Timer />
+              <Timer league={league} />
             </div>
           </div>
         </div>

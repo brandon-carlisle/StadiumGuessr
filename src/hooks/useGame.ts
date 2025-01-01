@@ -3,7 +3,6 @@ import { gameActions } from "@/store/features/game/game-slice";
 import { shuffle } from "@/lib/utils";
 import { type League } from "@/data/leagues/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { timerActions } from "@/store/features/timer/timer-slice";
 
 export default function useGame(league: League) {
   const dispatch = useAppDispatch();
@@ -14,10 +13,6 @@ export default function useGame(league: League) {
 
   function startGame(league: League) {
     const shuffled = shuffle(league.teams);
-    const baseGuessTimePerTeam = 0.5; // seconds per team
-    const calculatedInitialTime = baseGuessTimePerTeam * league.teams.length;
-
-    dispatch(timerActions.setTimeRemaining(calculatedInitialTime));
 
     dispatch(
       gameActions.initialise({
@@ -33,10 +28,6 @@ export default function useGame(league: League) {
   useEffect(() => {
     if (status === "IDLE") {
       startGame(league);
-    }
-
-    if (status === "COMPLETE") {
-      dispatch(timerActions.stop());
     }
   }, [status, startGame, dispatch]);
 

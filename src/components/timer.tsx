@@ -1,39 +1,38 @@
 import { gameActions } from "@/store/features/game/game-slice";
-import { timerActions } from "@/store/features/timer/timer-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+const baseGuessTimePerTeam = 5; // seconds per team
 
 export function Timer() {
   const dispatch = useAppDispatch();
-  const { isRunning, timeRemaining } = useAppSelector((state) => state.timer);
+  const { league, status } = useAppSelector((state) => state.game);
+
+  const [timeRemaining, setTimeRemaining] = useState(60);
 
   useEffect(() => {
-    dispatch(timerActions.start());
-    return () => {
-      dispatch(timerActions.reset());
-    };
-  }, [dispatch]);
+    const initialTimeRemaining = baseGuessTimePerTeam * league.teams.length;
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setTimeRemaining(initialTimeRemaining);
+  }, [league, baseGuessTimePerTeam]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | null = null;
 
-    if (isRunning && timeRemaining > 0) {
+    if (status === "PLAYING" && timeRemaining > 0) {
       timer = setInterval(() => {
-        dispatch(timerActions.decrementTime());
+        setTimeRemaining((prev) => prev - 1);
       }, 1000);
+    }
+
+    if (status === "PLAYING" && timeRemaining === 0) {
+      dispatch(gameActions.setGameStatus("COMPLETE"));
     }
 
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [isRunning, timeRemaining, dispatch]);
+  }, [timeRemaining, dispatch, status]);
 
-  useEffect(() => {
-    if (timeRemaining === 0) {
-      dispatch(timerActions.stop());
-      dispatch(gameActions.setGameStatus("COMPLETE"));
-    }
-  }, [timeRemaining, dispatch]);
-
-  return <>{timeRemaining}</>;
+  return <>{status === "IDLE" ? " " : timeRemaining}</>;
 }
