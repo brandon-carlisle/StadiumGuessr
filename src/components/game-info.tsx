@@ -1,37 +1,16 @@
 import { useAppSelector } from "@/store/hooks";
-import { useEffect, useState } from "react";
 import { Timer } from "./timer";
+import { Score } from "./score";
 
 export function GameInfo() {
-  const { score, league, teamsRemaining } = useAppSelector(
-    (state) => state.game,
-  );
-
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    if (score > 0) {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-      setAnimate(true);
-      const timer = setTimeout(() => {
-        setAnimate(false);
-      }, 600); // reset animate class after 600ms
-
-      return () => clearTimeout(timer);
-    }
-  }, [score]);
+  const { teamsRemaining } = useAppSelector((state) => state.game);
 
   return (
     <div className="card card-normal border bg-primary">
       <div className="card-body">
         <div className="flex justify-evenly md:flex-col gap-3">
           <div className="border-b-2 border-primary-content/10 pb-4">
-            <div className="uppercase text-xs font-semibold">Score</div>
-            <div
-              className={`stat-value text-5xl text-primary-content ${animate ? "motion-preset-confetti" : ""}`}
-            >
-              {score}
-            </div>
+            <Score />
           </div>
 
           <div className="border-b-2 border-primary-content/10 pb-4">
@@ -44,7 +23,7 @@ export function GameInfo() {
           <div className="pb-4">
             <div className="uppercase text-xs font-semibold">Time</div>
             <div className="stat-value text-5xl text-primary-content">
-              <Timer league={league} />
+              <Timer />
             </div>
           </div>
         </div>
