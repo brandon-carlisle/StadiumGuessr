@@ -12,8 +12,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { gameActions, GameState } from "@/store/features/game/game-slice";
 import useSound from "use-sound";
 import skippedFx from "@/assets/skipped_fx.mp3";
-import { useContext, useEffect } from "react";
-import { AudioContext } from "@/components/audio-provider";
+import { useEffect } from "react";
+import { useAudioContext } from "@/components/audio-provider";
 import { nanoid } from "nanoid";
 import { db } from "@/lib/db";
 
@@ -127,7 +127,7 @@ function RouteComponent() {
 }
 
 function SkipButton() {
-  const audioCtx = useContext(AudioContext);
+  const audioCtx = useAudioContext();
   const status = useAppSelector((state) => state.game.status);
 
   const dispatch = useAppDispatch();

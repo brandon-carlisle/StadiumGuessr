@@ -1,7 +1,8 @@
-import { useAppSelector } from "@/store/hooks";
-import { Map, ViewState } from "@vis.gl/react-maplibre";
+import { mapActions } from "@/store/features/map/map-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Map } from "@vis.gl/react-maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 
 // const init = {
 //   code: "MUN",
@@ -10,67 +11,73 @@ import { memo } from "react";
 //   locaction: { lat: 53.463056, lng: -2.291389 },
 // };
 //
-const demoMapStyle = "https://demotiles.maplibre.org/style.json";
-const DEMO = true;
+// const demoMapStyle = "https://demotiles.maplibre.org/style.json";
+// const DEMO = true;
+//
+export default function MapView() {
+  const dispatch = useAppDispatch();
+  const mapStyle = useAppSelector((state) => state.map.mapStyle);
+  const viewState = useAppSelector((state) => state.map.viewState);
 
-const MapView = memo(function MapView() {
-  const locaction = useAppSelector((state) => state.game.currentTeam.locaction);
-
-  // const [viewState] = useState({
-  //   longitude: init.locaction.lng,
-  //   latitude: init.locaction.lat,
-  //   zoom: 3.5,
-  // });
-  //
-  if (DEMO === true) {
-    return <Map {...locaction} mapStyle={demoMapStyle}></Map>;
-  }
-
-  const viewState: ViewState = {
-    latitude: locaction.lat,
-    longitude: locaction.lng,
-    zoom: 3.5,
-    bearing: 0,
-    pitch: 1,
-    padding: {
-      bottom: 0,
-      left: 0,
-      right: 0,
-      top: 0,
-    },
-  };
+  const onMove = useCallback((evt) => {
+    dispatch(mapActions.update(evt));
+  }, []);
 
   return (
     <Map
       {...viewState}
-      mapStyle={{
-        version: 8,
-        sources: {
-          satellite: {
-            type: "raster",
-            tiles: [
-              `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_API_KEY}`,
-            ],
-            tileSize: 256,
-          },
-        },
-        layers: [
-          {
-            id: "satellite",
-            type: "raster",
-            source: "satellite",
-            minzoom: 0,
-            maxzoom: 4,
-          },
-        ],
-      }}
-    ></Map>
+      onMove={onMove}
+      style={{ width: 800, height: 600 }}
+      mapStyle={mapStyle}
+    />
   );
-});
+}
 
-export default MapView;
-
-// import { type LatLngExpression } from "leaflet";
+// const MapView = memo(function MapView() {
+//   // const mapStyle = useAppSelector((state) => state.map.mapStyle);
+//   const viewState = useAppSelector((state) => state.map.viewState);
+//
+//   // const [viewState] = useState({
+//   //   longitude: init.locaction.lng,
+//   //   latitude: init.locaction.lat,
+//   //   zoom: 3.5,
+//   // });
+//   //
+//   if (DEMO === true) {
+//     return <Map {...viewState} mapStyle={demoMapStyle}></Map>;
+//   }
+//
+//   return (
+//     <Map
+//       {...viewState}
+//       mapStyle={{
+//         version: 8,
+//         sources: {
+//           satellite: {
+//             type: "raster",
+//             tiles: [
+//               `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${import.meta.env.VITE_MAPTILER_API_KEY}`,
+//             ],
+//             tileSize: 256,
+//           },
+//         },
+//         layers: [
+//           {
+//             id: "satellite",
+//             type: "raster",
+//             source: "satellite",
+//             minzoom: 0,
+//             maxzoom: 4,
+//           },
+//         ],
+//       }}
+//     ></Map>
+//   );
+// });
+//
+// export default MapView;
+//
+// // import { type LatLngExpression } from "leaflet";
 // import "leaflet/dist/leaflet.css";
 // import { useEffect } from "react";
 // import { MapContainer, TileLayer, useMap } from "react-leaflet";

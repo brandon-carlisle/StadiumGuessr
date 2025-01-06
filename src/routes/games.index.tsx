@@ -16,5 +16,7 @@ function RouteComponent() {
     return <div>None found rn</div>;
   }
 
+  console.log(games);
+
   return <ul>{games?.map((game) => <li key={game.id}>{game.id}</li>)}</ul>;
 }
