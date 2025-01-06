@@ -37,8 +37,6 @@ export function Score() {
     prevScore.current = score;
   }, [score]);
 
-  console.log(scoreDirection);
-
   function getAnimationClass() {
     if (!animate) {
       return "";

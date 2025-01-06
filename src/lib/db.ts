@@ -1,11 +1,14 @@
+import { League, Team } from "@/data/leagues/types";
 import Dexie, { type EntityTable } from "dexie";
 
 interface Game {
-  id: number;
+  id: string;
+  datePlayed: string; // Date played
+  league: League;
+  teams: Team[];
   score: number;
-  played: Date;
-  correct: string[];
-  skipped: string[];
+  correctTeamCodes: string[] | null;
+  skippedTeamCodes: string[] | null;
 }
 
 const db = new Dexie("GamesDb") as Dexie & {
@@ -17,7 +20,8 @@ const db = new Dexie("GamesDb") as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  games: "++id, score, played, correct, skipped", // primary key "id" (for the runtime!)
+  games:
+    "++id, datePlayed, league, teams, score, correctTeamCodes, skippedTeamCodes", // primary key "id" (for the runtime!)
 });
 
 export type { Game };

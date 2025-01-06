@@ -9,11 +9,13 @@ import { IconBulb, IconZoomIn } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { GuessInput } from "@/components/guess-input";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { gameActions } from "@/store/features/game/game-slice";
+import { gameActions, GameState } from "@/store/features/game/game-slice";
 import useSound from "use-sound";
 import skippedFx from "@/assets/skipped_fx.mp3";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AudioContext } from "@/components/audio-provider";
+import { nanoid } from "nanoid";
+import { db } from "@/lib/db";
 
 function getLeague(code: LeagueCode) {
   const league = allLeagues.find((league) => league.code === code);
@@ -44,9 +46,38 @@ export const Route = createFileRoute("/play/$leagueCode")({
   },
 });
 
+async function addGameToDb(state: GameState) {
+  return await db.games.add({
+    id: nanoid(),
+    datePlayed: new Date().toISOString(),
+    league: state.league,
+    teams: state.teams,
+    score: state.score,
+    correctTeamCodes: state.correctTeamCodes,
+    skippedTeamCodes: state.incorrectTeamCodes,
+  });
+}
+
 function RouteComponent() {
   const league = Route.useLoaderData();
   const { currentTeam } = useGame(league);
+  const state = useAppSelector((state) => state.game);
+  const status = useAppSelector((state) => state.game.status);
+
+  useEffect(() => {
+    if (status === "COMPLETE") {
+      (async () => {
+        let id;
+        try {
+          console.log("Adding to db");
+          id = await addGameToDb(state);
+          console.log("Added to db with id: ", id);
+        } catch (error) {
+          console.error("Failed to add to db: ", error);
+        }
+      })();
+    }
+  }, [status]);
 
   return (
     <div className="min-h-screen flex flex-col p-4 bg-background text-foreground">

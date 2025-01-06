@@ -13,7 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as PlayIndexImport } from './routes/play.index'
+import { Route as GamesIndexImport } from './routes/games.index'
 import { Route as PlayLeagueCodeImport } from './routes/play.$leagueCode'
+import { Route as GamesGameIdImport } from './routes/games.$gameId'
 
 // Create/Update Routes
 
@@ -29,9 +31,21 @@ const PlayIndexRoute = PlayIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const GamesIndexRoute = GamesIndexImport.update({
+  id: '/games/',
+  path: '/games/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const PlayLeagueCodeRoute = PlayLeagueCodeImport.update({
   id: '/play/$leagueCode',
   path: '/play/$leagueCode',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GamesGameIdRoute = GamesGameIdImport.update({
+  id: '/games/$gameId',
+  path: '/games/$gameId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,11 +60,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/games/$gameId': {
+      id: '/games/$gameId'
+      path: '/games/$gameId'
+      fullPath: '/games/$gameId'
+      preLoaderRoute: typeof GamesGameIdImport
+      parentRoute: typeof rootRoute
+    }
     '/play/$leagueCode': {
       id: '/play/$leagueCode'
       path: '/play/$leagueCode'
       fullPath: '/play/$leagueCode'
       preLoaderRoute: typeof PlayLeagueCodeImport
+      parentRoute: typeof rootRoute
+    }
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games'
+      preLoaderRoute: typeof GamesIndexImport
       parentRoute: typeof rootRoute
     }
     '/play/': {
@@ -67,41 +95,57 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/games/$gameId': typeof GamesGameIdRoute
   '/play/$leagueCode': typeof PlayLeagueCodeRoute
+  '/games': typeof GamesIndexRoute
   '/play': typeof PlayIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/games/$gameId': typeof GamesGameIdRoute
   '/play/$leagueCode': typeof PlayLeagueCodeRoute
+  '/games': typeof GamesIndexRoute
   '/play': typeof PlayIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/games/$gameId': typeof GamesGameIdRoute
   '/play/$leagueCode': typeof PlayLeagueCodeRoute
+  '/games/': typeof GamesIndexRoute
   '/play/': typeof PlayIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/play/$leagueCode' | '/play'
+  fullPaths: '/' | '/games/$gameId' | '/play/$leagueCode' | '/games' | '/play'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/play/$leagueCode' | '/play'
-  id: '__root__' | '/' | '/play/$leagueCode' | '/play/'
+  to: '/' | '/games/$gameId' | '/play/$leagueCode' | '/games' | '/play'
+  id:
+    | '__root__'
+    | '/'
+    | '/games/$gameId'
+    | '/play/$leagueCode'
+    | '/games/'
+    | '/play/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GamesGameIdRoute: typeof GamesGameIdRoute
   PlayLeagueCodeRoute: typeof PlayLeagueCodeRoute
+  GamesIndexRoute: typeof GamesIndexRoute
   PlayIndexRoute: typeof PlayIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GamesGameIdRoute: GamesGameIdRoute,
   PlayLeagueCodeRoute: PlayLeagueCodeRoute,
+  GamesIndexRoute: GamesIndexRoute,
   PlayIndexRoute: PlayIndexRoute,
 }
 
@@ -116,15 +160,23 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/games/$gameId",
         "/play/$leagueCode",
+        "/games/",
         "/play/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/games/$gameId": {
+      "filePath": "games.$gameId.tsx"
+    },
     "/play/$leagueCode": {
       "filePath": "play.$leagueCode.tsx"
+    },
+    "/games/": {
+      "filePath": "games.index.tsx"
     },
     "/play/": {
       "filePath": "play.index.tsx"

@@ -4,7 +4,7 @@ import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type GameStatus = "IDLE" | "PLAYING" | "COMPLETE";
 
-interface GameState {
+export interface GameState {
   league: League;
   teams: Team[];
   currentTeam: Team;
