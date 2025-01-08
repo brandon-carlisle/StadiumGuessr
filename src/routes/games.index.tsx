@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { createFileRoute } from "@tanstack/react-router";
+import { db, type Game } from "@/lib/db";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 
 export const Route = createFileRoute("/games/")({
@@ -18,5 +18,21 @@ function RouteComponent() {
 
   console.log(games);
 
-  return <ul>{games?.map((game) => <li key={game.id}>{game.id}</li>)}</ul>;
+  return (
+    <ul>{games?.map((game) => <GameLink key={game.id} game={game} />)}</ul>
+  );
+}
+
+interface GameProps {
+  game: Game;
+}
+
+function GameLink(props: GameProps) {
+  return (
+    <div>
+      <Link to="/games/$gameId" params={{ gameId: props.game.id }}>
+        Check out how you did
+      </Link>
+    </div>
+  );
 }
