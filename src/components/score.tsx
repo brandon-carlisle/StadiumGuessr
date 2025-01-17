@@ -2,30 +2,33 @@
 import { useAppSelector } from "@/store/hooks";
 import { useState, useEffect, useRef } from "react";
 
-// TODO: Change animation based
-// on score increasing or decreasing
-
-// 1) figure out if new score is > or < current score
-//
+// TODO: Fix score animations
+// Need to keep track of the previous score
+// When the score changes, determine based on
+// new score and previous score if it went up or down
 
 type ScoreDirection = "increased" | "decreased" | "none";
 
 export function Score() {
   const score = useAppSelector((state) => state.game.score);
-  const prevScore = useRef(score);
+  const prevScoreRef = useRef(score);
   const [animate, setAnimate] = useState(false);
   const [scoreDirection, setScoreDirection] = useState<ScoreDirection>("none");
 
   useEffect(() => {
-    if (score > prevScore.current) {
+    if (score > prevScoreRef.current) {
       setScoreDirection("increased");
-    } else if (score < prevScore.current) {
+    } else if (score < prevScoreRef.current) {
       setScoreDirection("decreased");
     } else {
       setScoreDirection("none");
     }
 
-    if (score !== prevScore.current) {
+    prevScoreRef.current = score;
+  }, [score]);
+
+  useEffect(() => {
+    if (score !== prevScoreRef.current) {
       setAnimate(true);
       const timer = setTimeout(() => {
         setAnimate(false);
@@ -33,14 +36,14 @@ export function Score() {
 
       return () => clearTimeout(timer);
     }
-
-    prevScore.current = score;
   }, [score]);
 
   function getAnimationClass() {
     if (!animate) {
       return "";
     }
+
+    console.log("scoreDirection: ", scoreDirection);
 
     return scoreDirection === "increased"
       ? "motion-preset-confetti"
