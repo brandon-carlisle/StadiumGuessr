@@ -9,7 +9,7 @@ export function AudioToggle() {
   };
 
   return (
-    <button onClick={toggleAudio} className="btn" type="button">
+    <button onClick={toggleAudio} className="btn btn-square" type="button">
       {volume ? <IconVolume /> : <IconVolume3 />}
     </button>
   );

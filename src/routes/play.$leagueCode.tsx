@@ -60,9 +60,13 @@ async function addGameToDb(state: GameState) {
 
 function RouteComponent() {
   const league = Route.useLoaderData();
-  const { currentTeam } = useGame(league);
+  const { startGame } = useGame();
   const state = useAppSelector((state) => state.game);
   const status = useAppSelector((state) => state.game.status);
+
+  useEffect(() => {
+    startGame(league);
+  }, [startGame, league]);
 
   useEffect(() => {
     if (status === "COMPLETE") {
@@ -108,12 +112,6 @@ function RouteComponent() {
               <IconZoomIn className="mr-2 h-4 w-4" />
               Reset Zoom
             </button>
-            <div className="col-span-2">
-              <AudioToggle />
-            </div>
-            <pre className="text-sm overflow-y-scroll w-72 h-52">
-              {JSON.stringify(currentTeam, null, 2)}
-            </pre>
           </div>
         </div>
       </div>
@@ -121,6 +119,7 @@ function RouteComponent() {
       <div className="flex gap-1">
         <GuessInput />
         <SkipButton />
+        <AudioToggle />
       </div>
     </div>
   );
