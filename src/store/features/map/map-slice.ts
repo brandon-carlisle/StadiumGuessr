@@ -11,12 +11,16 @@ interface MapState {
   viewState: ViewState;
 }
 
+const CountriesMapApiUrl =
+  "https://api.maptiler.com/maps/31aa5771-cc09-4b43-bee4-9ab7f5798252/style.json?key=LGDKympODc3TZnAaVFqw";
+
 const initialState: MapState = {
-  mapStyle: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+  // mapStyle: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+  mapStyle: CountriesMapApiUrl,
   viewState: {
     latitude: 37.8,
     longitude: -122.4,
-    zoom: 14,
+    zoom: 3,
   },
 };
 
