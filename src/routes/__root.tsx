@@ -7,6 +7,7 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 import { ReactNode, StrictMode, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 
 const BASE_TITLE = "StadiumGuessr";
@@ -46,17 +47,20 @@ function RootComponent() {
       <AudioProvider>
         <Provider store={store}>
           <Meta>
-            {isDevMode ? (
-              <StatusIndicator>
-                <Outlet />
-              </StatusIndicator>
-            ) : (
-              <Outlet />
-            )}
+            {isDevMode ? <WithDevMode /> : <Outlet />}
+            <Toaster />
           </Meta>
         </Provider>
       </AudioProvider>
     </StrictMode>
+  );
+}
+
+function WithDevMode() {
+  return (
+    <StatusIndicator>
+      <Outlet />
+    </StatusIndicator>
   );
 }
 

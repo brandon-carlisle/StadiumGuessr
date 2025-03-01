@@ -1,31 +1,17 @@
 import { GameInfo } from "@/components/game-info";
 import MapView from "@/components/map";
 import { AudioToggle } from "@/components/audio-toggle";
-import { allLeagues } from "@/data/leagues";
-import { LeagueCode } from "@/data/leagues/types";
 import useGame from "@/hooks/useGame";
-import { isLeagueCode } from "@/lib/utils";
-import { IconBulb, IconZoomIn } from "@tabler/icons-react";
+import { addGameToDb, getLeague, isLeagueCode } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { GuessInput } from "@/components/guess-input";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { gameActions, GameState } from "@/store/features/game/game-slice";
+import { gameActions } from "@/store/features/game/game-slice";
 import useSound from "use-sound";
 import skippedFx from "@/assets/skipped_fx.mp3";
 import { useEffect } from "react";
 import { useAudioContext } from "@/components/audio-provider";
-import { nanoid } from "nanoid";
-import { db } from "@/lib/db";
-
-function getLeague(code: LeagueCode) {
-  const league = allLeagues.find((league) => league.code === code);
-
-  if (!league) {
-    throw new Error("No league found");
-  }
-
-  return league;
-}
+import HintAndZoomControls from "@/components/hint-zoom";
 
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
@@ -45,18 +31,6 @@ export const Route = createFileRoute("/play/$leagueCode")({
     },
   },
 });
-
-async function addGameToDb(state: GameState) {
-  return await db.games.add({
-    id: nanoid(),
-    datePlayed: new Date().toISOString(),
-    league: state.league,
-    teams: state.teams,
-    score: state.score,
-    correctTeamCodes: state.correctTeamCodes,
-    skippedTeamCodes: state.incorrectTeamCodes,
-  });
-}
 
 function RouteComponent() {
   const league = Route.useLoaderData();
@@ -94,25 +68,7 @@ function RouteComponent() {
 
         <div className="md:w-1/3 space-y-4">
           <GameInfo />
-
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              className="btn"
-              onClick={() => console.log("Hint requested")}
-            >
-              <IconBulb className="mr-2 h-4 w-4" />
-              Hint
-            </button>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => console.log("Reset zoom")}
-            >
-              <IconZoomIn className="mr-2 h-4 w-4" />
-              Reset Zoom
-            </button>
-          </div>
+          <HintAndZoomControls />
         </div>
       </div>
 

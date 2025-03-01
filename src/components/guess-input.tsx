@@ -3,8 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import correctFx from "@/assets/correct_fx.mp3";
 import incorrectFx from "@/assets/incorrect_fx.mp3";
 import useSound from "use-sound";
-import { useContext } from "react";
-import { AudioContext } from "./audio-provider";
+import { useAudioContext } from "./audio-provider";
 import { gameActions } from "@/store/features/game/game-slice";
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -17,7 +16,7 @@ interface UserGuessFormElement extends HTMLFormElement {
 export function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
   const { teamsRemaining, status } = useAppSelector((state) => state.game);
-  const audioCtx = useContext(AudioContext);
+  const audioCtx = useAudioContext();
   const dispatch = useAppDispatch();
 
   // TODO: Use R2 urls in prod

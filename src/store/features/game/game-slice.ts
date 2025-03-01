@@ -61,6 +61,12 @@ const gameSlice = createSlice({
       state.score += 10;
     },
 
+    decrementScore(state, action: PayloadAction<number>) {
+      if (state.score > 0) {
+        state.score -= action.payload;
+      }
+    },
+
     setTeamsRemaining(state, action: PayloadAction<number>) {
       state.teamsRemaining = action.payload;
     },
