@@ -5,13 +5,10 @@ import useGame from "@/hooks/useGame";
 import { addGameToDb, getLeague, isLeagueCode } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { GuessInput } from "@/components/guess-input";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { gameActions } from "@/store/features/game/game-slice";
-import useSound from "use-sound";
-import skippedFx from "@/assets/skipped_fx.mp3";
+import { useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
-import { useAudioContext } from "@/components/audio-provider";
 import HintAndZoomControls from "@/components/hint-zoom";
+import { SkipButton } from "@/components/skip";
 
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
@@ -78,29 +75,5 @@ function RouteComponent() {
         <AudioToggle />
       </div>
     </div>
-  );
-}
-
-function SkipButton() {
-  const audioCtx = useAudioContext();
-  const status = useAppSelector((state) => state.game.status);
-
-  const dispatch = useAppDispatch();
-  const [playSkippedFx] = useSound(skippedFx, { volume: audioCtx.volume });
-
-  function handleSkip() {
-    if (status !== "PLAYING") {
-      return;
-    }
-
-    playSkippedFx();
-    dispatch(gameActions.registerSkippedGuess());
-    dispatch(gameActions.setCurrentTeamToNext());
-  }
-
-  return (
-    <button type="button" className="btn btn-accent" onClick={handleSkip}>
-      Skip (-5pts)
-    </button>
   );
 }
