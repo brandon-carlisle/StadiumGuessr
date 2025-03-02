@@ -31,6 +31,9 @@ const mapSlice = createSlice({
     update(state, view: PayloadAction<ViewState>) {
       state.viewState = view.payload;
     },
+    resetZoom(state) {
+      state.viewState.zoom = initialState.viewState.zoom;
+    },
   },
 });
 

@@ -1,5 +1,6 @@
 import { getHint } from "@/lib/utils";
 import { gameActions } from "@/store/features/game/game-slice";
+import { mapActions } from "@/store/features/map/map-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { IconBulb, IconZoomIn } from "@tabler/icons-react";
 import toast from "react-hot-toast";
@@ -14,7 +15,11 @@ export default function HintAndZoomControls() {
       disatch(gameActions.decrementScore(1));
     }
 
-    toast(getHint(team));
+    toast(getHint(team), { icon: "🤔" });
+  }
+
+  function onResetZoom() {
+    disatch(mapActions.resetZoom());
   }
 
   return (
@@ -23,11 +28,7 @@ export default function HintAndZoomControls() {
         <IconBulb className="mr-2 h-4 w-4" />
         Hint (-1pt)
       </button>
-      <button
-        type="button"
-        className="btn"
-        onClick={() => console.log("Reset zoom")}
-      >
+      <button type="button" className="btn" onClick={onResetZoom}>
         <IconZoomIn className="mr-2 h-4 w-4" />
         Reset Zoom
       </button>

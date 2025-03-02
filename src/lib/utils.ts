@@ -56,3 +56,13 @@ export async function addGameToDb(state: GameState) {
     skippedTeamCodes: state.incorrectTeamCodes,
   });
 }
+
+// TODO: Implement
+export async function getGamesFromDbOrThrow() {
+  return;
+}
+
+// TODO: Implement
+export async function getGameFromDb(id: string) {
+  return;
+}
