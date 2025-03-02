@@ -112,7 +112,7 @@ const eflChampionshipTeams: Team[] = [
   {
     code: "SHW",
     clubName: "Sheffield Wednesday",
-    stadiumNames: ["hillsborough stadium"],
+    stadiumNames: ["hillsborough stadium", "hillsborough"],
     locaction: { lat: 53.411389, lng: -1.5 },
   },
   {

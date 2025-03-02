@@ -86,7 +86,7 @@ const eplTeams: Team[] = [
   },
   {
     code: "LIV",
-    clubName: "liverpool",
+    clubName: "Liverpool",
     stadiumNames: ["anfield"],
     locaction: { lat: 53.430833, lng: -2.960833 },
   },
@@ -133,13 +133,13 @@ const eplTeams: Team[] = [
   },
   {
     code: "WHU",
-    clubName: "west ham united",
+    clubName: "West Ham United",
     stadiumNames: ["london stadium", "the london stadium"],
     locaction: { lat: 51.538611, lng: -0.016389 },
   },
   {
     code: "WOL",
-    clubName: "wolverhampton wanderers",
+    clubName: "Wolverhampton Wanderers",
     stadiumNames: ["molineux", "molineux stadium"],
     locaction: { lat: 52.590278, lng: -2.130278 },
   },
