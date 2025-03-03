@@ -1,14 +1,9 @@
-import { GameInfo } from "@/components/game-info";
-import MapView from "@/components/map";
-import { AudioToggle } from "@/components/audio-toggle";
 import useGame from "@/hooks/useGame";
 import { addGameToDb, getLeague, isLeagueCode } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { GuessInput } from "@/components/guess-input";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
-import HintAndZoomControls from "@/components/hint-zoom";
-import { SkipButton } from "@/components/skip";
+import GameLayout from "@/layouts/game-layout";
 
 export const Route = createFileRoute("/play/$leagueCode")({
   component: RouteComponent,
@@ -54,26 +49,5 @@ function RouteComponent() {
     }
   }, [status]);
 
-  return (
-    <div className="min-h-screen flex flex-col p-4 bg-background text-foreground">
-      <div className="flex-grow flex flex-col md:flex-row gap-4 mb-4">
-        <div className="flex-grow md:w-2/3 bg-muted flex items-center justify-center border rounded-lg">
-          <div className="container h-full w-full">
-            <MapView />
-          </div>
-        </div>
-
-        <div className="md:w-1/3 space-y-4">
-          <GameInfo />
-          <HintAndZoomControls />
-        </div>
-      </div>
-
-      <div className="flex gap-1">
-        <GuessInput />
-        <SkipButton />
-        <AudioToggle />
-      </div>
-    </div>
-  );
+  return <GameLayout />;
 }

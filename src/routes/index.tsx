@@ -15,16 +15,17 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
   const dispatch = useAppDispatch();
+
   // Reset the game state if we ever hit the home page
   useEffect(() => {
     dispatch(gameActions.resetGame());
-  }, []);
+  }, [dispatch]);
 
   return (
-    <>
+    <div className="flex flex-col min-h-dvh">
       <Hero />
       <Footer />
-    </>
+    </div>
   );
 }
 
@@ -45,7 +46,7 @@ function Hero() {
   const [option, setOption] = useState(defaultOptionCode);
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
+    <div className="hero bg-base-200 flex-grow">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-5xl font-bold">StadiumGuessr</h1>
@@ -105,7 +106,6 @@ function Footer() {
           >
             here
           </a>
-          , no cheating!
         </p>
       </aside>
     </footer>

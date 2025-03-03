@@ -4,7 +4,7 @@ import useSound from "use-sound";
 import { useAudioContext } from "./audio-provider";
 import skippedFx from "@/assets/skipped_fx.mp3";
 
-export function SkipButton() {
+export default function SkipButton() {
   const audioCtx = useAudioContext();
   const status = useAppSelector((state) => state.game.status);
 

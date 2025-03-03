@@ -5,6 +5,8 @@ import incorrectFx from "@/assets/incorrect_fx.mp3";
 import useSound from "use-sound";
 import { useAudioContext } from "./audio-provider";
 import { gameActions } from "@/store/features/game/game-slice";
+import SkipButton from "./skip";
+import { AudioToggle } from "./audio-toggle";
 
 interface FormElements extends HTMLFormControlsCollection {
   guessInput: HTMLInputElement;
@@ -13,7 +15,17 @@ interface UserGuessFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-export function GuessInput() {
+export default function GuessInputBar() {
+  return (
+    <div className="flex gap-1">
+      <GuessInput />
+      <SkipButton />
+      <AudioToggle />
+    </div>
+  );
+}
+
+function GuessInput() {
   const currentTeam = useAppSelector((state) => state.game.currentTeam);
   const { teamsRemaining, status } = useAppSelector((state) => state.game);
   const audioCtx = useAudioContext();

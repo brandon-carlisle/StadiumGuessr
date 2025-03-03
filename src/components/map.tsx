@@ -4,7 +4,7 @@ import { Map, ViewStateChangeEvent } from "@vis.gl/react-maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useCallback } from "react";
 
-export default function MapView() {
+function MapView() {
   const dispatch = useAppDispatch();
   const mapStyle = useAppSelector((state) => state.map.mapStyle);
   const viewState = useAppSelector((state) => state.map.viewState);
@@ -26,5 +26,15 @@ export default function MapView() {
       mapStyle={mapStyle}
       onMove={onMove}
     />
+  );
+}
+
+export function MapContainer() {
+  return (
+    <div className="flex-grow md:w-2/3 bg-muted flex items-center justify-center border rounded-lg">
+      <div className="container h-full w-full">
+        <MapView />
+      </div>
+    </div>
   );
 }
