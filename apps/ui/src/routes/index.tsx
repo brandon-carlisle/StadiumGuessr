@@ -4,8 +4,22 @@ import { useAppDispatch } from "@/store/hooks";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+async function fetchLeagues() {
+  try {
+    const res = await fetch("/api/league");
+    if (!res.ok) {
+      throw new Error(`Could not fetch leagues: ${res.status}`);
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const Route = createFileRoute("/")({
   component: RouteComponent,
+  loader: async () => await fetchLeagues(),
   staticData: {
     meta: {
       title: "Home",
@@ -14,6 +28,8 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
+  const leagues = Route.useLoaderData();
+  console.log("Leagues from api: ", leagues);
   const dispatch = useAppDispatch();
 
   // Reset the game state if we ever hit the home page

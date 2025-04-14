@@ -1,14 +1,13 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "dev": "bun run --hot index.ts"
   },
   "dependencies": {
     "hono": "^4.7.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250214.0",
-    "wrangler": "^4.4.0"
+    "@types/bun": "latest"
   }
 }
+

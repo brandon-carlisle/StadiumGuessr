@@ -1,0 +1,12 @@
+{
+  "name": "stadiumguessr",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "bun --filter '*' dev",
+    "build:ui": "bun --filter 'ui' build"
+  }
+}
