@@ -1,6 +1,6 @@
 import ReviewLayout from "@/layouts/review-layout";
 import { createFileRoute } from "@tanstack/react-router";
-import { getGame } from "@/lib/server/games";
+import { getGame } from "@/server-functions/games";
 
 export const Route = createFileRoute("/games/$gameId")({
   component: RouteComponent,

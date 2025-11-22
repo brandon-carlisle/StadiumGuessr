@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getGames } from "@/lib/server/games";
+import { getGames } from "@/server-functions/games";
 
 export const Route = createFileRoute("/games/")({
   component: RouteComponent,

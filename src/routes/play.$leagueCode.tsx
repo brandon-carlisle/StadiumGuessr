@@ -1,6 +1,6 @@
 import useGame from "@/hooks/useGame";
 import { getLeague, isLeagueCode } from "@/lib/utils";
-import { saveGame } from "@/lib/server/games";
+import { saveGame } from "@/server-functions/games";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
