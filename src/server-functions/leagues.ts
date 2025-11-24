@@ -1,187 +1,135 @@
-import { createServerFn } from '@tanstack/react-start'
-import { db } from '@/db'
-import { eq } from 'drizzle-orm'
-import { league } from '@/db/schema'
-import { nanoid } from 'nanoid'
+import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { db } from "@/db";
+import {
+	leagueInsertSchema,
+	leagueUpdateSchema,
+	TABLE_league,
+	TABLE_team,
+} from "@/db/schema";
 
 // NOTE: All server functions should have the Fn suffix
 
 // Gets all leagues for admin dashboard
 export const getLeaguesFn = createServerFn({
-  method: 'GET',
+	method: "GET",
 }).handler(async () => {
-  try {
-    const leagues = await db.select().from(league)
-    return {
-      success: true,
-      data: leagues,
-    }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch leagues',
-    }
-  }
-})
+	const leagues = await db.select().from(TABLE_league);
+
+	if (!leagues || leagues.length === 0) {
+		throw new Error("No leagues found");
+	}
+
+	return leagues;
+});
+
+const getLeagueByIdSchema = z.object({
+	id: z.string(),
+});
 
 // Gets a single league by ID
 export const getLeagueByIdFn = createServerFn({
-  method: 'GET',
-}).handler(async ({ data }: { data: { id: string } }) => {
-  try {
-    if (!data?.id) {
-      return {
-        success: false,
-        error: 'League ID is required',
-      }
-    }
-
-    const [foundLeague] = await db
-      .select()
-      .from(league)
-      .where(eq(league.id, data.id))
-      .limit(1)
-
-    if (!foundLeague) {
-      return {
-        success: false,
-        error: 'League not found',
-      }
-    }
-
-    return {
-      success: true,
-      data: foundLeague,
-    }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch league',
-    }
-  }
+	method: "GET",
 })
+	.inputValidator(getLeagueByIdSchema)
+	.handler(async ({ data }) => {
+		const [foundLeague] = await db
+			.select()
+			.from(TABLE_league)
+			.where(eq(TABLE_league.id, parseInt(data.id, 10)))
+			.limit(1);
+
+		if (!foundLeague) {
+			throw new Error("League not found");
+		}
+
+		return foundLeague;
+	});
+
+// Gets a single league by ID with all its teams
+export const getLeagueByIdWithTeamsFn = createServerFn({
+	method: "GET",
+})
+	.inputValidator(getLeagueByIdSchema)
+	.handler(async ({ data }) => {
+		const [foundLeague] = await db
+			.select()
+			.from(TABLE_league)
+			.where(eq(TABLE_league.id, parseInt(data.id, 10)))
+			.limit(1);
+
+		if (!foundLeague) {
+			throw new Error("League not found");
+		}
+
+		// Fetch all teams for this league
+		const teams = await db
+			.select()
+			.from(TABLE_team)
+			.where(eq(TABLE_team.leagueId, foundLeague.id));
+
+		return {
+			...foundLeague,
+			teams,
+		};
+	});
 
 // Will be used to add a new league to the database (admin dashboard only)
 export const addLeagueFn = createServerFn({
-  method: 'POST',
-}).handler(async ({ data }: { data: { code: string; name: string } }) => {
-  try {
-    if (!data?.code || !data?.name) {
-      return {
-        success: false,
-        error: 'Code and name are required',
-      }
-    }
-
-    const newLeague = {
-      id: nanoid(),
-      code: data.code,
-      name: data.name,
-    }
-
-    const [createdLeague] = await db
-      .insert(league)
-      .values(newLeague)
-      .returning()
-
-    return {
-      success: true,
-      data: createdLeague,
-    }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to create league',
-    }
-  }
+	method: "POST",
 })
+	.inputValidator(leagueInsertSchema)
+	.handler(async ({ data }) => {
+		const [createdLeague] = await db
+			.insert(TABLE_league)
+			.values(data)
+			.returning();
+
+		if (!createdLeague) {
+			throw new Error("Failed to create league");
+		}
+
+		return createdLeague;
+	});
 
 // Will be used to update an existing league (such as name or code) in the database (admin dashboard only)
 export const updateLeagueFn = createServerFn({
-  method: 'POST',
-}).handler(
-  async ({
-    data,
-  }: {
-    data: { id: string; code?: string; name?: string }
-  }) => {
-    try {
-      if (!data?.id) {
-        return {
-          success: false,
-          error: 'League ID is required',
-        }
-      }
+	method: "POST",
+})
+	.inputValidator(leagueUpdateSchema.extend({ id: z.string() }))
+	.handler(async ({ data }) => {
+		const [updatedLeague] = await db
+			.update(TABLE_league)
+			.set(data)
+			.where(eq(TABLE_league.id, parseInt(data.id, 10)))
+			.returning();
 
-      const updateData: { code?: string; name?: string } = {}
-      if (data.code !== undefined) updateData.code = data.code
-      if (data.name !== undefined) updateData.name = data.name
+		if (!updatedLeague) {
+			throw new Error("League not found");
+		}
 
-      if (Object.keys(updateData).length === 0) {
-        return {
-          success: false,
-          error: 'At least one field (code or name) must be provided',
-        }
-      }
+		return updatedLeague;
+	});
 
-      const [updatedLeague] = await db
-        .update(league)
-        .set(updateData)
-        .where(eq(league.id, data.id))
-        .returning()
-
-      if (!updatedLeague) {
-        return {
-          success: false,
-          error: 'League not found',
-        }
-      }
-
-      return {
-        success: true,
-        data: updatedLeague,
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to update league',
-      }
-    }
-  },
-)
+const deleteLeagueSchema = z.object({
+	id: z.string(),
+});
 
 // Will be used to delete a league from the database (admin dashboard only)
 export const deleteLeagueFn = createServerFn({
-  method: 'POST',
-}).handler(async ({ data }: { data: { id: string } }) => {
-  try {
-    if (!data?.id) {
-      return {
-        success: false,
-        error: 'League ID is required',
-      }
-    }
-
-    const [deletedLeague] = await db
-      .delete(league)
-      .where(eq(league.id, data.id))
-      .returning()
-
-    if (!deletedLeague) {
-      return {
-        success: false,
-        error: 'League not found',
-      }
-    }
-
-    return {
-      success: true,
-      data: deletedLeague,
-    }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to delete league',
-    }
-  }
+	method: "POST",
 })
+	.inputValidator(deleteLeagueSchema)
+	.handler(async ({ data }) => {
+		const [deletedLeague] = await db
+			.delete(TABLE_league)
+			.where(eq(TABLE_league.id, parseInt(data.id, 10)))
+			.returning();
+
+		if (!deletedLeague) {
+			throw new Error("League not found");
+		}
+
+		return deletedLeague;
+	});

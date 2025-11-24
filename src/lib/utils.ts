@@ -1,45 +1,15 @@
-import { allLeagues } from "@/data/leagues";
-import { type LeagueCode, leagueCodes, type Team } from "@/data/leagues/types";
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+	return twMerge(clsx(inputs));
 }
 
 export function shuffle<T>(array: T[]) {
-  return array
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-}
-
-export function isLeagueCode(value: string): value is LeagueCode {
-  return leagueCodes.includes(value as LeagueCode);
-}
-
-export function getLeagueTitle(code: LeagueCode) {
-  const league = allLeagues.find((league) => league.code === code);
-
-  if (!league) {
-    return "";
-  }
-
-  return league.leagueName;
-}
-
-export function getHint(team: Team) {
-  return `This stadium belongs to ${team.clubName}`;
-}
-
-export function getLeague(code: LeagueCode) {
-  const league = allLeagues.find((league) => league.code === code);
-
-  if (!league) {
-    throw new Error("No league found");
-  }
-
-  return league;
+	return array
+		.map((value) => ({ value, sort: Math.random() }))
+		.sort((a, b) => a.sort - b.sort)
+		.map(({ value }) => value);
 }
 
 /**
@@ -51,30 +21,30 @@ export function getLeague(code: LeagueCode) {
  * @returns Distance in miles
  */
 export function calculateDistance(
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
+	lat1: number,
+	lng1: number,
+	lat2: number,
+	lng2: number,
 ): number {
-  const R = 3958.8; // Earth's radius in miles
-  const dLat = toRadians(lat2 - lat1);
-  const dLng = toRadians(lng2 - lng1);
+	const R = 3958.8; // Earth's radius in miles
+	const dLat = toRadians(lat2 - lat1);
+	const dLng = toRadians(lng2 - lng1);
 
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
-      Math.cos(toRadians(lat2)) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
+	const a =
+		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos(toRadians(lat1)) *
+			Math.cos(toRadians(lat2)) *
+			Math.sin(dLng / 2) *
+			Math.sin(dLng / 2);
 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	const distance = R * c;
 
-  return distance;
+	return distance;
 }
 
 function toRadians(degrees: number): number {
-  return degrees * (Math.PI / 180);
+	return degrees * (Math.PI / 180);
 }
 
 /**
@@ -86,14 +56,13 @@ function toRadians(degrees: number): number {
  * @returns Score (0-5000)
  */
 export function calculateScore(distanceInMiles: number): number {
-  const maxDistance = 15534; // ~25,000 km in miles
-  const maxScore = 5000;
+	const maxDistance = 15534; // ~25,000 km in miles
+	const maxScore = 5000;
 
-  if (distanceInMiles >= maxDistance) {
-    return 0;
-  }
+	if (distanceInMiles >= maxDistance) {
+		return 0;
+	}
 
-  const score = maxScore * (1 - distanceInMiles / maxDistance);
-  return Math.round(score);
+	const score = maxScore * (1 - distanceInMiles / maxDistance);
+	return Math.round(score);
 }
-

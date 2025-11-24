@@ -1,0 +1,124 @@
+---
+alwaysApply: true
+---
+
+# Server Functions Pattern Guide
+
+## Naming Convention
+- All server functions MUST end with the `Fn` suffix (e.g., `getLeaguesFn`, `addTeamFn`)
+- Use descriptive names that indicate the action: `get`, `add`, `update`, `delete`, etc.
+
+## Imports
+Always import the following at the top of server function files:
+```typescript
+import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm"; // and other drizzle operators as needed
+import { z } from "zod";
+import { db } from "@/db";
+import { /* schemas and tables */ } from "@/db/schema";
+```
+
+## Function Structure
+
+### GET Methods
+```typescript
+export const getResourceFn = createServerFn({
+  method: "GET",
+})
+  .inputValidator(/* schema */) // Optional if no input needed
+  .handler(async ({ data }) => {
+    // Implementation
+  });
+```
+
+### POST Methods
+```typescript
+export const addResourceFn = createServerFn({
+  method: "POST",
+})
+  .inputValidator(schema) // Required for POST methods
+  .handler(async ({ data }) => {
+    // Implementation
+  });
+```
+
+## Input Validation
+- Use Zod schemas for input validation
+- Define schemas as constants before the function or inline
+- Can extend existing schemas from `@/db/schema` using `.extend()`
+- Always use `.inputValidator()` before `.handler()` for POST methods
+- For GET methods, define schemas when input is required
+
+Example:
+```typescript
+const getResourceByIdSchema = z.object({
+  id: z.string(),
+});
+
+// Or extend existing schemas from `@/db/schema` using `.extend()`:
+.inputValidator(leagueUpdateSchema.extend({ id: z.string() }))
+```
+
+## Database Operations
+
+### Querying (SELECT)
+```typescript
+const [result] = await db
+  .select()
+  .from(TABLE_name)
+  .where(eq(TABLE_name.id, id))
+  .limit(1); // Use limit(1) when expecting single result
+```
+
+### Creating (INSERT)
+```typescript
+const [created] = await db
+  .insert(TABLE_name)
+  .values(data)
+  .returning();
+```
+
+### Updating (UPDATE)
+```typescript
+const [updated] = await db
+  .update(TABLE_name)
+  .set(data)
+  .where(eq(TABLE_name.id, id))
+  .returning();
+```
+
+### Deleting (DELETE)
+```typescript
+const [deleted] = await db
+  .delete(TABLE_name)
+  .where(eq(TABLE_name.id, id))
+  .returning();
+```
+
+## Error Handling Patterns
+
+### Pattern 1: Throw Errors (for simpler error handling)
+```typescript
+if (!result) {
+  throw new Error("Resource not found");
+}
+return result;
+```
+
+## Comments
+- Include clear, concise comments above each function explaining its purpose
+- Note if functions are admin-only: `// (admin dashboard only)`
+
+## Type Safety
+- Use TypeScript types from schema imports when available
+- For string IDs that need conversion, use `parseInt(data.id, 10)`
+- Type the `data` parameter in handler functions based on the schema
+
+## Best Practices
+1. Always validate input using Zod schemas for POST methods
+2. Check for null/undefined results before returning
+3. Use `.returning()` to get the created/updated/deleted record
+4. Use `.limit(1)` when querying for a single record
+5. Handle errors appropriately by throwing an error
+6. Keep functions focused on a single responsibility
+7. Use clear, concise variable names that match the resource being operated on
