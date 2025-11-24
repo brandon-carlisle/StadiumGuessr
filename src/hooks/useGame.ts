@@ -1,7 +1,9 @@
 import { gameActions } from "@/store/features/game/game-slice";
+import { mapActions } from "@/store/features/map/map-slice";
 import { shuffle } from "@/lib/utils";
 import { type League } from "@/data/leagues/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
 
 export default function useGame() {
   const dispatch = useAppDispatch();
@@ -17,6 +19,9 @@ export default function useGame() {
 
     const shuffled = shuffle(league.teams);
 
+    // Clear marker when starting new game
+    dispatch(mapActions.clearMarker());
+
     dispatch(
       gameActions.initialise({
         league,
@@ -28,9 +33,12 @@ export default function useGame() {
     );
   }
 
-  if (teamsRemaining === 0) {
-    dispatch(gameActions.setGameStatus("COMPLETE"));
-  }
+  // Check for game completion when teams run out
+  useEffect(() => {
+    if (status === "PLAYING" && teamsRemaining === 0) {
+      dispatch(gameActions.setGameStatus("COMPLETE"));
+    }
+  }, [status, teamsRemaining, dispatch]);
 
   return { startGame };
 }

@@ -6,7 +6,9 @@ const baseGuessTimePerTeam = 5; // seconds per team
 
 export function Timer() {
   const dispatch = useAppDispatch();
-  const { league, status } = useAppSelector((state) => state.game);
+  const { league, status, isPopupVisible } = useAppSelector(
+    (state) => state.game,
+  );
 
   const [timeRemaining, setTimeRemaining] = useState(60);
 
@@ -19,7 +21,8 @@ export function Timer() {
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | null = null;
 
-    if (status === "PLAYING" && timeRemaining > 0) {
+    // Pause timer when popup is visible
+    if (status === "PLAYING" && timeRemaining > 0 && !isPopupVisible) {
       timer = setInterval(() => {
         setTimeRemaining((prev) => prev - 1);
       }, 1000);
@@ -32,7 +35,7 @@ export function Timer() {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [timeRemaining, dispatch, status]);
+  }, [timeRemaining, dispatch, status, isPopupVisible]);
 
   return <>{status === "IDLE" ? " " : timeRemaining}</>;
 }

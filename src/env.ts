@@ -23,8 +23,15 @@ export const env = createEnv({
   /**
    * What object holds the environment variables at runtime. This is usually
    * `process.env` or `import.meta.env`.
+   * 
+   * For server-side variables, we need `process.env` since Vite only exposes
+   * variables prefixed with `VITE_` to `import.meta.env`. We merge both to
+   * support both server and client variables.
    */
-  runtimeEnv: import.meta.env,
+  runtimeEnv: {
+    ...process.env,
+    ...import.meta.env,
+  },
 
   /**
    * By default, this library will feed the environment variables directly to

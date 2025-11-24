@@ -10,13 +10,9 @@ export interface Team {
   // https://liaison.reuters.com/tools/sports-team-codes
   code: string;
   clubName: string;
-  stadiumNames: string[];
-  locaction: Locaction;
-}
-
-interface Locaction {
-  lat: number;
-  lng: number;
+  stadiumName: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface League {

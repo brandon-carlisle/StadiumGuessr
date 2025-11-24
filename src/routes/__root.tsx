@@ -2,12 +2,12 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
-  useMatches,
+  useRouterState,
   Outlet,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import { StrictMode, useEffect } from 'react'
+import { StrictMode, useEffect, useMemo } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
 
@@ -29,7 +29,6 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => {
-    // Dynamic title will be set by Meta component
     return {
       meta: [
         {
@@ -83,16 +82,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 }
 
 function Meta({ children }: { children: React.ReactNode }) {
-  const matches = useMatches()
+  // Use useRouterState for better reactivity instead of useMatches()
+  const matches = useRouterState({
+    select: (state) => state.matches,
+  })
 
-  const titles: string[] = []
-
-  for (const match of matches) {
-    const title = match.staticData?.meta?.title
-    if (title) {
-      titles.push(title)
-    }
-  }
+  const titles = useMemo(
+    () =>
+      matches
+        .map((match) => {
+          // Access head meta title - runtime structure includes meta.title even if types don't
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const staticData = match.staticData as any
+          return staticData?.meta?.title as string | undefined
+        })
+        .filter((title): title is string => typeof title === 'string'),
+    [matches],
+  )
 
   useEffect(() => {
     if (titles.length > 0) {

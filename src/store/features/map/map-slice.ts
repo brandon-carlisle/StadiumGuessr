@@ -6,9 +6,15 @@ interface ViewState {
   zoom: number;
 }
 
+interface MarkerPosition {
+  lat: number;
+  lng: number;
+}
+
 interface MapState {
   mapStyle: string;
   viewState: ViewState;
+  markerPosition: MarkerPosition | null;
 }
 
 const CountriesMapApiUrl =
@@ -22,6 +28,7 @@ const initialState: MapState = {
     longitude: -122.4,
     zoom: 3,
   },
+  markerPosition: null,
 };
 
 const mapSlice = createSlice({
@@ -33,6 +40,12 @@ const mapSlice = createSlice({
     },
     resetZoom(state) {
       state.viewState.zoom = initialState.viewState.zoom;
+    },
+    setMarkerPosition(state, action: PayloadAction<MarkerPosition>) {
+      state.markerPosition = action.payload;
+    },
+    clearMarker(state) {
+      state.markerPosition = null;
     },
   },
 });

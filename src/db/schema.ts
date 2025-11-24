@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, integer, jsonb, boolean, index } from 'drizzle-orm/pg-core'
+import { pgTable, text, timestamp, boolean, index, integer, doublePrecision, jsonb } from 'drizzle-orm/pg-core'
 import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
@@ -76,6 +76,7 @@ export const verification = pgTable(
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  gameResults: many(gameResult),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -92,20 +93,99 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
+// League schema
+export const league = pgTable(
+  "league",
+  {
+    id: text("id").primaryKey(),
+    code: text("code").notNull().unique(),
+    name: text("name").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [index("league_code_idx").on(table.code)],
+);
 
-export const todos = pgTable('todos', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-})
+// Team schema
+export const team = pgTable(
+  "team",
+  {
+    id: text("id").primaryKey(),
+    code: text("code").notNull().unique(),
+    clubName: text("club_name").notNull(),
+    stadiumName: text("stadium_name").notNull(),
+    latitude: doublePrecision("latitude").notNull(),
+    longitude: doublePrecision("longitude").notNull(),
+    leagueId: text("league_id")
+      .notNull()
+      .references(() => league.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("team_code_idx").on(table.code),
+    index("team_leagueId_idx").on(table.leagueId),
+  ],
+);
 
-export const games = pgTable('games', {
-  id: text('id').primaryKey(),
-  datePlayed: timestamp('date_played').notNull(),
-  league: jsonb('league').notNull(),
-  teams: jsonb('teams').notNull(),
-  score: integer('score').notNull(),
-  correctTeamCodes: jsonb('correct_team_codes'),
-  skippedTeamCodes: jsonb('skipped_team_codes'),
-  createdAt: timestamp('created_at').defaultNow(),
-})
+// Game result schema
+export const gameResult = pgTable(
+  "game_result",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    leagueId: text("league_id")
+      .notNull()
+      .references(() => league.id, { onDelete: "cascade" }),
+    score: integer("score").notNull().default(0),
+    totalTeams: integer("total_teams").notNull(),
+    teamsGuessed: integer("teams_guessed").notNull().default(0),
+    guessHistory: jsonb("guess_history").$type<Array<{
+      teamCode: string;
+      guessLat: number;
+      guessLng: number;
+      actualLat: number;
+      actualLng: number;
+      distance: number;
+      points: number;
+    }>>().notNull().default([]),
+    completedAt: timestamp("completed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("game_result_userId_idx").on(table.userId),
+    index("game_result_leagueId_idx").on(table.leagueId),
+  ],
+);
+
+// Relations
+export const leagueRelations = relations(league, ({ many }) => ({
+  teams: many(team),
+  gameResults: many(gameResult),
+}));
+
+export const teamRelations = relations(team, ({ one }) => ({
+  league: one(league, {
+    fields: [team.leagueId],
+    references: [league.id],
+  }),
+}));
+
+export const gameResultRelations = relations(gameResult, ({ one }) => ({
+  user: one(user, {
+    fields: [gameResult.userId],
+    references: [user.id],
+  }),
+  league: one(league, {
+    fields: [gameResult.leagueId],
+    references: [league.id],
+  }),
+}));
