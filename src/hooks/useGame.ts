@@ -10,6 +10,8 @@ export default function useGame() {
 
 	const status = useAppSelector((state) => state.game.status);
 	const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
+	const teams = useAppSelector((state) => state.game.teams);
+	const guessHistory = useAppSelector((state) => state.game.guessHistory);
 
 	function startGame(league: LeagueWithTeams) {
 		if (status !== "IDLE") {
@@ -35,10 +37,22 @@ export default function useGame() {
 
 	// Check for game completion when teams run out
 	useEffect(() => {
-		if (status === "PLAYING" && teamsRemaining === 0) {
+		// Only mark as complete if:
+		// 1. Status is PLAYING (game is actively running)
+		// 2. Teams remaining is 0 (all teams have been guessed)
+		// 3. Game was properly initialized (teams.length > 0)
+		// 4. At least one guess was made (to distinguish from immediate completion)
+		// 5. Teams remaining matches expected (teams.length guesses were made)
+		if (
+			status === "PLAYING" &&
+			teamsRemaining === 0 &&
+			teams.length > 0 &&
+			guessHistory.length > 0 &&
+			guessHistory.length === teams.length
+		) {
 			dispatch(gameActions.setGameStatus("COMPLETE"));
 		}
-	}, [status, teamsRemaining, dispatch]);
+	}, [status, teamsRemaining, teams.length, guessHistory.length, dispatch]);
 
 	return { startGame };
 }

@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 
 // Sign in schema
 const signInSchema = z.object({
-	email: z.string().email("Please enter a valid email address"),
+	email: z.email("Please enter a valid email address"),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 	rememberMe: z.boolean().optional(),
 	callbackURL: z.string().url().optional().or(z.literal("")),
@@ -13,11 +13,11 @@ const signInSchema = z.object({
 
 // Sign up schema
 const signUpSchema = z.object({
-	email: z.string().email("Please enter a valid email address"),
+	email: z.email("Please enter a valid email address"),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 	name: z.string().min(2, "Name must be at least 2 characters"),
-	image: z.string().url().optional().or(z.literal("")),
-	callbackURL: z.string().url().optional().or(z.literal("")),
+	image: z.url().optional().or(z.literal("")),
+	callbackURL: z.url().optional().or(z.literal("")),
 });
 
 // Sign in with email and password

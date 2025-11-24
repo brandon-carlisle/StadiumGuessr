@@ -56,6 +56,11 @@ const gameSlice = createSlice({
 	initialState,
 	reducers: {
 		initialise(state, action: PayloadAction<InitGame>) {
+			// Reset all game state before initializing
+			state.score = 0;
+			state.guessHistory = [];
+			state.isPopupVisible = false;
+			// Set new game state
 			state.league = action.payload.league;
 			state.teams = action.payload.teams;
 			state.teamsRemaining = action.payload.teamsRemaining;

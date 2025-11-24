@@ -2,9 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import useGame from "@/hooks/useGame";
 import GameLayout from "@/layouts/game-layout";
+import { useSession } from "@/lib/auth-client";
 import { addGameResultFn } from "@/server-functions/games";
 import { getLeagueByIdWithTeamsFn } from "@/server-functions/leagues";
-import { useAppSelector } from "@/store/hooks";
+import { gameActions } from "@/store/features/game/game-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export const Route = createFileRoute("/play/$leagueId")({
 	component: RouteComponent,
@@ -24,21 +26,35 @@ function RouteComponent() {
 	const { startGame } = useGame();
 	const state = useAppSelector((state) => state.game);
 	const status = useAppSelector((state) => state.game.status);
+	const { data: session } = useSession();
+	const dispatch = useAppDispatch();
+
+	// Reset game state when entering play route to ensure clean state
+	useEffect(() => {
+		dispatch(gameActions.resetGame());
+	}, [dispatch]);
+
+	// Start the game after reset completes
+	useEffect(() => {
+		// Only start if status is IDLE (after reset) and we have league data
+		if (status === "IDLE" && league && league.teams.length > 0) {
+			startGame(league);
+		}
+	}, [startGame, league, status]);
+
+	const canSaveGame = status === "COMPLETE" && session?.user?.id;
 
 	useEffect(() => {
-		startGame(league);
-	}, [startGame, league]);
-
-	useEffect(() => {
-		if (status === "COMPLETE") {
+		// Only save game results if:
+		// 1. Game status is COMPLETE
+		// 2. User is logged in (has a valid user ID)
+		if (canSaveGame) {
 			(async () => {
 				try {
 					console.log("Saving game to database");
-					// TODO: Transform state to match addGameResultFn schema
-					// This will need userId, leagueId, score, totalTeams, teamsGuessed, guessHistory
 					const result = await addGameResultFn({
 						data: {
-							userId: "", // TODO: Get from auth context
+							userId: session.user.id,
 							leagueId: state.league.id,
 							score: state.score,
 							totalTeams: state.league.teams.length,
@@ -52,7 +68,7 @@ function RouteComponent() {
 				}
 			})();
 		}
-	}, [status, state]);
+	}, [state, canSaveGame, session]);
 
 	return <GameLayout />;
 }
