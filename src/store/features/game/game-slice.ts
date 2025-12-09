@@ -1,16 +1,22 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type {
 	GuessHistoryItem,
+	LeagueSelect,
 	LeagueWithTeams,
 	TeamSelect,
 } from "@/db/schema";
 
 type GameStatus = "IDLE" | "PLAYING" | "COMPLETE";
 
+type LeagueForGame = Omit<LeagueSelect, "createdAt" | "updatedAt"> & {
+	teams: TeamForGame[];
+};
+type TeamForGame = Omit<TeamSelect, "createdAt" | "updatedAt">;
+
 export interface GameState {
-	league: LeagueWithTeams;
-	teams: TeamSelect[];
-	currentTeam: TeamSelect;
+	league: LeagueForGame;
+	teams: TeamForGame[];
+	currentTeam: TeamForGame;
 	score: number;
 	teamsRemaining: number;
 	status: GameStatus;
@@ -23,8 +29,6 @@ const initialState: GameState = {
 		id: 0,
 		code: "",
 		name: "",
-		createdAt: new Date(),
-		updatedAt: new Date(),
 		teams: [],
 	},
 	teams: [],
@@ -36,8 +40,6 @@ const initialState: GameState = {
 		latitude: 0,
 		longitude: 0,
 		leagueId: 0,
-		createdAt: new Date(),
-		updatedAt: new Date(),
 	},
 	score: 0,
 	teamsRemaining: 0,
@@ -46,10 +48,13 @@ const initialState: GameState = {
 	isPopupVisible: false,
 };
 
-type InitGame = Pick<
-	GameState,
-	"league" | "teams" | "teamsRemaining" | "currentTeam" | "status"
->;
+type InitGame = {
+	league: LeagueWithTeams;
+	teams: TeamSelect[];
+	teamsRemaining: number;
+	currentTeam: TeamSelect;
+	status: GameStatus;
+};
 
 const gameSlice = createSlice({
 	name: "game",
@@ -60,11 +65,28 @@ const gameSlice = createSlice({
 			state.score = 0;
 			state.guessHistory = [];
 			state.isPopupVisible = false;
-			// Set new game state
-			state.league = action.payload.league;
-			state.teams = action.payload.teams;
+			// Set new game state (strip date fields)
+			const {
+				createdAt: _leagueCreatedAt,
+				updatedAt: _leagueUpdatedAt,
+				...leagueWithoutDates
+			} = action.payload.league;
+			state.league = {
+				...leagueWithoutDates,
+				teams: action.payload.teams.map(
+					({ createdAt: _createdAt, updatedAt: _updatedAt, ...team }) => team,
+				),
+			};
+			state.teams = action.payload.teams.map(
+				({ createdAt: _createdAt, updatedAt: _updatedAt, ...team }) => team,
+			);
 			state.teamsRemaining = action.payload.teamsRemaining;
-			state.currentTeam = action.payload.currentTeam;
+			const {
+				createdAt: _teamCreatedAt,
+				updatedAt: _teamUpdatedAt,
+				...currentTeamWithoutDates
+			} = action.payload.currentTeam;
+			state.currentTeam = currentTeamWithoutDates;
 			state.status = action.payload.status;
 		},
 

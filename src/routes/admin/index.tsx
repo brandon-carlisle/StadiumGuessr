@@ -8,7 +8,7 @@ export const Route = createFileRoute("/admin/")({
 	beforeLoad: async () => {
 		const isAdmin = await checkUserIsAdminFn();
 		if (!isAdmin) {
-			throw redirect({ to: "/" });
+			throw redirect({ to: "/sign-in" });
 		}
 	},
 	component: RouteComponent,
