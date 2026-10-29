@@ -21,12 +21,14 @@ export function LeagueForm({ league, onClose, onSuccess }: LeagueFormProps) {
 			try {
 				if (isEditing && league) {
 					await updateLeagueFn({
-						id: league.id.toString(),
-						...value,
+						data: {
+							id: league.id.toString(),
+							...value,
+						},
 					});
 					toast.success("League updated successfully");
 				} else {
-					await addLeagueFn(value);
+					await addLeagueFn({ data: value });
 					toast.success("League created successfully");
 				}
 				onSuccess();
@@ -172,7 +174,9 @@ export function LeagueForm({ league, onClose, onSuccess }: LeagueFormProps) {
 				</form>
 			</div>
 			<form method="dialog" className="modal-backdrop">
-				<button onClick={onClose}>close</button>
+				<button type="button" onClick={onClose}>
+					close
+				</button>
 			</form>
 		</dialog>
 	);

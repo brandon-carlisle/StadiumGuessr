@@ -3,14 +3,13 @@ export function Footer() {
 		<footer className="footer footer-center bg-base-300 text-base-content p-4">
 			<aside>
 				<p>
-					Check out the source code{" "}
 					<a
 						href="https://github.com/brandon-carlisle/stadiumGuessr/"
 						target="_blank"
 						className="link"
 						rel="noreferrer noopener"
 					>
-						here
+						View the source code on GitHub
 					</a>
 				</p>
 			</aside>

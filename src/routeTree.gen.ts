@@ -9,19 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PlayIndexRouteImport } from './routes/play.index'
-import { Route as GamesIndexRouteImport } from './routes/games.index'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as PlayLeagueIdRouteImport } from './routes/play.$leagueId'
+import { Route as GamesIndexRouteImport } from './routes/games.index'
 import { Route as GamesGameIdRouteImport } from './routes/games.$gameId'
+import { Route as PlayIndexRouteImport } from './routes/play.index'
+import { Route as PlayLeagueIdRouteImport } from './routes/play.$leagueId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const SignUpRoute = SignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
@@ -29,19 +29,9 @@ const SignInRoute = SignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlayIndexRoute = PlayIndexRouteImport.update({
-  id: '/play/',
-  path: '/play/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GamesIndexRoute = GamesIndexRouteImport.update({
-  id: '/games/',
-  path: '/games/',
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -49,14 +39,24 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlayLeagueIdRoute = PlayLeagueIdRouteImport.update({
-  id: '/play/$leagueId',
-  path: '/play/$leagueId',
+const GamesIndexRoute = GamesIndexRouteImport.update({
+  id: '/games/',
+  path: '/games/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GamesGameIdRoute = GamesGameIdRouteImport.update({
   id: '/games/$gameId',
   path: '/games/$gameId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayIndexRoute = PlayIndexRouteImport.update({
+  id: '/play/',
+  path: '/play/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayLeagueIdRoute = PlayLeagueIdRouteImport.update({
+  id: '/play/$leagueId',
+  path: '/play/$leagueId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -71,9 +71,9 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof SignUpRoute
   '/games/$gameId': typeof GamesGameIdRoute
   '/play/$leagueId': typeof PlayLeagueIdRoute
-  '/admin': typeof AdminIndexRoute
-  '/games': typeof GamesIndexRoute
-  '/play': typeof PlayIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/games/': typeof GamesIndexRoute
+  '/play/': typeof PlayIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -107,9 +107,9 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/games/$gameId'
     | '/play/$leagueId'
-    | '/admin'
-    | '/games'
-    | '/play'
+    | '/admin/'
+    | '/games/'
+    | '/play/'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,11 +149,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -163,39 +163,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/play/': {
-      id: '/play/'
-      path: '/play'
-      fullPath: '/play'
-      preLoaderRoute: typeof PlayIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/games/': {
-      id: '/games/'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof GamesIndexRouteImport
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
-      fullPath: '/admin'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/play/$leagueId': {
-      id: '/play/$leagueId'
-      path: '/play/$leagueId'
-      fullPath: '/play/$leagueId'
-      preLoaderRoute: typeof PlayLeagueIdRouteImport
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games/'
+      preLoaderRoute: typeof GamesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/games/$gameId': {
@@ -203,6 +189,20 @@ declare module '@tanstack/react-router' {
       path: '/games/$gameId'
       fullPath: '/games/$gameId'
       preLoaderRoute: typeof GamesGameIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play/': {
+      id: '/play/'
+      path: '/play'
+      fullPath: '/play/'
+      preLoaderRoute: typeof PlayIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play/$leagueId': {
+      id: '/play/$leagueId'
+      path: '/play/$leagueId'
+      fullPath: '/play/$leagueId'
+      preLoaderRoute: typeof PlayLeagueIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {

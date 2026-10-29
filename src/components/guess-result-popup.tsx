@@ -6,6 +6,8 @@ export function GuessResultPopup() {
 	const dispatch = useAppDispatch();
 	const isPopupVisible = useAppSelector((state) => state.game.isPopupVisible);
 	const guessHistory = useAppSelector((state) => state.game.guessHistory);
+	const status = useAppSelector((state) => state.game.status);
+	const teamsRemaining = useAppSelector((state) => state.game.teamsRemaining);
 
 	if (!isPopupVisible || guessHistory.length === 0) {
 		return null;
@@ -49,7 +51,9 @@ export function GuessResultPopup() {
 							onClick={handleDismiss}
 							type="button"
 						>
-							Move onto next
+							{status === "COMPLETE" || teamsRemaining === 0
+								? "Close"
+								: "Move onto next"}
 						</button>
 					</div>
 				</div>

@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 
-// TODO: Change animation based
-// on score increasing or decreasing
-
 export function Score() {
 	const score = useAppSelector((state) => state.game.score);
 	const [animate, setAnimate] = useState(false);
 
 	useEffect(() => {
-		let timer: ReturnType<typeof setTimeout>;
-
-		if (!animate) {
-			setAnimate(true);
-			timer = setTimeout(() => {
-				setAnimate(false);
-			}, 600); // reset animate class after 600ms
+		if (score === 0) {
+			return;
 		}
 
+		setAnimate(true);
+		const timer = setTimeout(() => {
+			setAnimate(false);
+		}, 600);
+
 		return () => clearTimeout(timer);
-	}, [animate]);
+	}, [score]);
 
 	function getAnimationClass() {
 		if (!animate) {

@@ -8,6 +8,7 @@ import {
 	teamInsertSchema,
 	teamUpdateSchema,
 } from "@/db/schema";
+import { requireAdmin } from "@/server-functions/session";
 
 // NOTE: All server functions should have the Fn suffix
 
@@ -19,7 +20,7 @@ const getTeamsForLeagueSchema = z.object({
 export const getTeamsForLeagueFn = createServerFn({
 	method: "GET",
 })
-	.inputValidator(getTeamsForLeagueSchema)
+	.validator(getTeamsForLeagueSchema)
 	.handler(async ({ data }) => {
 		// First find the league by id
 		const [foundLeague] = await db
@@ -49,7 +50,7 @@ const getTeamByIdSchema = z.object({
 export const getTeamByIdFn = createServerFn({
 	method: "GET",
 })
-	.inputValidator(getTeamByIdSchema)
+	.validator(getTeamByIdSchema)
 	.handler(async ({ data }) => {
 		const [foundTeam] = await db
 			.select()
@@ -68,8 +69,9 @@ export const getTeamByIdFn = createServerFn({
 export const addTeamFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(teamInsertSchema)
+	.validator(teamInsertSchema)
 	.handler(async ({ data }) => {
+		await requireAdmin();
 		const [createdTeam] = await db.insert(TABLE_team).values(data).returning();
 
 		if (!createdTeam) {
@@ -83,12 +85,14 @@ export const addTeamFn = createServerFn({
 export const updateTeamFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(teamUpdateSchema.extend({ id: z.string() }))
+	.validator(teamUpdateSchema.extend({ id: z.string() }))
 	.handler(async ({ data }) => {
+		await requireAdmin();
+		const { id, ...updates } = data;
 		const [updatedTeam] = await db
 			.update(TABLE_team)
-			.set(data)
-			.where(eq(TABLE_team.id, parseInt(data.id, 10)))
+			.set(updates)
+			.where(eq(TABLE_team.id, parseInt(id, 10)))
 			.returning();
 
 		if (!updatedTeam) {
@@ -106,8 +110,9 @@ const deleteTeamSchema = z.object({
 export const deleteTeamFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(deleteTeamSchema)
+	.validator(deleteTeamSchema)
 	.handler(async ({ data }) => {
+		await requireAdmin();
 		const [deletedTeam] = await db
 			.delete(TABLE_team)
 			.where(eq(TABLE_team.id, data.id))

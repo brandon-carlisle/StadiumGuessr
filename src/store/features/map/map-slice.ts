@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { env } from "@/env";
 
 interface ViewState {
 	latitude: number;
@@ -17,16 +18,14 @@ interface MapState {
 	markerPosition: MarkerPosition | null;
 }
 
-const CountriesMapApiUrl =
-	"https://api.maptiler.com/maps/31aa5771-cc09-4b43-bee4-9ab7f5798252/style.json?key=LGDKympODc3TZnAaVFqw";
+const CountriesMapApiUrl = `https://api.maptiler.com/maps/31aa5771-cc09-4b43-bee4-9ab7f5798252/style.json?key=${env.VITE_MAPTILER_KEY}`;
 
 const initialState: MapState = {
-	// mapStyle: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
 	mapStyle: CountriesMapApiUrl,
 	viewState: {
-		latitude: 37.8,
-		longitude: -122.4,
-		zoom: 3,
+		latitude: 54.5,
+		longitude: -2.5,
+		zoom: 5,
 	},
 	markerPosition: null,
 };

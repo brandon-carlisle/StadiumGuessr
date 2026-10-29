@@ -1,6 +1,6 @@
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
-import { resolve } from "path";
-import { fileURLToPath } from "url";
 
 // Load environment variables before importing env.ts
 const __filename = fileURLToPath(import.meta.url);

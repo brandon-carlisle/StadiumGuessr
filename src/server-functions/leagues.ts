@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import {
@@ -8,20 +8,35 @@ import {
 	TABLE_league,
 	TABLE_team,
 } from "@/db/schema";
+import { requireAdmin } from "@/server-functions/session";
 
 // NOTE: All server functions should have the Fn suffix
 
-// Gets all leagues for admin dashboard
+// Gets all leagues, including how many teams each one has
 export const getLeaguesFn = createServerFn({
 	method: "GET",
 }).handler(async () => {
 	const leagues = await db.select().from(TABLE_league);
-
-	if (!leagues || leagues.length === 0) {
-		throw new Error("No leagues found");
+	if (leagues.length === 0) {
+		return [];
 	}
 
-	return leagues;
+	const counts = await db
+		.select({
+			leagueId: TABLE_team.leagueId,
+			teamCount: count(),
+		})
+		.from(TABLE_team)
+		.groupBy(TABLE_team.leagueId);
+
+	const countByLeague = new Map(
+		counts.map((row) => [row.leagueId, Number(row.teamCount)]),
+	);
+
+	return leagues.map((league) => ({
+		...league,
+		teamCount: countByLeague.get(league.id) ?? 0,
+	}));
 });
 
 const getLeagueByIdSchema = z.object({
@@ -32,7 +47,7 @@ const getLeagueByIdSchema = z.object({
 export const getLeagueByIdFn = createServerFn({
 	method: "GET",
 })
-	.inputValidator(getLeagueByIdSchema)
+	.validator(getLeagueByIdSchema)
 	.handler(async ({ data }) => {
 		const [foundLeague] = await db
 			.select()
@@ -51,7 +66,7 @@ export const getLeagueByIdFn = createServerFn({
 export const getLeagueByIdWithTeamsFn = createServerFn({
 	method: "GET",
 })
-	.inputValidator(getLeagueByIdSchema)
+	.validator(getLeagueByIdSchema)
 	.handler(async ({ data }) => {
 		const [foundLeague] = await db
 			.select()
@@ -79,8 +94,9 @@ export const getLeagueByIdWithTeamsFn = createServerFn({
 export const addLeagueFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(leagueInsertSchema)
+	.validator(leagueInsertSchema)
 	.handler(async ({ data }) => {
+		await requireAdmin();
 		const [createdLeague] = await db
 			.insert(TABLE_league)
 			.values(data)
@@ -97,12 +113,14 @@ export const addLeagueFn = createServerFn({
 export const updateLeagueFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(leagueUpdateSchema.extend({ id: z.string() }))
+	.validator(leagueUpdateSchema.extend({ id: z.string() }))
 	.handler(async ({ data }) => {
+		await requireAdmin();
+		const { id, ...updates } = data;
 		const [updatedLeague] = await db
 			.update(TABLE_league)
-			.set(data)
-			.where(eq(TABLE_league.id, parseInt(data.id, 10)))
+			.set(updates)
+			.where(eq(TABLE_league.id, parseInt(id, 10)))
 			.returning();
 
 		if (!updatedLeague) {
@@ -120,8 +138,9 @@ const deleteLeagueSchema = z.object({
 export const deleteLeagueFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(deleteLeagueSchema)
+	.validator(deleteLeagueSchema)
 	.handler(async ({ data }) => {
+		await requireAdmin();
 		const [deletedLeague] = await db
 			.delete(TABLE_league)
 			.where(eq(TABLE_league.id, parseInt(data.id, 10)))

@@ -22,6 +22,7 @@ export interface GameState {
 	status: GameStatus;
 	guessHistory: GuessHistoryItem[];
 	isPopupVisible: boolean;
+	playId: string;
 }
 
 const initialState: GameState = {
@@ -46,6 +47,7 @@ const initialState: GameState = {
 	status: "IDLE",
 	guessHistory: [],
 	isPopupVisible: false,
+	playId: "",
 };
 
 type InitGame = {
@@ -54,6 +56,7 @@ type InitGame = {
 	teamsRemaining: number;
 	currentTeam: TeamSelect;
 	status: GameStatus;
+	playId: string;
 };
 
 const gameSlice = createSlice({
@@ -65,6 +68,7 @@ const gameSlice = createSlice({
 			state.score = 0;
 			state.guessHistory = [];
 			state.isPopupVisible = false;
+			state.playId = action.payload.playId;
 			// Set new game state (strip date fields)
 			const {
 				createdAt: _leagueCreatedAt,
@@ -136,6 +140,9 @@ const gameSlice = createSlice({
 
 		dismissPopup(state) {
 			state.isPopupVisible = false;
+			if (state.status === "COMPLETE") {
+				return;
+			}
 			// Move to next team if there are more teams
 			if (state.teamsRemaining > 0) {
 				const nextTeamIndex =

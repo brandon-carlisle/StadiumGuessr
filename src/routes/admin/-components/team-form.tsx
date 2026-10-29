@@ -48,12 +48,14 @@ export function TeamForm({
 
 				if (isEditing && team) {
 					await updateTeamFn({
-						id: team.id.toString(),
-						...teamData,
+						data: {
+							id: team.id.toString(),
+							...teamData,
+						},
 					});
 					toast.success("Team updated successfully");
 				} else {
-					await addTeamFn(teamData);
+					await addTeamFn({ data: teamData });
 					toast.success("Team created successfully");
 				}
 				onSuccess();
@@ -262,7 +264,7 @@ export function TeamForm({
 										return "Latitude is required";
 									}
 									const num = parseFloat(value);
-									if (isNaN(num)) {
+									if (Number.isNaN(num)) {
 										return "Latitude must be a valid number";
 									}
 									if (num < -90 || num > 90) {
@@ -307,7 +309,7 @@ export function TeamForm({
 										return "Longitude is required";
 									}
 									const num = parseFloat(value);
-									if (isNaN(num)) {
+									if (Number.isNaN(num)) {
 										return "Longitude must be a valid number";
 									}
 									if (num < -180 || num > 180) {
@@ -374,7 +376,9 @@ export function TeamForm({
 				</form>
 			</div>
 			<form method="dialog" className="modal-backdrop">
-				<button onClick={onClose}>close</button>
+				<button type="button" onClick={onClose}>
+					close
+				</button>
 			</form>
 		</dialog>
 	);

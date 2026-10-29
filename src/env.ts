@@ -18,6 +18,7 @@ export const env = createEnv({
 	client: {
 		VITE_APP_TITLE: z.string().min(1).optional(),
 		VITE_DEV_MODE: z.enum(["TRUE", "FALSE"]).default("FALSE"),
+		VITE_MAPTILER_KEY: z.string().min(1),
 	},
 
 	/**

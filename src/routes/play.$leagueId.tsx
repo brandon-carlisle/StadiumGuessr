@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import useGame from "@/hooks/useGame";
 import GameLayout from "@/layouts/game-layout";
 import { useSession } from "@/lib/auth-client";
@@ -7,6 +8,8 @@ import { addGameResultFn } from "@/server-functions/games";
 import { getLeagueByIdWithTeamsFn } from "@/server-functions/leagues";
 import { gameActions } from "@/store/features/game/game-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+
+const savedPlayIds = new Set<string>();
 
 export const Route = createFileRoute("/play/$leagueId")({
 	component: RouteComponent,
@@ -24,10 +27,13 @@ export const Route = createFileRoute("/play/$leagueId")({
 function RouteComponent() {
 	const league = Route.useLoaderData();
 	const { startGame } = useGame();
-	const state = useAppSelector((state) => state.game);
 	const status = useAppSelector((state) => state.game.status);
+	const playId = useAppSelector((state) => state.game.playId);
+	const leagueId = useAppSelector((state) => state.game.league.id);
+	const guessHistory = useAppSelector((state) => state.game.guessHistory);
 	const { data: session } = useSession();
 	const dispatch = useAppDispatch();
+	const [saveError, setSaveError] = useState<string | null>(null);
 
 	// Reset game state when entering play route to ensure clean state
 	useEffect(() => {
@@ -36,39 +42,51 @@ function RouteComponent() {
 
 	// Start the game after reset completes
 	useEffect(() => {
-		// Only start if status is IDLE (after reset) and we have league data
 		if (status === "IDLE" && league && league.teams.length > 0) {
 			startGame(league);
 		}
 	}, [startGame, league, status]);
 
-	const canSaveGame = status === "COMPLETE" && session?.user?.id;
-
 	useEffect(() => {
-		// Only save game results if:
-		// 1. Game status is COMPLETE
-		// 2. User is logged in (has a valid user ID)
-		if (canSaveGame) {
-			(async () => {
-				try {
-					console.log("Saving game to database");
-					const result = await addGameResultFn({
-						data: {
-							userId: session.user.id,
-							leagueId: state.league.id,
-							score: state.score,
-							totalTeams: state.league.teams.length,
-							teamsGuessed: state.league.teams.length - state.teamsRemaining,
-							guessHistory: state.guessHistory,
-						},
-					});
-					console.log("Game saved with id: ", result.id);
-				} catch (error) {
-					console.error("Failed to save game: ", error);
-				}
-			})();
+		if (status !== "COMPLETE" || !session?.user?.id || !playId) {
+			return;
 		}
-	}, [state, canSaveGame, session]);
+		if (savedPlayIds.has(playId)) {
+			return;
+		}
+		savedPlayIds.add(playId);
 
-	return <GameLayout />;
+		const guesses = guessHistory.map((guess) => ({
+			teamId: guess.teamId,
+			guessLat: guess.guessLat,
+			guessLng: guess.guessLng,
+		}));
+
+		void (async () => {
+			try {
+				await addGameResultFn({
+					data: {
+						leagueId,
+						guessHistory: guesses,
+					},
+				});
+			} catch (error) {
+				const message =
+					error instanceof Error ? error.message : "Could not save this game";
+				setSaveError(message);
+				toast.error(message);
+			}
+		})();
+	}, [status, session?.user?.id, playId, leagueId, guessHistory]);
+
+	return (
+		<>
+			{saveError ? (
+				<div className="alert alert-error m-4">
+					<span>Could not save this game. {saveError}</span>
+				</div>
+			) : null}
+			<GameLayout />
+		</>
+	);
 }

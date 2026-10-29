@@ -21,7 +21,7 @@ export function LeagueList({ leagues, onRefetch }: LeagueListProps) {
 
 	const deleteMutation = useMutation({
 		mutationFn: async (id: string) => {
-			await deleteLeagueFn({ id });
+			await deleteLeagueFn({ data: { id } });
 		},
 		onSuccess: () => {
 			toast.success("League deleted successfully");
@@ -76,7 +76,11 @@ export function LeagueList({ leagues, onRefetch }: LeagueListProps) {
 				<div className="card-body">
 					<div className="flex justify-between items-center mb-4">
 						<h2 className="card-title text-2xl">Leagues</h2>
-						<button className="btn btn-primary" onClick={handleAdd}>
+						<button
+							type="button"
+							className="btn btn-primary"
+							onClick={handleAdd}
+						>
 							Add League
 						</button>
 					</div>
@@ -101,6 +105,7 @@ export function LeagueList({ leagues, onRefetch }: LeagueListProps) {
 											<tr key={league.id}>
 												<td>
 													<button
+														type="button"
 														className="btn btn-ghost btn-sm"
 														onClick={() => toggleLeague(league.id)}
 													>
@@ -114,12 +119,14 @@ export function LeagueList({ leagues, onRefetch }: LeagueListProps) {
 												<td>
 													<div className="flex gap-2">
 														<button
+															type="button"
 															className="btn btn-sm btn-warning"
 															onClick={() => handleEdit(league)}
 														>
 															Edit
 														</button>
 														<button
+															type="button"
 															className="btn btn-sm btn-error"
 															onClick={() => handleDelete(league)}
 															disabled={deleteMutation.isPending}

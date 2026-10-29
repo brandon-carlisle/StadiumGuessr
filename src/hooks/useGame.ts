@@ -15,7 +15,6 @@ export default function useGame() {
 
 	function startGame(league: LeagueWithTeams) {
 		if (status !== "IDLE") {
-			console.log("Game not started: Status must be idle");
 			return;
 		}
 
@@ -31,6 +30,7 @@ export default function useGame() {
 				teamsRemaining: league.teams.length,
 				currentTeam: shuffled[0],
 				status: "PLAYING",
+				playId: crypto.randomUUID(),
 			}),
 		);
 	}

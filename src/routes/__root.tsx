@@ -87,10 +87,10 @@ function Meta({ children }: { children: React.ReactNode }) {
 		() =>
 			matches
 				.map((match) => {
-					// Access head meta title - runtime structure includes meta.title even if types don't
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					const staticData = match.staticData as any;
-					return staticData?.meta?.title as string | undefined;
+					const staticData = match.staticData as {
+						meta?: { title?: string };
+					};
+					return staticData.meta?.title;
 				})
 				.filter((title): title is string => typeof title === "string"),
 		[matches],

@@ -48,21 +48,21 @@ function toRadians(degrees: number): number {
 }
 
 /**
- * Calculate score based on distance using GeoGuessr-style scoring
- * Max score: 5000 points
- * Score decreases linearly with distance
- * Max distance: ~15,534 miles (25,000 km) - returns 0 points beyond this
- * @param distanceInMiles Distance in miles
- * @returns Score (0-5000)
+ * Seconds allowed for a game: 5 seconds for each team in the league.
+ */
+export function gameDurationSeconds(teamCount: number): number {
+	return 5 * teamCount;
+}
+
+/**
+ * Score drops exponentially so a guess across Britain is worth much less than a near miss.
+ * 0 miles is 5000. The scale is 50 miles.
  */
 export function calculateScore(distanceInMiles: number): number {
-	const maxDistance = 15534; // ~25,000 km in miles
 	const maxScore = 5000;
-
-	if (distanceInMiles >= maxDistance) {
-		return 0;
+	if (distanceInMiles <= 0) {
+		return maxScore;
 	}
 
-	const score = maxScore * (1 - distanceInMiles / maxDistance);
-	return Math.round(score);
+	return Math.round(maxScore * Math.exp(-distanceInMiles / 50));
 }

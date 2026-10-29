@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { requireAdmin } from "@/server-functions/session";
 
 // Sign in schema
 const signInSchema = z.object({
@@ -24,7 +25,7 @@ const signUpSchema = z.object({
 export const signInFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(signInSchema)
+	.validator(signInSchema)
 	.handler(async ({ data }) => {
 		const headers = getRequestHeaders();
 		const result = await auth.api.signInEmail({
@@ -44,7 +45,7 @@ export const signInFn = createServerFn({
 export const signUpFn = createServerFn({
 	method: "POST",
 })
-	.inputValidator(signUpSchema)
+	.validator(signUpSchema)
 	.handler(async ({ data }) => {
 		const headers = getRequestHeaders();
 		const result = await auth.api.signUpEmail({
@@ -83,11 +84,14 @@ export const signOutFn = createServerFn({
 	return result;
 });
 
-// Check if current user is an admin
+// Check if current user is an admin. The helper throws for everyone else; this returns false so the page can redirect.
 export const checkUserIsAdminFn = createServerFn({
 	method: "GET",
 }).handler(async () => {
-	const headers = getRequestHeaders();
-	const session = await auth.api.getSession({ headers });
-	return session?.user?.role === "admin";
+	try {
+		await requireAdmin();
+		return true;
+	} catch {
+		return false;
+	}
 });

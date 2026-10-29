@@ -1,41 +1,36 @@
+import { sql } from "drizzle-orm";
 import { allLeagues } from "@/data/leagues";
 import { db } from "./index.ts";
-import {
-	type LeagueInsert,
-	TABLE_league,
-	TABLE_team,
-	type TeamInsert,
-} from "./schema.ts";
+import { TABLE_league, TABLE_team, type TeamInsert } from "./schema.ts";
 
 async function seed() {
 	console.log("🌱 Starting database seed...");
 
 	try {
-		// Delete existing teams first (due to foreign key constraint)
-		console.log("🗑️  Clearing existing teams...");
-		await db.delete(TABLE_team);
-
-		// Delete existing leagues
-		console.log("🗑️  Clearing existing leagues...");
-		await db.delete(TABLE_league);
-
-		// Insert leagues and teams
 		for (const leagueData of allLeagues) {
 			console.log(
-				`📋 Inserting league: ${leagueData.leagueName} (${leagueData.code})`,
+				`📋 Upserting league: ${leagueData.leagueName} (${leagueData.code})`,
 			);
 
-			// Insert league
-			const leagueInsert: LeagueInsert = {
-				code: leagueData.code,
-				name: leagueData.leagueName,
-			};
 			const [createdLeagueResult] = await db
 				.insert(TABLE_league)
-				.values(leagueInsert)
+				.values({
+					code: leagueData.code,
+					name: leagueData.leagueName,
+				})
+				.onConflictDoUpdate({
+					target: TABLE_league.code,
+					set: {
+						name: leagueData.leagueName,
+						updatedAt: new Date(),
+					},
+				})
 				.returning();
 
-			// Insert teams
+			if (!createdLeagueResult) {
+				throw new Error(`Failed to upsert league ${leagueData.code}`);
+			}
+
 			const teamsToInsert: TeamInsert[] = leagueData.teams.map((teamData) => {
 				return {
 					code: teamData.code,
@@ -47,8 +42,21 @@ async function seed() {
 				};
 			});
 
-			console.log(`  ⚽ Inserting ${teamsToInsert.length} teams...`);
-			await db.insert(TABLE_team).values(teamsToInsert);
+			console.log(`  ⚽ Upserting ${teamsToInsert.length} teams...`);
+			await db
+				.insert(TABLE_team)
+				.values(teamsToInsert)
+				.onConflictDoUpdate({
+					target: TABLE_team.code,
+					set: {
+						clubName: sql`excluded.club_name`,
+						stadiumName: sql`excluded.stadium_name`,
+						latitude: sql`excluded.latitude`,
+						longitude: sql`excluded.longitude`,
+						leagueId: sql`excluded.league_id`,
+						updatedAt: new Date(),
+					},
+				});
 		}
 
 		console.log("✅ Database seed completed successfully!");
